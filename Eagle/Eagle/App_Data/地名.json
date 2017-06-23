@@ -1,0 +1,14 @@
+﻿{
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "北京",
+      "synonyms": [ "北平", "燕京", "京城" ]
+    },
+    {
+      "value": "天津",
+      "synonyms": [ "直沽寨", "海津镇", "天津卫", "天津州" ]
+    }
+  ]
+}
+

@@ -1,0 +1,24 @@
+﻿{
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "怎么样"
+    },
+    {
+      "value": "吗"
+    },
+    {
+      "value": "呢"
+    },
+    {
+      "value": "啥"
+    },
+    {
+      "value": "哪",
+      "synonyms": [ "哪里", "哪儿", "在哪" ]
+    },
+    {
+      "value": "如何"
+    }
+  ]
+}

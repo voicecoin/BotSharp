@@ -1,0 +1,52 @@
+﻿{
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "千克",
+      "synonyms": [ "公斤" ]
+    },
+    {
+      "value": "千米",
+      "synonyms": [ "公里" ]
+    },
+    {
+      "value": "米"
+    },
+    {
+      "value": "分米"
+    },
+    {
+      "value": "厘米"
+    },
+    {
+      "value": "毫米"
+    },
+    {
+      "value": "微米"
+    },
+    {
+      "value": "纳米"
+    },
+    {
+      "value": "光年"
+    },
+    {
+      "value": "立方米"
+    },
+    {
+      "value": "平方米"
+    },
+    {
+      "value": "寸"
+    },
+    {
+      "value": "尺"
+    },
+    {
+      "value": "毫克"
+    },
+    {
+      "value": "斤"
+    }
+  ]
+}
