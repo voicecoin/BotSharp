@@ -1,5 +1,4 @@
 ﻿using Eagle.Enums;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,20 +13,21 @@ namespace Eagle.DbTables
         public DbTable()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedDate = DateTime.UtcNow;
+            DataStatus = DataRowStatus.Active;
         }
-        
+
         [Key]
         [StringLength(36)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public String Id { get; set; }
 
-        [Required]
+        // 用户信息通过ClientAccessToken或者DeveloperAccessToken信息获取
+        /*[Required]
         [StringLength(36)]
         public String CreatedUserId { get; set; }
         [Required]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }*/
         [Required]
-        public bool Disabled { get; set; }
+        public DataRowStatus DataStatus { get; set; }
     }
 }

@@ -1,0 +1,18 @@
+﻿{
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "江西省",
+      "synonyms": [ "赣", "江西" ]
+    },
+    {
+      "value": "湖南省",
+      "synonyms": [ "湘", "湖南" ]
+    },
+    {
+      "value": "湖北省",
+      "synonyms": [ "鄂", "湖北" ]
+    }
+  ]
+}
+

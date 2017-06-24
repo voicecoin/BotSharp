@@ -16,8 +16,17 @@ namespace Eagle.DbTables
         public String Description { get; set; }
 
         [Required]
+        [StringLength(36)]
+        public String UserId { get; set; }
+        /// <summary>
+        /// 给Yaya平台调用的。
+        /// </summary>
+        [Required]
         [StringLength(32)]
         public String ClientAccessToken { get; set; }
+        /// <summary>
+        /// 给第三方开发者API调用的
+        /// </summary>
         [Required]
         [StringLength(32)]
         public String DeveloperAccessToken { get; set; }

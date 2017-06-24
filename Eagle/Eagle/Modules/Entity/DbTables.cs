@@ -39,11 +39,6 @@ namespace Eagle.DbTables
         [Required]
         [MaxLength(64)]
         public String Value { get; set; }
-        /// <summary>
-        /// Value的冗余字段，方便系统用来查找组合实体
-        /// </summary>
-        [MaxLength(64)]
-        public String Template { get; set; }
     }
 
     /// <summary>

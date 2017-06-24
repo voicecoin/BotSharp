@@ -40,9 +40,9 @@ namespace Eagle
             var agent = new Agents()
             {
                 Id = Constants.GenesisAgentId,
-                CreatedUserId = Constants.GenesisUserId,
-                ClientAccessToken = Guid.NewGuid().ToString("N"),
-                DeveloperAccessToken = Guid.NewGuid().ToString("N"),
+                UserId = Constants.GenesisUserId,
+                ClientAccessToken = Constants.GenesisAccessToken,
+                DeveloperAccessToken = Constants.GenesisDeveloperToken,
                 Name = "小丫",
                 Description = "人工智能通用机器人。"
             };
@@ -57,7 +57,6 @@ namespace Eagle
             var intent = new Intents()
             {
                 Id = "ee560fa6-1a28-43be-a027-7e2f523b3a00",
-                CreatedUserId = Constants.GenesisUserId,
                 AgentId = agent.Id,
                 Name = "问带时间和地点的天气情况"
             };
@@ -66,28 +65,27 @@ namespace Eagle
 
             var intentExpression = new IntentExpressions()
             {
-                IntentId = intent.Id,
-                CreatedUserId = Constants.GenesisUserId
+                IntentId = intent.Id
             };
             context.IntentExpressions.Add(intentExpression);
 
             context.SaveChanges();
 
             // add user say
-            new NerController().Ner("翌日京城天气如何").ForEach(itemModel =>
+            /*new NerController().Ner("翌日京城天气如何").ForEach(itemModel =>
             {
                 var itemRecord = Mapper.Map<IntentExpressionItems>(itemModel);
                 itemRecord.IntentExpressionId = intentExpression.Id;
                 itemRecord.CreatedUserId = Constants.GenesisUserId;
                 context.IntentExpressionItems.Add(itemRecord);
-            });
+            });*/
         }
 
         private static void InitEntities(IHostingEnvironment env, DataContexts context, string agentId)
         {
-            var entities = LoadEntityNamesFromJsonFile(env);
+            var entityNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\Entity").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
-            entities.ForEach(entityName => {
+            entityNames.ForEach(entityName => {
 
                 // add entity
                 EntityModel entity = LoadEntityFromJsonFile(env, entityName);
@@ -95,7 +93,6 @@ namespace Eagle
                 var entityRecord = new Entities()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    CreatedUserId = Constants.GenesisUserId,
                     Name = entityName,
                     AgentId = agentId,
                     IsEnum = entity.IsEnum,
@@ -105,29 +102,28 @@ namespace Eagle
                 context.Entities.Add(entityRecord);
 
                 // add entries
-                entity.Entries.ToList().ForEach(entry =>
+                entity.Entries.Where(x => !String.IsNullOrEmpty(x.Value)).ToList().ForEach(entry =>
                 {
-                    var entryRecord = new EntityEntries { EntityId = entityRecord.Id, Value = entry.Value, CreatedUserId = Constants.GenesisUserId };
-                    if (String.IsNullOrEmpty(entry.Template) && !entity.IsEnum)
+                    var entryRecord = new EntityEntries { EntityId = entityRecord.Id, Value = entry.Value };
+                    /*if (String.IsNullOrEmpty(entry.Template) && !entity.IsEnum)
                     {
                         entryRecord.Template = $"@{entityName}";
                     }
                     else
                     {
                         entryRecord.Template = entry.Template;
-                    }
+                    }*/
 
                     context.EntityEntries.Add(entryRecord);
 
                     // add synonyms
                     if (entry.Synonyms != null)
                     {
-                        entry.Synonyms.ToList().ForEach(synonym => {
+                        entry.Synonyms.Where(x => !String.IsNullOrEmpty(x)).ToList().ForEach(synonym => {
 
                             context.EntityEntrySynonyms.Add(new EntityEntrySynonyms
                             {
                                 EntityEntryId = entryRecord.Id,
-                                CreatedUserId = Constants.GenesisUserId,
                                 Synonym = synonym
                             });
 
@@ -139,23 +135,10 @@ namespace Eagle
             });
         }
 
-        private static List<String> LoadEntityNamesFromJsonFile(IHostingEnvironment env)
-        {
-            string json = "";
-
-            // create a entity
-            using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\EntityList.json"))
-            {
-                json = SourceReader.ReadToEnd();
-            }
-
-            return JsonConvert.DeserializeObject<IEnumerable<String>>(json).ToList();
-        }
-
         private static EntityModel LoadEntityFromJsonFile(IHostingEnvironment env, string name)
         {
             string json;
-            using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\{name}.json"))
+            using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\Entity\\{name}.json"))
             {
                 json = SourceReader.ReadToEnd();
             }

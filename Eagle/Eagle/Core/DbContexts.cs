@@ -1,6 +1,5 @@
 ﻿using Eagle.DbTables;
 using Eagle.Models;
-using Eagle.Modules.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

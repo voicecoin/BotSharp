@@ -9,6 +9,7 @@ using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Models;
 using AutoMapper;
+using Eagle.Utility;
 
 namespace Eagle.Modules.Entity
 {
@@ -19,9 +20,13 @@ namespace Eagle.Modules.Entity
 
         // GET: api/Entities
         [HttpGet]
-        public IEnumerable<Entities> GetEntities()
+        public PageResultModel<EntityModel> GetEntities(QueryModel<EntityModel> queryModel)
         {
-            return _context.Entities.Take(10);
+            var query = _context.Entities.Where(x => x.AgentId == queryModel.Data.AgentId);
+            var total = query.Count();
+
+            var items = query.Skip(queryModel.Page * queryModel.Size).Take(queryModel.Size).Select(x => x.Map<EntityModel>()).ToList();
+            return new PageResultModel<EntityModel> { Total = total, Page = queryModel.Page, Size = queryModel.Size, Items = items };
         }
 
         // GET: v1/Entities/5

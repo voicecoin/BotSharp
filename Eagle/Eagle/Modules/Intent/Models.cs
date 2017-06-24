@@ -1,9 +1,5 @@
-﻿using Eagle.DbTables;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,11 +25,11 @@ namespace Eagle.Models
 
     public class IntentExpressionItemModel
     {
+        public String EntryId { get; set; }
         public String Text { get; set; }
         public String Alias { get; set; }
         public String Meta { get; set; }
         //public Boolean UserDefined { get; set; }
-        [JsonIgnore]
         public String EntityId { get; set; }
         public int Position { get; set; }
         public int Length { get; set; }

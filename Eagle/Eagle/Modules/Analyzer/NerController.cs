@@ -25,35 +25,36 @@ namespace Eagle.Modules.Analyzer
         [HttpGet("Ner/{text}")]
         public List<IntentExpressionItemModel> Ner([FromRoute] string text)
         {
-            // 识别单元实体
-            var unitEntitiesQueryable = from entity in _context.Entities
+            // 识别所有单元实体
+            var unitEntitiesQueryable = (from entity in _context.Entities
                             join entry in _context.EntityEntries on entity.Id equals entry.EntityId
                             from synonym in _context.EntityEntrySynonyms.Where(x => x.EntityEntryId == entry.Id && text.Contains(x.Synonym)).DefaultIfEmpty()
                             where text.Contains(entry.Value) || text.Contains(synonym.Synonym)
                             select new IntentExpressionItemModel
                             {
+                                EntryId = entry.Id,
                                 EntityId = entity.Id,
                                 Text = synonym != null ? synonym.Synonym : entry.Value,
                                 Meta = $"@{entity.Name}",
                                 Alias = entity.Name
-                            };
+                            }).ToList();
 
-            var unitEntities = Process(text, unitEntitiesQueryable.ToList());
+            var unitEntities = Process(text, unitEntitiesQueryable);
 
-            string template = String.Join(" ", unitEntities.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
+            string template = String.Concat(unitEntities.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
             // 识别组合实体
-            var compositEntitiesQueryable = from entity in _context.Entities
+            var compositEntitiesQueryable = (from entity in _context.Entities
                                         join entry in _context.EntityEntries on entity.Id equals entry.EntityId
-                                        where entity.IsEnum && template.Contains(entry.Template)
+                                        where entity.IsEnum && template.Contains(entry.Value)
                                         select new IntentExpressionItemModel
                                         {
                                             EntityId = entity.Id,
-                                            Text = entry.Template,
+                                            Text = entry.Value,
                                             Meta = $"@{entity.Name}",
                                             Alias = entity.Name
-                                        };
+                                        }).ToList();
 
-            var compositEntities = Process(template, compositEntitiesQueryable.ToList()).Where(x => x.EntityId != null).ToList();
+            var compositEntities = Process(template, compositEntitiesQueryable).Where(x => x.EntityId != null).ToList();
 
             
 
@@ -83,9 +84,7 @@ namespace Eagle.Modules.Analyzer
 
         private int CorrectPosition(IntentExpressionItemModel compositedEntity, List<IntentExpressionItemModel> unitEntities, int pos)
         {
-            var source = compositedEntity.Text.Split(' ')
-                .ToList()
-                .Select(x => x).ToList();
+            var source = unitEntities.Where(x => !String.IsNullOrEmpty(x.Meta) && compositedEntity.Text.Contains(x.Meta)).Select(x => x.Meta).Distinct().ToList();
 
             for (; pos < unitEntities.Count;)
             {
@@ -93,7 +92,7 @@ namespace Eagle.Modules.Analyzer
                     .Skip(pos).Take(source.Count).ToList();
                 var join = (from s in source
                             join t in target on s equals t.Meta
-                            select t).ToList();
+                            select t).OrderBy(x => x.Position).ToList();
 
                 if(join.Count == source.Count)
                 {

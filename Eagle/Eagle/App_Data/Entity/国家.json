@@ -1,0 +1,17 @@
+﻿{
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "中国",
+      "synonyms": [ "中华人民共和国" ]
+    },
+    {
+      "value": "美国",
+      "synonyms": [ "美利坚合众国" ]
+    },
+    {
+      "value": "日本"
+    }
+  ]
+}
+

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
 using Eagle.DbTables;
+using Eagle.Models;
+using Eagle.Utility;
 
 namespace Eagle.Modules.Agent
 {
@@ -16,15 +18,15 @@ namespace Eagle.Modules.Agent
         private readonly DataContexts _context = new DataContexts();
 
         // GET: v1/Agents
-        [HttpGet]
-        public IEnumerable<Agents> GetAgents()
+        [HttpGet("list/{userId}")]
+        public IEnumerable<AgentModel> GetAgents([FromRoute] string userId)
         {
-            return _context.Agents;
+            return _context.Agents.Where(x => x.UserId == userId).Select(x => x.Map<AgentModel>());
         }
 
         // GET: v1/Agents/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAgents([FromRoute] string id)
+        public async Task<IActionResult> GetAgent([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
