@@ -52,16 +52,8 @@ namespace Eagle
                 routes.MapRoute(name: "API", template: "v1/{controller=Home}/{action=Index}/{id?}");
             });
 
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<Agents, AgentModel>();
-                cfg.CreateMap<IntentExpressionItemModel, IntentExpressionItems>();
-                cfg.CreateMap<Entities, EntityModel>();
-            });
-
-            DataContexts dbContexts = new DataContexts(new DbContextOptions<DataContexts>());
-            //var dbContexts = serviceProvider.GetService<DataContexts>();
-            DbInitializer.Initialize(env, dbContexts);
+            MapperInitializer.Initialize();
+            DbInitializer.Initialize(env);
         }
     }
 }

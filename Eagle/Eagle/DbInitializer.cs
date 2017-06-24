@@ -6,6 +6,7 @@ using Eagle.Models;
 using Eagle.Modules.Analyzer;
 using Eagle.Utility;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,11 @@ namespace Eagle
 {
     public class DbInitializer
     {
-        public static void Initialize(IHostingEnvironment env, DataContexts context)
+        public static void Initialize(IHostingEnvironment env)
         {
+            DataContexts context = new DataContexts(new DbContextOptions<DataContexts>());
+            //var dbContexts = serviceProvider.GetService<DataContexts>();
+
             context.Database.EnsureCreated();
 
             // Look for any students.

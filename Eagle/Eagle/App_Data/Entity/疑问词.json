@@ -2,23 +2,22 @@
   "isOverridable": true,
   "entries": [
     {
-      "value": "怎么样"
-    },
-    {
       "value": "吗"
     },
     {
       "value": "呢"
     },
     {
-      "value": "啥"
+      "value": "啥",
+      "synonyms": [ "什么" ]
     },
     {
-      "value": "哪",
-      "synonyms": [ "哪里", "哪儿", "在哪" ]
+      "value": "在哪",
+      "synonyms": [ "哪", "哪里", "哪儿", "在哪", "在哪里" ]
     },
     {
-      "value": "如何"
+      "value": "好不好",
+      "synonyms": [ "好不", "行不行", "行不", "可以吗", "可不可以", "如何", "怎么样", "咋样" ]
     }
   ]
 }

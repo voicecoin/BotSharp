@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Eagle.Models
         public String Alias { get; set; }
         public String Meta { get; set; }
         //public Boolean UserDefined { get; set; }
+        [JsonIgnore]
         public String EntityId { get; set; }
         public int Position { get; set; }
         public int Length { get; set; }

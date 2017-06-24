@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,7 @@ namespace Eagle.Utility
     {
         public static T Map<T>(this Object source)
         {
-            string json = JsonConvert.SerializeObject(source);
-            return JsonConvert.DeserializeObject<T>(json);
+            return Mapper.Map<T>(source);
         }
     }
 }
