@@ -97,7 +97,7 @@ namespace Eagle
                 EntityModel entity = LoadEntityFromJsonFile(env, entityName);
                 entity.AgentId = agentId;
                 entity.Name = entityName;
-                entity.Create(context);
+                entity.Add(context);
             });
         }
 

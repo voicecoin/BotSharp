@@ -23,6 +23,7 @@ namespace Eagle.Models
         [JsonIgnore]
         public String EntityId { get; set; }
         public String Value { get; set; }
+        [JsonIgnore]
         public String Template { get; set; }
         public IEnumerable<String> Synonyms { get; set; }
     }

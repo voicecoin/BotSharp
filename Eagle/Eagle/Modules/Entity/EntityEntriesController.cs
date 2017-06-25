@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
 using Eagle.DbTables;
+using Eagle.Models;
+using Eagle.Utility;
+using Eagle.Model.Extionsions;
 
 namespace Eagle.Modules.Entity
 {
@@ -16,10 +19,21 @@ namespace Eagle.Modules.Entity
         private readonly DataContexts _context = new DataContexts();
 
         // GET: v1/EntityEntries
-        [HttpGet]
-        public IEnumerable<EntityEntries> GetEntityEntries()
+        [HttpGet("{entityId}/Query")]
+        public PageResultModel<EntityEntryModel> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1)
         {
-            return _context.EntityEntries.Take(10);
+            var query = _context.EntityEntries.Where(x => x.EntityId == entityId);
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Value.Contains(name));
+            }
+
+            var total = query.Count();
+
+            int size = 20;
+
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<EntityEntryModel>()).ToList();
+            return new PageResultModel<EntityEntryModel> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/EntityEntries/5
@@ -43,52 +57,40 @@ namespace Eagle.Modules.Entity
 
         // PUT: api/EntityEntries/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEntityEntries([FromRoute] string id, [FromBody] EntityEntries entityEntries)
+        public async Task<IActionResult> PutEntityEntries([FromRoute] string id, [FromBody] EntityEntryModel entityEntryModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != entityEntries.Id)
+            if (id != entityEntryModel.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(entityEntries).State = EntityState.Modified;
+            _context.Transaction(delegate {
+                entityEntryModel.Update(_context);
+            });
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EntityEntriesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(entityEntryModel.Id);
         }
 
         // POST: api/EntityEntries
-        [HttpPost]
-        public async Task<IActionResult> PostEntityEntries([FromBody] EntityEntries entityEntries)
+        [HttpPost("{entityId}")]
+        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] EntityEntryModel entityEntryModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.EntityEntries.Add(entityEntries);
-            await _context.SaveChangesAsync();
+            _context.Transaction(delegate {
+                entityEntryModel.EntityId = entityId;
+                entityEntryModel.Add(_context);
+            });
 
-            return CreatedAtAction("GetEntityEntries", new { id = entityEntries.Id }, entityEntries);
+            return CreatedAtAction("GetEntityEntries", new { id = entityEntryModel.Id }, entityEntryModel.Id);
         }
 
         // DELETE: api/EntityEntries/5
@@ -106,10 +108,11 @@ namespace Eagle.Modules.Entity
                 return NotFound();
             }
 
-            _context.EntityEntries.Remove(entityEntries);
-            await _context.SaveChangesAsync();
+            _context.Transaction(delegate {
+                entityEntries.Map<EntityEntryModel>().Delete(_context);
+            });
 
-            return Ok(entityEntries);
+            return Ok(entityEntries.Id);
         }
 
         private bool EntityEntriesExists(string id)

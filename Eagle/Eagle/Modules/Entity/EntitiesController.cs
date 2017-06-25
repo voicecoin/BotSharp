@@ -20,10 +20,15 @@ namespace Eagle.Modules.Entity
         private readonly DataContexts _context = new DataContexts();
 
         // GET: api/Entities
-        [HttpGet("{agentId}/{page}")]
-        public PageResultModel<EntityModel> GetEntities(string agentId, int page)
+        [HttpGet("{agentId}/Query")]
+        public PageResultModel<EntityModel> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
             var query = _context.Entities.Where(x => x.AgentId == agentId);
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.Contains(name));
+            }
+
             var total = query.Count();
 
             int size = 20;
@@ -99,7 +104,7 @@ namespace Eagle.Modules.Entity
 
             _context.Transaction(delegate {
                 entityModel.AgentId = agentId;
-                entityModel.Create(_context);
+                entityModel.Add(_context);
             });
             
 

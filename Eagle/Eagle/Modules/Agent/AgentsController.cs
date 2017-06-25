@@ -18,10 +18,21 @@ namespace Eagle.Modules.Agent
         private readonly DataContexts _context = new DataContexts();
 
         // GET: v1/Agents
-        [HttpGet("list/{userId}")]
-        public IEnumerable<AgentModel> GetAgents([FromRoute] string userId)
+        [HttpGet("{userId}/Query")]
+        public PageResultModel<AgentModel> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
-            return _context.Agents.Where(x => x.UserId == userId).Select(x => x.Map<AgentModel>());
+            var query = _context.Agents.Where(x => x.UserId == userId);
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.Contains(name));
+            }
+
+            var total = query.Count();
+
+            int size = 20;
+
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<AgentModel>()).ToList();
+            return new PageResultModel<AgentModel> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Agents/5
