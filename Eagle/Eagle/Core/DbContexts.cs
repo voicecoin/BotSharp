@@ -1,6 +1,7 @@
 ﻿using Eagle.DbTables;
 using Eagle.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,31 @@ namespace Eagle.DbContexts
             optionsBuilder.UseSqlServer(connStr);
 
             base.OnConfiguring(optionsBuilder);
+        }
+
+        public void Transaction(Action action)
+        {
+            using (IDbContextTransaction transaction = Database.BeginTransaction())
+            {
+                try
+                {
+                    action();
+                    transaction.Commit();
+                    SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    if (ex.Message.Contains("See the inner exception for details"))
+                    {
+                        throw ex.InnerException;
+                    }
+                    else
+                    {
+                        throw ex;
+                    }
+                }
+            }
         }
     }
 }

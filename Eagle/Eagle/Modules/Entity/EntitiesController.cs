@@ -10,6 +10,7 @@ using Eagle.DbTables;
 using Eagle.Models;
 using AutoMapper;
 using Eagle.Utility;
+using Eagle.Model.Extionsions;
 
 namespace Eagle.Modules.Entity
 {
@@ -19,19 +20,21 @@ namespace Eagle.Modules.Entity
         private readonly DataContexts _context = new DataContexts();
 
         // GET: api/Entities
-        [HttpGet]
-        public PageResultModel<EntityModel> GetEntities(QueryModel<EntityModel> queryModel)
+        [HttpGet("{agentId}/{page}")]
+        public PageResultModel<EntityModel> GetEntities(string agentId, int page)
         {
-            var query = _context.Entities.Where(x => x.AgentId == queryModel.Data.AgentId);
+            var query = _context.Entities.Where(x => x.AgentId == agentId);
             var total = query.Count();
 
-            var items = query.Skip(queryModel.Page * queryModel.Size).Take(queryModel.Size).Select(x => x.Map<EntityModel>()).ToList();
-            return new PageResultModel<EntityModel> { Total = total, Page = queryModel.Page, Size = queryModel.Size, Items = items };
+            int size = 20;
+
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<EntityModel>()).ToList();
+            return new PageResultModel<EntityModel> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Entities/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEntities([FromRoute] string id)
+        public async Task<IActionResult> GetEntity([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
@@ -45,65 +48,62 @@ namespace Eagle.Modules.Entity
                 return NotFound();
             }
 
+            var entity = _context.Entities.Find(id).Map<EntityModel>();
+
             var items = (from entry in _context.EntityEntries
                          join synonym in _context.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
                          where entry.EntityId == id
-                         select new { entry, synonym }).ToList();
+                         select new { synonym.EntityEntryId, synonym.Synonym, entry.Value, }).ToList();
 
-            var entity = _context.Entities.Where(x => x.Id == id).Select(x => Mapper.Map<EntityModel>(x)).ToList();
-            
+            entity.Entries = items.Select(x => new EntityEntryModel
+            {
+                Value = x.Value,
+                Id = x.EntityEntryId,
+                Synonyms = items.Where(syn => syn.EntityEntryId == x.EntityEntryId)
+                .Select(syn => syn.Synonym)
+                .ToList()
+            });
 
-            return Ok(entities);
+            return Ok(entity);
         }
 
         // PUT: api/Entities/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEntities([FromRoute] string id, [FromBody] Entities entities)
+        public async Task<IActionResult> PutEntities([FromRoute] string id, [FromBody] EntityModel entityModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != entities.Id)
+            if (id != entityModel.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(entities).State = EntityState.Modified;
+            _context.Transaction(delegate {
+                entityModel.Update(_context);
+            });
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EntitiesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(entityModel.Id);
         }
 
         // POST: v1/Entities
-        [HttpPost]
-        public async Task<IActionResult> PostEntities([FromBody] Entities entities)
+        [HttpPost("{agentId}")]
+        public async Task<IActionResult> PostEntities(string agentId, [FromBody] EntityModel entityModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Entities.Add(entities);
-            await _context.SaveChangesAsync();
+            _context.Transaction(delegate {
+                entityModel.AgentId = agentId;
+                entityModel.Create(_context);
+            });
+            
 
-            return CreatedAtAction("GetEntities", new { id = entities.Id }, new { id = entities.Id });
+            return CreatedAtAction("GetEntities", new { id = entityModel.Id }, new { id = entityModel.Id });
         }
 
         // DELETE: api/Entities/5
@@ -121,10 +121,11 @@ namespace Eagle.Modules.Entity
                 return NotFound();
             }
 
-            _context.Entities.Remove(entities);
-            await _context.SaveChangesAsync();
+            _context.Transaction(delegate {
+                entities.Map<EntityModel>().Delete(_context);
+            });
 
-            return Ok(entities);
+            return Ok(entities.Id);
         }
 
         private bool EntitiesExists(string id)

@@ -40,24 +40,32 @@ namespace Eagle.Modules.Agent
                 return NotFound();
             }
 
-            return Ok(agents);
+            var agent = agents.Map<AgentDetailModel>();
+
+            return Ok(agent);
         }
 
         // PUT: v1/Agents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] Agents agents)
+        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentDetailModel agentModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != agents.Id)
+            if (id != agentModel.Id)
             {
-                return BadRequest();
+                return BadRequest("Agent id not match.");
             }
 
-            _context.Entry(agents).State = EntityState.Modified;
+            var agentRecord = _context.Agents.Find(id);
+
+            agentRecord.Name = agentModel.Name;
+            agentRecord.Description = agentModel.Description;
+            agentRecord.Language = agentModel.Language;
+
+            _context.Entry(agentRecord).State = EntityState.Modified;
 
             try
             {
@@ -80,21 +88,23 @@ namespace Eagle.Modules.Agent
 
         // POST: v1/Agents
         [HttpPost]
-        public async Task<IActionResult> PostAgents([FromBody] Agents agents)
+        public async Task<IActionResult> PostAgent([FromBody] AgentDetailModel agentModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            agents.ClientAccessToken = Guid.NewGuid().ToString("N");
-            agents.DeveloperAccessToken = Guid.NewGuid().ToString("N");
+            Agents agentRecord = agentModel.Map<Agents>();
 
+            agentRecord.Language = "zh-cn";
+            agentRecord.ClientAccessToken = Guid.NewGuid().ToString("N");
+            agentRecord.DeveloperAccessToken = Guid.NewGuid().ToString("N");
 
-            _context.Agents.Add(agents);
+            _context.Agents.Add(agentRecord);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAgents", new { id = agents.Id }, new { id = agents.Id });
+            return CreatedAtAction("GetAgents", new { id = agentRecord.Id }, new { id = agentRecord.Id });
         }
 
         // DELETE: v1/Agents/5

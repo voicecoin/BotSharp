@@ -12,6 +12,7 @@ using Eagle.Models;
 using Eagle.DbTables;
 using Eagle.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 
 namespace Eagle
 {
@@ -37,7 +38,11 @@ namespace Eagle
             DataContexts.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -26,9 +26,11 @@ namespace Eagle.Models
 
     public class IntentExpressionItemModel
     {
+        [JsonIgnore]
         public String EntryId { get; set; }
         public String Text { get; set; }
         public String Alias { get; set; }
+        [JsonIgnore]
         public String Meta { get; set; }
         //public Boolean UserDefined { get; set; }
         [JsonIgnore]

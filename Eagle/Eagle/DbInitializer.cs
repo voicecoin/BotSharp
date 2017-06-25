@@ -2,6 +2,7 @@
 using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Enums;
+using Eagle.Model.Extionsions;
 using Eagle.Models;
 using Eagle.Modules.Analyzer;
 using Eagle.Utility;
@@ -31,11 +32,12 @@ namespace Eagle
                 return;   // DB has been seeded
             }
 
-            Agents agent = InitAgent(env, context);
-            InitEntities(env, context, agent.Id);
-            InitIntents(env, context, agent);
-
-            context.SaveChanges();
+            context.Transaction(delegate
+            {
+                Agents agent = InitAgent(env, context);
+                InitEntities(env, context, agent.Id);
+                InitIntents(env, context, agent);
+            });
         }
 
         private static Agents InitAgent(IHostingEnvironment env, DataContexts context)
@@ -89,53 +91,13 @@ namespace Eagle
         {
             var entityNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\Entity").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
-            entityNames.ForEach(entityName => {
-
+            entityNames.ForEach(entityName =>
+            {
                 // add entity
                 EntityModel entity = LoadEntityFromJsonFile(env, entityName);
-
-                var entityRecord = new Entities()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = entityName,
-                    AgentId = agentId,
-                    IsEnum = entity.IsEnum,
-                    IsOverridable = entity.IsOverridable,
-                };
-
-                context.Entities.Add(entityRecord);
-
-                // add entries
-                entity.Entries.Where(x => !String.IsNullOrEmpty(x.Value)).ToList().ForEach(entry =>
-                {
-                    var entryRecord = new EntityEntries { EntityId = entityRecord.Id, Value = entry.Value };
-                    /*if (String.IsNullOrEmpty(entry.Template) && !entity.IsEnum)
-                    {
-                        entryRecord.Template = $"@{entityName}";
-                    }
-                    else
-                    {
-                        entryRecord.Template = entry.Template;
-                    }*/
-
-                    context.EntityEntries.Add(entryRecord);
-
-                    // add synonyms
-                    if (entry.Synonyms != null)
-                    {
-                        entry.Synonyms.Where(x => !String.IsNullOrEmpty(x)).ToList().ForEach(synonym => {
-
-                            context.EntityEntrySynonyms.Add(new EntityEntrySynonyms
-                            {
-                                EntityEntryId = entryRecord.Id,
-                                Synonym = synonym
-                            });
-
-                        });
-                    }
-
-                });
-
+                entity.AgentId = agentId;
+                entity.Name = entityName;
+                entity.Create(context);
             });
         }
 

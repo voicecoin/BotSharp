@@ -8,7 +8,6 @@ namespace Eagle.Models
 
     public class QueryModel<T>
     {
-        public string AgentId { get; set; }
         public int Page { get; set; }
         public int Size { get; set; }
         public T Data { get; set; }

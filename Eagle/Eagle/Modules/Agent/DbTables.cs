@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Eagle.DbTables
         public String Name { get; set; }
         [MaxLength(256)]
         public String Description { get; set; }
+
+        public String Language { get; set; }
 
         [Required]
         [StringLength(36)]
@@ -30,5 +33,7 @@ namespace Eagle.DbTables
         [Required]
         [StringLength(32)]
         public String DeveloperAccessToken { get; set; }
+
+        public bool IsPublic { get; set; }
     }
 }

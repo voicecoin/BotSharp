@@ -14,9 +14,11 @@ namespace Eagle
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Agents, AgentModel>();
-                cfg.CreateMap<IntentExpressionItemModel, IntentExpressionItems>();
-                cfg.CreateMap<Entities, EntityModel>();
+                cfg.CreateMap<Agents, AgentModel>().ReverseMap();
+                cfg.CreateMap<Agents, AgentDetailModel>().ReverseMap();
+                cfg.CreateMap<IntentExpressionItemModel, IntentExpressionItems>().ReverseMap();
+                cfg.CreateMap<Entities, EntityModel>().ReverseMap();
+                cfg.CreateMap<EntityEntries, EntityEntryModel>().ReverseMap();
             });
         }
     }
