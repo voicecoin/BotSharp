@@ -9,7 +9,7 @@ using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Models;
 using Eagle.Utility;
-using Eagle.Model.Extionsions;
+using Eagle.Model.Extensions;
 
 namespace Eagle.Modules.Entity
 {

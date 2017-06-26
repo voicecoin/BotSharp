@@ -2,7 +2,7 @@
 using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Enums;
-using Eagle.Model.Extionsions;
+using Eagle.Model.Extensions;
 using Eagle.Models;
 using Eagle.Modules.Analyzer;
 using Eagle.Utility;

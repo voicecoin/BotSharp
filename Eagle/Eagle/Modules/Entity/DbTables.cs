@@ -45,14 +45,14 @@ namespace Eagle.DbTables
     /// 实体条目标签，用来细分标识条目的特性。
     /// 比如：“奔驰”，可以标识为“汽车”, 属于品牌实体类；“刘德华”，标识为“名人”，属于“人名”实体。
     /// </summary>
-    public class EntityEntryLables : DbTable
+    /*public class EntityEntryLables : DbTable
     {
         [Required]
         [JsonIgnore]
         [StringLength(36)]
         public String EntityEntryId { get; set; }
         public String Name { get; set; }
-    }
+    }*/
 
     /// <summary>
     /// 实体条目同义词

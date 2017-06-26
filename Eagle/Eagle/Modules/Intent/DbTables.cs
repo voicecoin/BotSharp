@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Eagle.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,17 +25,6 @@ namespace Eagle.DbTables
         [Required]
         [MaxLength(32)]
         public String Name { get; set; }
-    }
-
-    public class IntentOutputContexts : DbTable
-    {
-        [Required]
-        [StringLength(36)]
-        public String IntentId { get; set; }
-        [Required]
-        [MaxLength(32)]
-        public String Name { get; set; }
-        public int? Lifespan { get; set; }
     }
 
     public class IntentExpressions : DbTable
@@ -68,13 +58,60 @@ namespace Eagle.DbTables
         public String Name { get; set; }
     }
 
-    public class IntentActions : DbTable
+    public class IntentResponses : DbTable
     {
         [Required]
         [StringLength(36)]
         public String IntentId { get; set; }
+        [MaxLength(128)]
+        public String Action { get; set; }
+    }
+
+    public class IntentResponseContexts : DbTable
+    {
+        [Required]
+        [StringLength(36)]
+        public String IntentResponseId { get; set; }
         [Required]
         [MaxLength(32)]
         public String Name { get; set; }
+        public int? Lifespan { get; set; }
+    }
+
+    public class IntentResponseMessages : DbTable
+    {
+        [Required]
+        [StringLength(36)]
+        public String IntentResponseId { get; set; }
+        [Required]
+        [MaxLength(128)]
+        public String Speech { get; set; }
+        public IntentResponseMessageType Type { get; set; }
+        public IntentResponseMessagePlatform Platform { get; set; }
+    }
+
+    public class IntentResponseParameters : DbTable
+    {
+        [Required]
+        [StringLength(36)]
+        public String IntentResponseId { get; set; }
+        [Required]
+        [MaxLength(32)]
+        public String Name { get; set; }
+        public Boolean IsList { get; set; }
+        /// <summary>
+        /// Entity Id
+        /// </summary>
+        public String DataType { get; set; }
+        public Boolean Required { get; set; }
+        public String Value { get; set; }
+    }
+
+    public class IntentResponseParameterPrompts : DbTable
+    {
+        [Required]
+        [StringLength(36)]
+        public String IntentResponseParameterId { get; set; }
+        public String Text { get; set; }
     }
 }

@@ -16,7 +16,9 @@ namespace Eagle
             {
                 cfg.CreateMap<Agents, AgentModel>().ReverseMap();
                 cfg.CreateMap<Agents, AgentDetailModel>().ReverseMap();
-                cfg.CreateMap<IntentExpressionItemModel, IntentExpressionItems>().ReverseMap();
+                cfg.CreateMap<Intents, IntentModel>().ReverseMap();
+                cfg.CreateMap<IntentExpressions, IntentExpressionModel>().ReverseMap();
+                cfg.CreateMap<IntentExpressionItems, IntentExpressionItemModel>().ReverseMap();
                 cfg.CreateMap<Entities, EntityModel>().ReverseMap();
                 cfg.CreateMap<EntityEntries, EntityEntryModel>().ReverseMap();
             });

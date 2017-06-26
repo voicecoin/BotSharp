@@ -13,7 +13,7 @@ namespace Eagle.DbContexts
     {
         public DbSet<Entities> Entities { get; set; }
         public DbSet<EntityEntries> EntityEntries { get; set; }
-        public DbSet<EntityEntryLables> EntityEntryLables { get; set; }
+        //public DbSet<EntityEntryLables> EntityEntryLables { get; set; }
         public DbSet<EntityEntrySynonyms> EntityEntrySynonyms { get; set; }
     }
 }

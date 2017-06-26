@@ -12,9 +12,13 @@ namespace Eagle.DbContexts
     {
         public DbSet<Intents> Intents { get; set; }
         public DbSet<IntentInputContexts> IntentInputContexts { get; set; }
-        public DbSet<IntentOutputContexts> IntentOutputContexts { get; set; }
         public DbSet<IntentExpressions> IntentExpressions { get; set; }
         public DbSet<IntentExpressionItems> IntentExpressionItems { get; set; }
         public DbSet<IntentEvents> IntentEvents { get; set; }
+        public DbSet<IntentResponses> IntentResponses { get; set; }
+        public DbSet<IntentResponseContexts> IntentResponseContexts { get; set; }
+        public DbSet<IntentResponseMessages> IntentResponseMessages { get; set; }
+        public DbSet<IntentResponseParameters> IntentResponseParameters { get; set; }
+        public DbSet<IntentResponseParameterPrompts> IntentResponseParameterPrompts { get; set; }
     }
 }

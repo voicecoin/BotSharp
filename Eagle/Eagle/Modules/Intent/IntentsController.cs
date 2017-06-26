@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Models;
+using Eagle.Utility;
+using Eagle.Model.Extensions;
 
 namespace Eagle.Modules.Intent
 {
@@ -17,10 +19,21 @@ namespace Eagle.Modules.Intent
         private readonly DataContexts _context = new DataContexts();
 
         // GET: api/Intents
-        [HttpGet]
-        public IEnumerable<Intents> GetIntents()
+        [HttpGet("{agentId}/Query")]
+        public PageResultModel<IntentModel> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
-            return _context.Intents;
+            var query = _context.Intents.Where(x => x.AgentId == agentId);
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.Contains(name));
+            }
+
+            var total = query.Count();
+
+            int size = 20;
+
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<IntentModel>()).ToList();
+            return new PageResultModel<IntentModel> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Intents/5
@@ -108,18 +121,21 @@ namespace Eagle.Modules.Intent
         }
 
         // POST: api/Intents
-        [HttpPost]
-        public async Task<IActionResult> PostIntents([FromBody] Intents intents)
+        [HttpPost("{agentId}")]
+        public async Task<IActionResult> PostIntents(string agentId, [FromBody] IntentModel intentModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Intents.Add(intents);
-            await _context.SaveChangesAsync();
+            _context.Transaction(delegate
+            {
+                intentModel.AgentId = agentId;
+                intentModel.Add(_context);
+            });
 
-            return CreatedAtAction("GetIntents", new { id = intents.Id }, intents);
+            return CreatedAtAction("GetIntents", new { id = intentModel.Id }, intentModel.Id);
         }
 
         // DELETE: api/Intents/5

@@ -10,7 +10,11 @@ namespace Eagle.Models
     {
         public String Id { get; set; }
         public String Name { get; set; }
-        public List<String> ContextIn { get; set; }
+        public String AgentId { get; set; }
+        /// <summary>
+        /// Context In
+        /// </summary>
+        public List<String> Contexts { get; set; }
         public List<String> Templates { get; set; }
         public List<IntentExpressionModel> UserSays { get; set; }
         public List<Object> Responses { get; set; }
@@ -19,6 +23,7 @@ namespace Eagle.Models
     public class IntentExpressionModel
     {
         public String Id { get; set; }
+        public String IntentId { get; set; }
         public Boolean IsTemplate { get; set; }
         public Int32 Count { get; set; }
         public List<IntentExpressionItemModel> Data { get; set; }
@@ -26,14 +31,13 @@ namespace Eagle.Models
 
     public class IntentExpressionItemModel
     {
-        [JsonIgnore]
+        public String Id { get; set; }
+        public String IntentExpressionId { get; set; }
         public String EntryId { get; set; }
         public String Text { get; set; }
         public String Alias { get; set; }
-        [JsonIgnore]
         public String Meta { get; set; }
         //public Boolean UserDefined { get; set; }
-        [JsonIgnore]
         public String EntityId { get; set; }
         public int Position { get; set; }
         public int Length { get; set; }

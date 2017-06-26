@@ -10,7 +10,7 @@ using Eagle.DbTables;
 using Eagle.Models;
 using AutoMapper;
 using Eagle.Utility;
-using Eagle.Model.Extionsions;
+using Eagle.Model.Extensions;
 
 namespace Eagle.Modules.Entity
 {
