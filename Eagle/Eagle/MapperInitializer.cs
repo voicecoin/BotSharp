@@ -19,6 +19,10 @@ namespace Eagle
                 cfg.CreateMap<Intents, IntentModel>().ReverseMap();
                 cfg.CreateMap<IntentExpressions, IntentExpressionModel>().ReverseMap();
                 cfg.CreateMap<IntentExpressionItems, IntentExpressionItemModel>().ReverseMap();
+                cfg.CreateMap<IntentResponses, IntentResponseModel>().ReverseMap();
+                cfg.CreateMap<IntentResponseContexts, IntentResponseContextModel>().ReverseMap();
+                cfg.CreateMap<IntentResponseMessages, IntentResponseMessageModel>().ReverseMap();
+                cfg.CreateMap<IntentResponseParameters, IntentResponseParameterModel>().ReverseMap();
                 cfg.CreateMap<Entities, EntityModel>().ReverseMap();
                 cfg.CreateMap<EntityEntries, EntityEntryModel>().ReverseMap();
             });

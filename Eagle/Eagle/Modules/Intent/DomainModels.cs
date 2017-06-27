@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Eagle.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Eagle.Models
         public List<String> Contexts { get; set; }
         public List<String> Templates { get; set; }
         public List<IntentExpressionModel> UserSays { get; set; }
-        public List<Object> Responses { get; set; }
+        public List<IntentResponseModel> Responses { get; set; }
     }
 
     public class IntentExpressionModel
@@ -41,5 +42,44 @@ namespace Eagle.Models
         public String EntityId { get; set; }
         public int Position { get; set; }
         public int Length { get; set; }
+    }
+
+    public class IntentResponseModel
+    {
+        public String Id { get; set; }
+        public String IntentId { get; set; }
+        public String Action { get; set; }
+        public List<IntentResponseContextModel> AffectedContexts { get; set; }
+        public List<IntentResponseMessageModel> Messages { get; set; }
+        public List<IntentResponseParameterModel> Parameters { get; set; }
+    }
+
+    public class IntentResponseContextModel
+    {
+        public String Id { get; set; }
+        public String IntentResponseId { get; set; }
+        public String Name { get; set; }
+        public int? Lifespan { get; set; }
+    }
+
+    public class IntentResponseMessageModel
+    {
+        public String Id { get; set; }
+        public String IntentResponseId { get; set; }
+        public String Speech { get; set; }
+        public IntentResponseMessageType Type { get; set; }
+        public IntentResponseMessagePlatform Platform { get; set; }
+    }
+
+    public class IntentResponseParameterModel
+    {
+        public String Id { get; set; }
+        public String IntentResponseId { get; set; }
+        public String Name { get; set; }
+        public Boolean IsList { get; set; }
+        public String DataType { get; set; }
+        public Boolean Required { get; set; }
+        public String Value { get; set; }
+        public List<String> Prompts { get; set; }
     }
 }

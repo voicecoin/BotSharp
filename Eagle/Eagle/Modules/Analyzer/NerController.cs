@@ -142,10 +142,19 @@ namespace Eagle.Modules.Analyzer
                 MatchCollection mc = Regex.Matches(text, token.Text);
                 foreach (Match m in mc)
                 {
-                    token.Position = m.Index;
-                    token.Length = m.Length;
-                    IntentExpressionItemModel temp = token.Map<IntentExpressionItemModel>();
-                    temp.EntityId = token.EntityId;
+                    IntentExpressionItemModel temp = new IntentExpressionItemModel()
+                    {
+                        Position = m.Index,
+                        Length = m.Length,
+                        EntityId = token.EntityId,
+                        Alias = token.Alias,
+                        Text = token.Text,
+                        Meta = token.Meta,
+                        Id = token.Id,
+                        EntryId = token.EntryId,
+                        IntentExpressionId = token.IntentExpressionId
+                    };
+
                     tags.Add(temp);
                 }
             });

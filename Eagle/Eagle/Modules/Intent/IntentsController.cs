@@ -87,35 +87,22 @@ namespace Eagle.Modules.Intent
 
         // PUT: api/Intents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] Intents intents)
+        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] IntentModel intentModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != intents.Id)
+            if (id != intentModel.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(intents).State = EntityState.Modified;
-
-            try
+            _context.Transaction(delegate
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IntentsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                intentModel.Update(_context);
+            });
 
             return NoContent();
         }
