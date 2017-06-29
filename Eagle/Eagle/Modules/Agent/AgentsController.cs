@@ -111,6 +111,7 @@ namespace Eagle.Modules.Agent
             agentRecord.Language = "zh-cn";
             agentRecord.ClientAccessToken = Guid.NewGuid().ToString("N");
             agentRecord.DeveloperAccessToken = Guid.NewGuid().ToString("N");
+            agentRecord.CreatedDate = DateTime.UtcNow;
 
             _context.Agents.Add(agentRecord);
             await _context.SaveChangesAsync();

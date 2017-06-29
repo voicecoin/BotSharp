@@ -13,5 +13,11 @@ namespace Eagle.Utility
         {
             return Mapper.Map<T>(source);
         }
+
+        public static T MapByJsonString<T>(this Object Source)
+        {
+            string json = JsonConvert.SerializeObject(Source);
+            return JsonConvert.DeserializeObject<T>(json);
+        }
     }
 }

@@ -9,4 +9,14 @@ namespace Eagle.Models
     {
         public List<IntentExpressionItemModel> Tags { get; set; }
     }
+
+    public class AnalyzerModel
+    {
+        public string Text { get; set; }
+
+        internal object Ner()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -13,6 +13,7 @@ namespace Eagle.Models
         public String Description { get; set; }
         public String UserId { get; set; }
         public String ClientAccessToken { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 
     public class AgentDetailModel : AgentModel

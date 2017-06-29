@@ -15,6 +15,7 @@ namespace Eagle.Model.Extensions
         {
             entityModel.Id = Guid.NewGuid().ToString();
             var entityRecord = entityModel.Map<Entities>();
+            entityRecord.CreatedDate = DateTime.UtcNow;
 
             dc.Entities.Add(entityRecord);
 
@@ -59,6 +60,7 @@ namespace Eagle.Model.Extensions
         {
             entityEntryModel.Id = Guid.NewGuid().ToString();
             var entryRecord = entityEntryModel.Map<EntityEntries>();
+            entryRecord.CreatedDate = DateTime.UtcNow;
 
             dc.EntityEntries.Add(entryRecord);
             // add synonyms
@@ -91,7 +93,8 @@ namespace Eagle.Model.Extensions
                 dc.EntityEntrySynonyms.Add(new EntityEntrySynonyms
                 {
                     EntityEntryId = entityEntryId,
-                    Synonym = synonym
+                    Synonym = synonym,
+                    CreatedDate = DateTime.UtcNow
                 });
 
             });

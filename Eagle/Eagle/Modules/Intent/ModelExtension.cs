@@ -15,6 +15,7 @@ namespace Eagle.Model.Extensions
         {
             intentModel.Id = Guid.NewGuid().ToString();
             var intentRecord = intentModel.Map<Intents>();
+            intentRecord.CreatedDate = DateTime.UtcNow;
 
             dc.Intents.Add(intentRecord);
 
@@ -50,6 +51,7 @@ namespace Eagle.Model.Extensions
         {
             var intentRecord = dc.Intents.Find(intentModel.Id);
             intentRecord.Name = intentModel.Name;
+            intentRecord.ModifiedDate = DateTime.UtcNow;
 
             // Remove all related data then create with same IntentId
             intentModel.UpdateInputContexts(dc);
@@ -105,6 +107,8 @@ namespace Eagle.Model.Extensions
         {
             var expressionRecord = expressionModel.Map<IntentExpressions>();
             expressionRecord.Id = Guid.NewGuid().ToString();
+            expressionRecord.CreatedDate = DateTime.UtcNow;
+
             dc.IntentExpressions.Add(expressionRecord);
 
             int pos = 0;
@@ -123,6 +127,8 @@ namespace Eagle.Model.Extensions
             expressionItemRecord.EntityId = entity?.Id;
             expressionItemRecord.Length = expressionItemRecord.Text.Length;
             expressionItemRecord.Position = pos;
+            expressionItemRecord.CreatedDate = DateTime.UtcNow;
+
             dc.IntentExpressionItems.Add(expressionItemRecord);
 
             return pos + expressionItemRecord.Length;
@@ -132,6 +138,8 @@ namespace Eagle.Model.Extensions
         {
             var responseRecord = responseModel.Map<IntentResponses>();
             responseRecord.Id = Guid.NewGuid().ToString();
+            responseRecord.CreatedDate = DateTime.UtcNow;
+
             dc.IntentResponses.Add(responseRecord);
 
             if(responseModel.AffectedContexts != null)
@@ -163,6 +171,8 @@ namespace Eagle.Model.Extensions
         {
             var responseContextRecord = responseContextModel.Map<IntentResponseContexts>();
             responseContextRecord.Id = Guid.NewGuid().ToString();
+            responseContextRecord.CreatedDate = DateTime.UtcNow;
+
             dc.IntentResponseContexts.Add(responseContextRecord);
         }
 
@@ -170,6 +180,8 @@ namespace Eagle.Model.Extensions
         {
             var responseMessageRecord = responseMessageModel.Map<IntentResponseMessages>();
             responseMessageRecord.Id = Guid.NewGuid().ToString();
+            responseMessageRecord.CreatedDate = DateTime.UtcNow;
+
             dc.IntentResponseMessages.Add(responseMessageRecord);
         }
 
@@ -177,6 +189,8 @@ namespace Eagle.Model.Extensions
         {
             var responseParameterRecord = responseParameterModel.Map<IntentResponseParameters>();
             responseParameterRecord.Id = Guid.NewGuid().ToString();
+            responseParameterRecord.CreatedDate = DateTime.UtcNow;
+
             dc.IntentResponseParameters.Add(responseParameterRecord);
 
             if(responseParameterModel.Prompts != null)

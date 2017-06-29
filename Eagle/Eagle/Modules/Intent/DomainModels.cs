@@ -38,10 +38,20 @@ namespace Eagle.Models
         public String Text { get; set; }
         public String Alias { get; set; }
         public String Meta { get; set; }
-        //public Boolean UserDefined { get; set; }
+        public Boolean UserDefined { get; set; }
         public String EntityId { get; set; }
+        /// <summary>
+        /// 字符串在句子中的起始位置
+        /// </summary>
         public int Position { get; set; }
+        /// <summary>
+        /// 实体字符长度
+        /// </summary>
         public int Length { get; set; }
+        /// <summary>
+        /// 以实体为单位在句子中的位置
+        /// </summary>
+        public int Unit { get; set; }
     }
 
     public class IntentResponseModel

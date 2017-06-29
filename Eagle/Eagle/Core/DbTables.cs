@@ -14,6 +14,8 @@ namespace Eagle.DbTables
         {
             Id = Guid.NewGuid().ToString();
             DataStatus = DataRowStatus.Active;
+            CreatedDate = DateTime.UtcNow;
+            ModifiedDate = DateTime.UtcNow;
         }
 
         [Key]
@@ -24,9 +26,11 @@ namespace Eagle.DbTables
         // 用户信息通过ClientAccessToken或者DeveloperAccessToken信息获取
         /*[Required]
         [StringLength(36)]
-        public String CreatedUserId { get; set; }
+        public String CreatedUserId { get; set; }*/
         [Required]
-        public DateTime CreatedDate { get; set; }*/
+        public DateTime CreatedDate { get; set; }
+        [Required]
+        public DateTime ModifiedDate { get; set; }
         [Required]
         public DataRowStatus DataStatus { get; set; }
     }

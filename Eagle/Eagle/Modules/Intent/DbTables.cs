@@ -32,6 +32,9 @@ namespace Eagle.DbTables
         [Required]
         [StringLength(36)]
         public String IntentId { get; set; }
+        [Required]
+        [MaxLength(128)]
+        public String Text { get; set; }
     }
 
     public class IntentExpressionItems : DbTable
@@ -44,8 +47,12 @@ namespace Eagle.DbTables
         public String Text { get; set; }
         [StringLength(36)]
         public String EntityId { get; set; }
+        [Required]
         public int Position { get; set; }
+        [Required]
         public int Length { get; set; }
+        [Required]
+        public int Unit { get; set; }
     }
 
     public class IntentEvents : DbTable

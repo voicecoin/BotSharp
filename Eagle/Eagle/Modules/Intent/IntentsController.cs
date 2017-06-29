@@ -18,7 +18,7 @@ namespace Eagle.Modules.Intent
     {
         private readonly DataContexts _context = new DataContexts();
 
-        // GET: api/Intents
+        // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
         public PageResultModel<IntentModel> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
@@ -144,6 +144,24 @@ namespace Eagle.Modules.Intent
             await _context.SaveChangesAsync();
 
             return Ok(intents);
+        }
+
+        // GET: v1/Intent?text=
+        [HttpGet("Markup")]
+        public IEnumerable<Object> Markup([FromQuery] string text)
+        {
+            var model = new AnalyzerModel { Text = text };
+
+            return model.Ner(_context).Select(x => new
+            {
+                x.Text,
+                x.Alias,
+                x.Meta,
+                x.Position,
+                x.Length,
+                x.Unit,
+                x.EntityId
+            }).OrderBy(x => x.Unit);
         }
 
         private bool IntentsExists(string id)
