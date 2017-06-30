@@ -13,10 +13,7 @@ namespace Eagle.Models
     public class AnalyzerModel
     {
         public string Text { get; set; }
-
-        internal object Ner()
-        {
-            throw new NotImplementedException();
-        }
+        public string ClientAccessToken { get; set; }
+        public string SessionId { get; set; }
     }
 }

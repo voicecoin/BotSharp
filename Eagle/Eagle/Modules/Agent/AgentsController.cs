@@ -51,14 +51,14 @@ namespace Eagle.Modules.Agent
                 return NotFound();
             }
 
-            var agent = agents.Map<AgentDetailModel>();
+            var agent = agents.Map<AgentModel>();
 
             return Ok(agent);
         }
 
         // PUT: v1/Agents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentDetailModel agentModel)
+        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentModel agentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -99,7 +99,7 @@ namespace Eagle.Modules.Agent
 
         // POST: v1/Agents
         [HttpPost]
-        public async Task<IActionResult> PostAgent([FromBody] AgentDetailModel agentModel)
+        public async Task<IActionResult> PostAgent([FromBody] AgentModel agentModel)
         {
             if (!ModelState.IsValid)
             {

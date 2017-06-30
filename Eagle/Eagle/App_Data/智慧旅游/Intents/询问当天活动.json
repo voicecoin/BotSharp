@@ -1,0 +1,23 @@
+﻿{
+  "userSays": [
+    {
+      "text": "今天有什么活动" 
+    }
+  ],
+  "responses": [
+    {
+      "messages": [
+        {
+          "speech": "晚上有猜灯谜的活动。",
+          "type": 0
+        },
+        {
+          "speech": "下午3点在足球场有比赛。",
+          "type": 0
+        }
+      ],
+      "parameters": [
+      ]
+    }
+  ]
+}

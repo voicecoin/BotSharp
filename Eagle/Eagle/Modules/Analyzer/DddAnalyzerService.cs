@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Eagle.Model.Extensions
+namespace Eagle.DddServices
 {
-    public static partial class ModelExtension
+    public static class DddAnalyzerService
     {
         public static List<IntentExpressionItemModel> Ner(this AnalyzerModel analyzerModel, DataContexts dc)
         {

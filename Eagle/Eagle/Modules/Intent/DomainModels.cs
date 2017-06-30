@@ -9,6 +9,14 @@ namespace Eagle.Models
 {
     public class IntentModel
     {
+        public IntentModel()
+        {
+            Contexts = new List<string>();
+            Templates = new List<string>();
+            UserSays = new List<IntentExpressionModel>();
+            Responses = new List<IntentResponseModel>();
+        }
+
         public String Id { get; set; }
         public String Name { get; set; }
         public String AgentId { get; set; }
@@ -23,10 +31,15 @@ namespace Eagle.Models
 
     public class IntentExpressionModel
     {
+        public IntentExpressionModel()
+        {
+            Data = new List<IntentExpressionItemModel>();
+        }
         public String Id { get; set; }
         public String IntentId { get; set; }
         public Boolean IsTemplate { get; set; }
         public Int32 Count { get; set; }
+        public String Text { get; set; }
         public List<IntentExpressionItemModel> Data { get; set; }
     }
 
@@ -56,6 +69,12 @@ namespace Eagle.Models
 
     public class IntentResponseModel
     {
+        public IntentResponseModel()
+        {
+            AffectedContexts = new List<IntentResponseContextModel>();
+            Messages = new List<IntentResponseMessageModel>();
+            Parameters = new List<IntentResponseParameterModel>();
+        }
         public String Id { get; set; }
         public String IntentId { get; set; }
         public String Action { get; set; }
@@ -83,6 +102,10 @@ namespace Eagle.Models
 
     public class IntentResponseParameterModel
     {
+        public IntentResponseParameterModel()
+        {
+            Prompts = new List<string>();
+        }
         public String Id { get; set; }
         public String IntentResponseId { get; set; }
         public String Name { get; set; }

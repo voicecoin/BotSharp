@@ -9,7 +9,7 @@ using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Models;
 using Eagle.Utility;
-using Eagle.Model.Extensions;
+using Eagle.DddServices;
 
 namespace Eagle.Modules.Intent
 {

@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Model.Extensions
+namespace Eagle.DddServices
 {
-    public static partial class ModelExtension
+    public static partial class DddIntentService
     {
         public static void Add(this IntentModel intentModel, DataContexts dc)
         {
@@ -19,32 +19,27 @@ namespace Eagle.Model.Extensions
 
             dc.Intents.Add(intentRecord);
 
-            if(intentModel.Contexts != null)
+            intentModel.Contexts.ForEach(context =>
             {
-                intentModel.Contexts.ForEach(context => {
-                    dc.IntentInputContexts.Add(new IntentInputContexts {
-                        Id = Guid.NewGuid().ToString(),
-                        IntentId = intentModel.Id,
-                        Name = context
-                    });
+                dc.IntentInputContexts.Add(new IntentInputContexts
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    IntentId = intentModel.Id,
+                    Name = context
                 });
-            }
+            });
 
-            if(intentModel.UserSays != null)
+            intentModel.UserSays.ForEach(userSay =>
             {
-                intentModel.UserSays.ForEach(userSay => {
-                    userSay.IntentId = intentRecord.Id;
-                    userSay.Add(dc);
-                });
-            }
+                userSay.IntentId = intentRecord.Id;
+                userSay.Add(dc);
+            });
 
-            if(intentModel.Responses != null)
+            intentModel.Responses.ForEach(response =>
             {
-                intentModel.Responses.ForEach(response => {
-                    response.IntentId = intentRecord.Id;
-                    response.Add(dc);
-                });
-            }
+                response.IntentId = intentRecord.Id;
+                response.Add(dc);
+            });
         }
 
         public static void Update(this IntentModel intentModel, DataContexts dc)
@@ -63,17 +58,15 @@ namespace Eagle.Model.Extensions
         {
             dc.IntentInputContexts.RemoveRange(dc.IntentInputContexts.Where(x => x.IntentId == intentModel.Id));
 
-            if (intentModel.Contexts != null)
+            intentModel.Contexts.ForEach(context =>
             {
-                intentModel.Contexts.ForEach(context => {
-                    dc.IntentInputContexts.Add(new IntentInputContexts
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        IntentId = intentModel.Id,
-                        Name = context
-                    });
+                dc.IntentInputContexts.Add(new IntentInputContexts
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    IntentId = intentModel.Id,
+                    Name = context
                 });
-            }
+            });
         }
 
         public static void UpdateExpressions(this IntentModel intentModel, DataContexts dc)
@@ -81,26 +74,22 @@ namespace Eagle.Model.Extensions
             // Remove
             dc.IntentExpressions.RemoveRange();
 
-            if (intentModel.UserSays != null)
+            intentModel.UserSays.ForEach(userSay =>
             {
-                intentModel.UserSays.ForEach(userSay => {
-                    userSay.IntentId = intentModel.Id;
-                    userSay.Add(dc);
-                });
-            }
+                userSay.IntentId = intentModel.Id;
+                userSay.Add(dc);
+            });
         }
 
         public static void UpdateResponses(this IntentModel intentModel, DataContexts dc)
         {
             dc.IntentResponses.RemoveRange();
 
-            if (intentModel.Responses != null)
+            intentModel.Responses.ForEach(response =>
             {
-                intentModel.Responses.ForEach(response => {
-                    response.IntentId = intentModel.Id;
-                    response.Add(dc);
-                });
-            }
+                response.IntentId = intentModel.Id;
+                response.Add(dc);
+            });
         }
 
         public static void Add(this IntentExpressionModel expressionModel, DataContexts dc)
@@ -142,29 +131,23 @@ namespace Eagle.Model.Extensions
 
             dc.IntentResponses.Add(responseRecord);
 
-            if(responseModel.AffectedContexts != null)
+            responseModel.AffectedContexts.ForEach(context =>
             {
-                responseModel.AffectedContexts.ForEach(context => {
-                    context.IntentResponseId = responseRecord.Id;
-                    context.Add(dc);
-                });
-            }
+                context.IntentResponseId = responseRecord.Id;
+                context.Add(dc);
+            });
 
-            if (responseModel.Messages != null)
+            responseModel.Messages.ForEach(message =>
             {
-                responseModel.Messages.ForEach(message => {
-                    message.IntentResponseId = responseRecord.Id;
-                    message.Add(dc);
-                });
-            }
+                message.IntentResponseId = responseRecord.Id;
+                message.Add(dc);
+            });
 
-            if (responseModel.Parameters != null)
+            responseModel.Parameters.ForEach(parameter =>
             {
-                responseModel.Parameters.ForEach(parameter => {
-                    parameter.IntentResponseId = responseRecord.Id;
-                    parameter.Add(dc);
-                });
-            }
+                parameter.IntentResponseId = responseRecord.Id;
+                parameter.Add(dc);
+            });
         }
 
         public static void Add(this IntentResponseContextModel responseContextModel, DataContexts dc)
@@ -193,17 +176,14 @@ namespace Eagle.Model.Extensions
 
             dc.IntentResponseParameters.Add(responseParameterRecord);
 
-            if(responseParameterModel.Prompts != null)
+            responseParameterModel.Prompts.ForEach(prompt =>
             {
-                responseParameterModel.Prompts.ForEach(prompt =>
+                dc.IntentResponseParameterPrompts.Add(new IntentResponseParameterPrompts
                 {
-                    dc.IntentResponseParameterPrompts.Add(new IntentResponseParameterPrompts
-                    {
-                        IntentResponseParameterId = responseParameterRecord.Id,
-                        Text = prompt
-                    });
+                    IntentResponseParameterId = responseParameterRecord.Id,
+                    Text = prompt
                 });
-            }
+            });
         }
     }
 }

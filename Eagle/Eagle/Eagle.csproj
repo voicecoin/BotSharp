@@ -8,7 +8,6 @@
   <ItemGroup>
     <Folder Include="App_Data\小丫\Intents\" />
     <Folder Include="App_Data\智慧旅游\Entities\" />
-    <Folder Include="App_Data\智慧旅游\Intents\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

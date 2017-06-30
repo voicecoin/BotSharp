@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Eagle.Models;
 using Eagle.DbContexts;
-using System.Text.RegularExpressions;
-using Eagle.Utility;
-using Eagle.Model.Extensions;
+using Eagle.DddServices;
 
 namespace Eagle.Modules.Analyzer
 {
     [Route("v1/Analyzer")]
-    public class NerController : ControllerBase
+    public class AnalyzerController : ControllerBase
     {
         private readonly DataContexts _context = new DataContexts();
 
@@ -31,7 +27,22 @@ namespace Eagle.Modules.Analyzer
             return model.Ner(_context).Select(x => new
             {
                 Text = x.Text,
-                Alias = x.Alias,
+                Entity = x.Alias,
+                Position = x.Position,
+                Length = x.Length,
+                Unit = x.Unit
+            }).OrderBy(x => x.Unit);
+        }
+
+        [HttpGet("Markup")]
+        public IEnumerable<IntentExpressionItemModel> Markup([FromQuery] string text)
+        {
+            var model = new AnalyzerModel { Text = text };
+
+            return model.Ner(_context).Select(x => new IntentExpressionItemModel
+            {
+                Text = x.Text,
+                EntityId = x.EntityId,
                 Position = x.Position,
                 Length = x.Length,
                 Unit = x.Unit

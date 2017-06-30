@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Eagle.DbContexts;
 using Eagle.DbTables;
+using Eagle.DddServices;
 using Eagle.Enums;
-using Eagle.Model.Extensions;
 using Eagle.Models;
-using Eagle.Modules.Analyzer;
 using Eagle.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -43,58 +42,82 @@ namespace Eagle
 
             agentNames.ForEach(agentName => {
 
-                if (context.Agents.Any(x => x.Name == agentName))
-                {
-                    return; 
-                }
-
                 var agent = LoadJson<Agents>(env, $"{agentName}\\Agent");
 
-                context.Transaction(delegate
+                if (!context.Agents.Any(x => x.Name == agentName))
                 {
-                    context.Agents.Add(agent);
-
-                    InitEntities(env, context, agent);
-                });
+                    context.Transaction(delegate
+                    {
+                        context.Agents.Add(agent);
+                    });
+                }
 
                 agents.Add(agent);
-
             });
 
             agents.ForEach(agent =>
             {
-                context.Transaction(delegate
+                if (!context.Entities.Any(x => x.AgentId == agent.Id))
                 {
-                    InitIntents(env, context, agent);
-                });
+                    context.Transaction(delegate
+                    {
+                        InitEntities(env, context, agent);
+                    });
+                }
+            });
+
+            agents.ForEach(agent =>
+            {
+                if (!context.Intents.Any(x => x.AgentId == agent.Id))
+                {
+                    context.Transaction(delegate
+                    {
+                        InitIntents(env, context, agent);
+                    });
+                }
             });
         }
 
         private static void InitIntents(IHostingEnvironment env, DataContexts context, Agents agent)
         {
-            var intent = new Intents()
-            {
-                AgentId = agent.Id,
-                Name = "问带时间和地点的天气情况"
-            };
+            var intentNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
-            context.Intents.Add(intent);
-
-            var intentExpression = new IntentExpressions()
+            intentNames.ForEach(entityName =>
             {
-                IntentId = intent.Id,
-                Text = "明天江西天气怎么样"
-            };
-            context.IntentExpressions.Add(intentExpression);
+                // Intent
+                var intentModel = LoadJson<IntentModel>(env, $"{agent.Name}\\Intents\\{entityName}");
+                intentModel.AgentId = agent.Id;
+                intentModel.Name = entityName;
 
-            // add user say
-            var model = new AnalyzerModel { Text = intentExpression.Text };
-            model.Ner(context).ForEach(itemModel =>
-            {
-                var itemRecord = itemModel.MapByJsonString<IntentExpressionItems>();
-                itemRecord.IntentExpressionId = intentExpression.Id;
-                itemRecord.CreatedDate = DateTime.UtcNow;
-                context.IntentExpressionItems.Add(itemRecord);
+                var intentRecord = intentModel.Map<Intents>();
+                context.Intents.Add(intentRecord);
+
+                // User expression
+                intentModel.UserSays.ForEach(expression => {
+                    var intentExpression = new IntentExpressions()
+                    {
+                        IntentId = intentRecord.Id,
+                        Text = expression.Text
+                    };
+
+                    // Markup
+                    var model = new AnalyzerModel { Text = intentExpression.Text };
+                    model.Ner(context).ForEach(itemModel =>
+                    {
+                        var itemRecord = itemModel.MapByJsonString<IntentExpressionItems>();
+                        itemRecord.IntentExpressionId = intentExpression.Id;
+                        context.IntentExpressionItems.Add(itemRecord);
+                    });
+
+                    var userSay = intentExpression.Map<IntentExpressionModel>();
+                    userSay.Add(context);
+                });
+
+                // Bot response
+                intentModel.Responses.ForEach(response => {
+                    response.IntentId = intentRecord.Id;
+                    response.Add(context);
+                });
             });
         }
 
