@@ -54,6 +54,7 @@ namespace Eagle.DddServices
         {
             Entities entityRecored = dc.Entities.Find(entityModel.Id);
             entityRecored.Name = entityModel.Name;
+            entityRecored.IsEnum = entityModel.IsEnum;
         }
 
         public static void Add(this EntityEntryModel entityEntryModel, DataContexts dc)

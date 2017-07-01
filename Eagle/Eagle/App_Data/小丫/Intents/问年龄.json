@@ -1,0 +1,19 @@
+﻿{
+  "userSays": [
+    { "text": "你多大" },
+    { "text": "你几岁" }
+  ],
+  "responses": [
+    {
+      "action":  "",
+      "messages": [
+        {
+          "speech": "@agent.age。",
+          "type": 0
+        }
+      ],
+      "parameters": [
+      ]
+    }
+  ]
+}

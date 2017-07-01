@@ -40,6 +40,7 @@ namespace Eagle.Models
         public Boolean IsTemplate { get; set; }
         public Int32 Count { get; set; }
         public String Text { get; set; }
+        public String Template { get; set; }
         public List<IntentExpressionItemModel> Data { get; set; }
     }
 

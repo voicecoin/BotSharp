@@ -11,6 +11,45 @@ namespace Eagle.DddServices
 {
     public static partial class DddIntentService
     {
+        public static void Load(this IntentModel intentModel, DataContexts dc)
+        {
+            var intentExpressions = dc.IntentExpressions.Where(x => x.IntentId == intentModel.Id).ToList();
+            var intentExpressionItems = (from item in dc.IntentExpressionItems
+                                         from entity in dc.Entities.Where(x => item.EntityId == x.Id).DefaultIfEmpty()
+                                         where intentExpressions.Select(expression => expression.Id).Contains(item.IntentExpressionId)
+                                         orderby item.Position
+                                         select new { item, entity }).ToList();
+
+            intentModel.UserSays = intentExpressions.Select(expression => new IntentExpressionModel
+            {
+                Id = expression.Id,
+                Data = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id)
+                    .Select(item => new IntentExpressionItemModel
+                    {
+                        Text = item.item.Text,
+                        Meta = item.entity == null ? null : $"@{item.entity?.Name}",
+                        Alias = item.entity?.Name
+                    }).ToList()
+            }).ToList();
+
+            intentModel.UserSays.ForEach(expression => {
+                //string template = String.Join(" ", expression.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : $"{x.Meta}:{x.Alias}").ToArray());
+                intentModel.Templates.Add(expression.Template);
+            });
+
+            intentModel.Responses = dc.IntentResponses
+                .Where(x => x.IntentId == intentModel.Id)
+                .Select(x => x.Map<IntentResponseModel>())
+                .ToList();
+
+            intentModel.Responses.ForEach(response =>
+            {
+                response.Messages = dc.IntentResponseMessages.Where(x => x.IntentResponseId == response.Id)
+                    .Select(x => x.Map< IntentResponseMessageModel>()).ToList();
+            });
+        }
+
+
         public static void Add(this IntentModel intentModel, DataContexts dc)
         {
             intentModel.Id = Guid.NewGuid().ToString();
@@ -95,9 +134,7 @@ namespace Eagle.DddServices
         public static void Add(this IntentExpressionModel expressionModel, DataContexts dc)
         {
             var expressionRecord = expressionModel.Map<IntentExpressions>();
-            expressionRecord.Id = Guid.NewGuid().ToString();
-            expressionRecord.CreatedDate = DateTime.UtcNow;
-
+            expressionRecord.Template = String.Concat(expressionModel.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
             dc.IntentExpressions.Add(expressionRecord);
 
             int pos = 0;
@@ -109,7 +146,7 @@ namespace Eagle.DddServices
 
         public static int Add(this IntentExpressionItemModel expressionItemModel, DataContexts dc, int pos)
         {
-            var entity = dc.Entities.FirstOrDefault(x => x.Name + "@" == expressionItemModel.Meta);
+            var entity = dc.Entities.FirstOrDefault(x => "@" + x.Name == expressionItemModel.Meta);
 
             var expressionItemRecord = expressionItemModel.Map<IntentExpressionItems>();
             expressionItemRecord.Id = Guid.NewGuid().ToString();

@@ -1,0 +1,27 @@
+﻿{
+  "userSays": [
+    { "text": "你是谁" },
+    { "text": "你叫什么" },
+    { "text": "你叫啥" },
+    { "text": "你叫什么名字" },
+    { "text": "贵姓" },
+    { "text": "尊姓大名" }
+  ],
+  "responses": [
+    {
+      "action":  "",
+      "messages": [
+        {
+          "speech": "叫我@agent.name就可以了。",
+          "type": 0
+        },
+        {
+          "speech": "我叫@agent.name。@agent.description。",
+          "type": 0
+        }
+      ],
+      "parameters": [
+      ]
+    }
+  ]
+}

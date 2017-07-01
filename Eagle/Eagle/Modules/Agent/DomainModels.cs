@@ -16,13 +16,14 @@ namespace Eagle.Models
         public DateTime CreatedDate { get; set; }
         public String Language { get; set; }
         public Boolean IsPublic { get; set; }
-        public AgentRequestModel Request { get; set; }
     }
 
     public class AgentRequestModel
     {
         public String Text { get; set; }
-        public AgentRequestModel Response { get; set; }
+        public String ClientAccessToken { get; set; }
+        public String SessionId { get; set; }
+        public AgentModel Agent { get; set; }
     }
 
     public class AgentResponseModel

@@ -16,22 +16,15 @@ namespace Eagle.Modules.Analyzer
         private readonly DataContexts _context = new DataContexts();
 
         [HttpGet("Text")]
-        public async Task<String> Text(AnalyzerModel analyzerModel)
+        public async Task<String> Text(AgentRequestModel analyzerModel)
         {
             // Yaya UserName: gh_0a3fe78f2d13, key: ce36fa6d0ec047248da3354519658734
             // Lingxihuagu UserName: gh_c96a6311ab6d, key: f8bc556e63364c5a8b4e37000d897704
 
-            /*string key = "ce36fa6d0ec047248da3354519658734";
-
-            if (analyzerModel.ClientAccessToken.Equals("gh_c96a6311ab6d"))
-            {
-                key = "f8bc556e63364c5a8b4e37000d897704";
-            }*/
-
             var agentRecord = _context.Agents.First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
-            var agentModel = agentRecord.Map<AgentModel>();
+            AgentRequestModel agentRequestModel = new AgentRequestModel { Agent = agentRecord.Map<AgentModel>(), Text = analyzerModel.Text };
 
-            var response = agentModel.TextRequest(_context);
+            var response = agentRequestModel.TextRequest(_context);
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {

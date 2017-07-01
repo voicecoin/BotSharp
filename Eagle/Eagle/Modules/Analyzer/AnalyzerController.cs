@@ -22,9 +22,9 @@ namespace Eagle.Modules.Analyzer
         [HttpGet("Ner")]
         public IEnumerable<Object> Ner([FromQuery] string text)
         {
-            var model = new AnalyzerModel { Text = text };
+            var model = new AgentRequestModel { Text = text };
 
-            return model.Ner(_context).Select(x => new
+            return model.PosTagger(_context).Select(x => new
             {
                 Text = x.Text,
                 Entity = x.Alias,
@@ -37,9 +37,9 @@ namespace Eagle.Modules.Analyzer
         [HttpGet("Markup")]
         public IEnumerable<IntentExpressionItemModel> Markup([FromQuery] string text)
         {
-            var model = new AnalyzerModel { Text = text };
+            var model = new AgentRequestModel { Text = text };
 
-            return model.Ner(_context).Select(x => new IntentExpressionItemModel
+            return model.PosTagger(_context).Select(x => new IntentExpressionItemModel
             {
                 Text = x.Text,
                 EntityId = x.EntityId,

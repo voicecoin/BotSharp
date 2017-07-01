@@ -12,7 +12,13 @@ namespace Eagle.DddServices
 {
     public static class DddAnalyzerService
     {
-        public static List<IntentExpressionItemModel> Ner(this AnalyzerModel analyzerModel, DataContexts dc)
+        /// <summary>
+        /// 分词与词性标注,  Part-Of-Speech Tagger (POS Tagger) 
+        /// </summary>
+        /// <param name="analyzerModel"></param>
+        /// <param name="dc"></param>
+        /// <returns></returns>
+        public static List<IntentExpressionItemModel> PosTagger(this AgentRequestModel analyzerModel, DataContexts dc)
         {
             string text = analyzerModel.Text;
 
@@ -52,7 +58,7 @@ namespace Eagle.DddServices
 
             var unitEntities = Process(text, unitEntityTotal);
 
-            string template = String.Concat(unitEntities.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
+            string template = unitEntities.GetTemplateString(); // String.Concat(unitEntities.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
             // 识别组合实体
             var compositEntitiesQueryable = (from entity in dc.Entities
                                              join entry in dc.EntityEntries on entity.Id equals entry.EntityId
@@ -94,6 +100,49 @@ namespace Eagle.DddServices
             }
 
             return merged.OrderBy(x => x.Position).ToList();
+        }
+
+        public static string GetTemplateString(this List<IntentExpressionItemModel> items)
+        {
+            return String.Concat(items.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
+        }
+
+        /// <summary>
+        /// 机器人回复进一步处理，替换变量，填充参数
+        /// </summary>
+        /// <param name="responseModel"></param>
+        /// <param name="dc"></param>
+        public static IntentResponseMessageModel PostResponse(this IntentResponseModel responseModel, DataContexts dc, AgentModel agent)
+        {
+            // 随机选择一个回答。
+            int randomMax = responseModel.Messages.Count;
+            int messageIdx = new Random().Next(0, randomMax);
+            IntentResponseMessageModel messageModel = responseModel.Messages[messageIdx];
+            // Replace system token
+            messageModel.ReplaceSystemToken(dc, agent);
+
+            return messageModel;
+        }
+
+        /// <summary>
+        /// 转换系统内置变量
+        /// </summary>
+        /// <param name="messageModel"></param>
+        /// <param name="dc"></param>
+        /// <param name="agent"></param>
+        public static void ReplaceSystemToken(this IntentResponseMessageModel messageModel, DataContexts dc, AgentModel agent)
+        {
+            /*Agents agent = (from agt in dc.Agents
+                                  join intent in dc.Intents on agt.Id equals intent.AgentId
+                                  join response in dc.IntentResponses on intent.Id equals response.IntentId
+                                  where response.Id == messageModel.IntentResponseId
+                                  select agt).First();*/
+
+            messageModel.Speech = messageModel.Speech.Replace("@agent.name", agent.Name);
+            messageModel.Speech = messageModel.Speech.Replace("@agent.description", agent.Description);
+
+            TimeSpan age = DateTime.UtcNow - agent.CreatedDate;
+            messageModel.Speech = messageModel.Speech.Replace("@agent.age", $"我刚出生{(int)age.TotalDays}天");
         }
 
         private static int CorrectPosition(IntentExpressionItemModel compositedEntity, List<IntentExpressionItemModel> unitEntities, int pos)
@@ -180,6 +229,7 @@ namespace Eagle.DddServices
             // 扫描字符串
             for (int pos = 0; pos < text.Length;)
             {
+                // 查找实体
                 var tag = tags.FirstOrDefault(x => x.Position == pos);
                 if (tag != null)
                 {
@@ -188,9 +238,11 @@ namespace Eagle.DddServices
                 }
                 else
                 {
-                    // 取下一个, 如果没找到，就一直取到最后一个字符。
-                    tag = tags.FirstOrDefault(x => x.Position > pos);
-                    int length = tag == null ? text.Length - pos : tag.Position - pos;
+                    // 取下一个, 如果没找到实体，就一直取到最后一个字符。
+                    /*tag = tags.FirstOrDefault(x => x.Position > pos);
+                    int length = tag == null ? text.Length - pos : tag.Position - pos;*/
+
+                    int length = 1;
 
                     var item = new IntentExpressionItemModel
                     {

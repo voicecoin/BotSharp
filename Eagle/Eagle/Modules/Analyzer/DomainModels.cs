@@ -9,11 +9,4 @@ namespace Eagle.Models
     {
         public List<IntentExpressionItemModel> Tags { get; set; }
     }
-
-    public class AnalyzerModel
-    {
-        public string Text { get; set; }
-        public string ClientAccessToken { get; set; }
-        public string SessionId { get; set; }
-    }
 }

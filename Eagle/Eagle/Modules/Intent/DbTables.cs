@@ -35,6 +35,9 @@ namespace Eagle.DbTables
         [Required]
         [MaxLength(128)]
         public String Text { get; set; }
+        [Required]
+        [MaxLength(128)]
+        public String Template { get; set; }
     }
 
     public class IntentExpressionItems : DbTable

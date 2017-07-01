@@ -94,23 +94,19 @@ namespace Eagle
 
                 // User expression
                 intentModel.UserSays.ForEach(expression => {
-                    var intentExpression = new IntentExpressions()
-                    {
-                        IntentId = intentRecord.Id,
-                        Text = expression.Text
-                    };
+
+                    expression.Id = Guid.NewGuid().ToString();
+                    expression.IntentId = intentRecord.Id;
 
                     // Markup
-                    var model = new AnalyzerModel { Text = intentExpression.Text };
-                    model.Ner(context).ForEach(itemModel =>
+                    var model = new AgentRequestModel { Text = expression.Text };
+                    model.PosTagger(context).ForEach(itemModel =>
                     {
-                        var itemRecord = itemModel.MapByJsonString<IntentExpressionItems>();
-                        itemRecord.IntentExpressionId = intentExpression.Id;
-                        context.IntentExpressionItems.Add(itemRecord);
+                        itemModel.IntentExpressionId = expression.Id;
+                        expression.Data.Add(itemModel);
                     });
 
-                    var userSay = intentExpression.Map<IntentExpressionModel>();
-                    userSay.Add(context);
+                    expression.Add(context);
                 });
 
                 // Bot response

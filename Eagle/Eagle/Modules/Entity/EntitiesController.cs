@@ -55,10 +55,10 @@ namespace Eagle.Modules.Entity
 
             var entity = _context.Entities.Find(id).Map<EntityModel>();
 
-            var items = (from entry in _context.EntityEntries
+            /*var items = (from entry in _context.EntityEntries
                          join synonym in _context.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
                          where entry.EntityId == id
-                         select new { synonym.EntityEntryId, synonym.Synonym, entry.Value, }).ToList();
+                         select new { synonym.EntityEntryId, synonym.Synonym, entry.Value, }).Take(100).ToList();
 
             entity.Entries = items.Select(x => new EntityEntryModel
             {
@@ -67,7 +67,7 @@ namespace Eagle.Modules.Entity
                 Synonyms = items.Where(syn => syn.EntityEntryId == x.EntityEntryId)
                 .Select(syn => syn.Synonym)
                 .ToList()
-            });
+            });*/
 
             return Ok(entity);
         }
