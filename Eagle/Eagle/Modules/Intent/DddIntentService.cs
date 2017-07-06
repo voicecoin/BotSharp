@@ -32,10 +32,7 @@ namespace Eagle.DddServices
                     }).ToList()
             }).ToList();
 
-            intentModel.UserSays.ForEach(expression => {
-                //string template = String.Join(" ", expression.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : $"{x.Meta}:{x.Alias}").ToArray());
-                intentModel.Templates.Add(expression.Template);
-            });
+            intentModel.Templates = intentExpressions.Select(x => x.Template).ToList();
 
             intentModel.Responses = dc.IntentResponses
                 .Where(x => x.IntentId == intentModel.Id)

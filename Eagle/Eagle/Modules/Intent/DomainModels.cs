@@ -41,6 +41,7 @@ namespace Eagle.Models
         public Int32 Count { get; set; }
         public String Text { get; set; }
         public String Template { get; set; }
+        public double Similarity { get; set; }
         public List<IntentExpressionItemModel> Data { get; set; }
     }
 

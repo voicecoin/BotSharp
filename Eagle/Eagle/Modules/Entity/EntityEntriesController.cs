@@ -32,6 +32,15 @@ namespace Eagle.Modules.Entity
             int size = 20;
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<EntityEntryModel>()).ToList();
+
+            var synonyms = (from synonym in _context.EntityEntrySynonyms
+                         where items.Select(x => x.Id).Contains(synonym.EntityEntryId)
+                         select new { synonym.EntityEntryId, synonym.Synonym}).ToList();
+
+            items.ForEach(item => {
+                item.Synonyms = synonyms.Where(x => x.EntityEntryId == item.Id).Select(x => x.Synonym);
+            });
+
             return new PageResultModel<EntityEntryModel> { Total = total, Page = page, Size = size, Items = items };
         }
 
