@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Controllers
+namespace Eagle.Core
 {
     [Produces("application/json")]
     [Route("v1/[controller]")]
-    public class RootController : ControllerBase
+    [ServiceFilter(typeof(ApiExceptionFilter))]
+    public class CoreController : ControllerBase
     {
         protected readonly DataContexts dc;
 

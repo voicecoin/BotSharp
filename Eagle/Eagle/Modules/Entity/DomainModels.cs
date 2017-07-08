@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Models
+namespace Eagle.DomainModels
 {
-    public class EntityModel
+    public class DmEntity
     {
         public String Id { get; set; }
         public String AgentId { get; set; }
         public String Name { get; set; }
         public Boolean IsEnum { get; set; }
         public Boolean IsOverridable { get; set; }
-        public IEnumerable<EntityEntryModel> Entries { get; set; }
+        public IEnumerable<DmEntityEntry> Entries { get; set; }
     }
 
-    public class EntityEntryModel
+    public class DmEntityEntry
     {
         public String Id { get; set; }
         public String EntityId { get; set; }

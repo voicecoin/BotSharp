@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.Utility;
-using Eagle.DddServices;
+using Eagle.DmServices;
 
 namespace Eagle.Modules.Entity
 {
@@ -19,7 +19,7 @@ namespace Eagle.Modules.Entity
 
         // GET: v1/EntityEntries
         [HttpGet("{entityId}/Query")]
-        public PageResultModel<EntityEntryModel> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1)
+        public DmPageResult<DmEntityEntry> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1)
         {
             var query = _context.EntityEntries.Where(x => x.EntityId == entityId);
             if (!String.IsNullOrEmpty(name))
@@ -31,7 +31,7 @@ namespace Eagle.Modules.Entity
 
             int size = 20;
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<EntityEntryModel>()).ToList();
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntityEntry>()).ToList();
 
             var synonyms = (from synonym in _context.EntityEntrySynonyms
                          where items.Select(x => x.Id).Contains(synonym.EntityEntryId)
@@ -41,7 +41,7 @@ namespace Eagle.Modules.Entity
                 item.Synonyms = synonyms.Where(x => x.EntityEntryId == item.Id).Select(x => x.Synonym);
             });
 
-            return new PageResultModel<EntityEntryModel> { Total = total, Page = page, Size = size, Items = items };
+            return new DmPageResult<DmEntityEntry> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/EntityEntries/5
@@ -65,7 +65,7 @@ namespace Eagle.Modules.Entity
 
         // PUT: api/EntityEntries/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEntityEntries([FromRoute] string id, [FromBody] EntityEntryModel entityEntryModel)
+        public async Task<IActionResult> PutEntityEntries([FromRoute] string id, [FromBody] DmEntityEntry entityEntryModel)
         {
             if (!ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Eagle.Modules.Entity
 
         // POST: api/EntityEntries
         [HttpPost("{entityId}")]
-        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] EntityEntryModel entityEntryModel)
+        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] DmEntityEntry entityEntryModel)
         {
             if (!ModelState.IsValid)
             {
@@ -117,7 +117,7 @@ namespace Eagle.Modules.Entity
             }
 
             _context.Transaction(delegate {
-                entityEntries.Map<EntityEntryModel>().Delete(_context);
+                entityEntries.Map<DmEntityEntry>().Delete(_context);
             });
 
             return Ok(entityEntries.Id);

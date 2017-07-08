@@ -1,6 +1,6 @@
 ﻿using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.Utility;
 using System;
 using System.Collections.Generic;
@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Eagle.DddServices
+namespace Eagle.DmServices
 {
-    public static class DddAnalyzerService
+    public static class DmAnalyzerService
     {
         /// <summary>
         /// 分词与词性标注,  Part-Of-Speech Tagger (POS Tagger) 
@@ -18,7 +18,7 @@ namespace Eagle.DddServices
         /// <param name="analyzerModel"></param>
         /// <param name="dc"></param>
         /// <returns></returns>
-        public static List<IntentExpressionItemModel> PosTagger(this AgentRequestModel analyzerModel, DataContexts dc)
+        public static List<DmIntentExpressionItem> PosTagger(this DmAgentRequest analyzerModel, DataContexts dc)
         {
             string text = analyzerModel.Text;
 
@@ -27,7 +27,7 @@ namespace Eagle.DddServices
             var unitEntityInEntry = (from entity in dc.Entities
                                          join entry in dc.EntityEntries on entity.Id equals entry.EntityId
                                          where text.Contains(entry.Value)
-                                         select new IntentExpressionItemModel
+                                         select new DmIntentExpressionItem
                                          {
                                              EntryId = entry.Id,
                                              EntityId = entity.Id,
@@ -42,7 +42,7 @@ namespace Eagle.DddServices
                                        join entry in dc.EntityEntries on entity.Id equals entry.EntityId
                                        join synonym in dc.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
                                        where text.Contains(synonym.Synonym)
-                                       select new IntentExpressionItemModel
+                                       select new DmIntentExpressionItem
                                        {
                                            EntryId = entry.Id,
                                            EntityId = entity.Id,
@@ -52,7 +52,7 @@ namespace Eagle.DddServices
                                            Length = entry.Value.Length
                                        }).ToList();
 
-            var unitEntityTotal = new List<IntentExpressionItemModel>();
+            var unitEntityTotal = new List<DmIntentExpressionItem>();
             unitEntityTotal.AddRange(unitEntityInEntry);
             unitEntityTotal.AddRange(unitEntityInSynonym);
 
@@ -63,7 +63,7 @@ namespace Eagle.DddServices
             var compositEntitiesQueryable = (from entity in dc.Entities
                                              join entry in dc.EntityEntries on entity.Id equals entry.EntityId
                                              where entity.IsEnum && template.Contains(entry.Value)
-                                             select new IntentExpressionItemModel
+                                             select new DmIntentExpressionItem
                                              {
                                                  EntityId = entity.Id,
                                                  Text = entry.Value,
@@ -80,7 +80,7 @@ namespace Eagle.DddServices
                 pos = CorrectPosition(comEntity, unitEntities, pos);
             });
 
-            List<IntentExpressionItemModel> merged = compositEntities;
+            List<DmIntentExpressionItem> merged = compositEntities;
 
             // Merge unit and composite
             for (int idx = 0; idx < unitEntities.Count; idx++)
@@ -102,7 +102,35 @@ namespace Eagle.DddServices
             return merged.OrderBy(x => x.Position).ToList();
         }
 
-        public static string GetTemplateString(this List<IntentExpressionItemModel> items)
+        public static List<DmIntentExpressionItem> Segment(this DmAgentRequest analyzerModel, DataContexts dc)
+        {
+            var taggers = PosTagger(analyzerModel, dc);
+
+            List<DmIntentExpressionItem> segments = new List<DmIntentExpressionItem>();
+            segments.AddRange(taggers.Where(x => !String.IsNullOrEmpty(x.EntityId)));
+
+            taggers.Where(x => String.IsNullOrEmpty(x.EntityId))
+                .ToList()
+                .ForEach(tag =>
+                {
+                    var chars = tag.Text.ToCharArray();
+                    for (int idx = 0; idx < chars.Length; idx++)
+                    {
+                        segments.Add(new DmIntentExpressionItem
+                        {
+                            Position = tag.Position + idx,
+                            Length = 1,
+                            Unit = tag.Unit + idx,
+                            Text = chars[idx].ToString()
+                        });
+                    }
+                });
+
+
+            return segments;
+        }
+
+        public static string GetTemplateString(this List<DmIntentExpressionItem> items)
         {
             return String.Concat(items.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
         }
@@ -112,12 +140,12 @@ namespace Eagle.DddServices
         /// </summary>
         /// <param name="responseModel"></param>
         /// <param name="dc"></param>
-        public static IntentResponseMessageModel PostResponse(this IntentResponseModel responseModel, DataContexts dc, AgentModel agent)
+        public static DmIntentResponseMessage PostResponse(this DmIntentResponse responseModel, DataContexts dc, DmAgent agent)
         {
             // 随机选择一个回答。
             int randomMax = responseModel.Messages.Count;
             int messageIdx = new Random().Next(0, randomMax);
-            IntentResponseMessageModel messageModel = responseModel.Messages[messageIdx];
+            DmIntentResponseMessage messageModel = responseModel.Messages[messageIdx];
             // Replace system token
             messageModel.ReplaceSystemToken(dc, agent);
 
@@ -130,7 +158,7 @@ namespace Eagle.DddServices
         /// <param name="messageModel"></param>
         /// <param name="dc"></param>
         /// <param name="agent"></param>
-        public static void ReplaceSystemToken(this IntentResponseMessageModel messageModel, DataContexts dc, AgentModel agent)
+        public static void ReplaceSystemToken(this DmIntentResponseMessage messageModel, DataContexts dc, DmAgent agent)
         {
             /*Agents agent = (from agt in dc.Agents
                                   join intent in dc.Intents on agt.Id equals intent.AgentId
@@ -145,7 +173,7 @@ namespace Eagle.DddServices
             messageModel.Speech = messageModel.Speech.Replace("@agent.age", $"我刚出生{(int)age.TotalDays}天");
         }
 
-        private static int CorrectPosition(IntentExpressionItemModel compositedEntity, List<IntentExpressionItemModel> unitEntities, int pos)
+        private static int CorrectPosition(DmIntentExpressionItem compositedEntity, List<DmIntentExpressionItem> unitEntities, int pos)
         {
             var source = unitEntities.Where(x => !String.IsNullOrEmpty(x.Meta) && compositedEntity.Text.Contains(x.Meta)).Select(x => x.Meta).Distinct().ToList();
 
@@ -175,7 +203,7 @@ namespace Eagle.DddServices
             return pos;
         }
 
-        private static bool CheckToken(IntentExpressionItemModel compositedEntity, List<IntentExpressionItemModel> unitEntities, int idx)
+        private static bool CheckToken(DmIntentExpressionItem compositedEntity, List<DmIntentExpressionItem> unitEntities, int idx)
         {
             var source = compositedEntity.Text.Split(' ')
                 .ToList()
@@ -196,16 +224,16 @@ namespace Eagle.DddServices
         /// <param name="text"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private static List<IntentExpressionItemModel> Process(string text, List<IntentExpressionItemModel> entities)
+        private static List<DmIntentExpressionItem> Process(string text, List<DmIntentExpressionItem> entities)
         {
-            var tags = new List<IntentExpressionItemModel>();
+            var tags = new List<DmIntentExpressionItem>();
 
             entities.ForEach(token =>
             {
                 MatchCollection mc = Regex.Matches(text, token.Text);
                 foreach (Match m in mc)
                 {
-                    IntentExpressionItemModel temp = new IntentExpressionItemModel()
+                    DmIntentExpressionItem temp = new DmIntentExpressionItem()
                     {
                         Position = m.Index,
                         Length = m.Length,
@@ -224,7 +252,7 @@ namespace Eagle.DddServices
 
             tags = tags.OrderBy(x => x.Position).ToList();
 
-            var results = new List<IntentExpressionItemModel>();
+            var results = new List<DmIntentExpressionItem>();
 
             // 扫描字符串
             for (int pos = 0; pos < text.Length;)
@@ -239,12 +267,13 @@ namespace Eagle.DddServices
                 else
                 {
                     // 取下一个, 如果没找到实体，就一直取到最后一个字符。
-                    /*tag = tags.FirstOrDefault(x => x.Position > pos);
-                    int length = tag == null ? text.Length - pos : tag.Position - pos;*/
+                    tag = tags.FirstOrDefault(x => x.Position > pos);
+                    int length = tag == null ? text.Length - pos : tag.Position - pos;
 
-                    int length = 1;
+                    // 如果没有识别为实体，则切开每个字符。
+                    // int length = 1;
 
-                    var item = new IntentExpressionItemModel
+                    var item = new DmIntentExpressionItem
                     {
                         Text = text.Substring(pos, length),
                         Position = pos,

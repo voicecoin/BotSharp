@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.DbTables;
 using Eagle.DbContexts;
 using Microsoft.EntityFrameworkCore;

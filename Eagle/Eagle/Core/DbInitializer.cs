@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using Eagle.DbContexts;
+﻿using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.DddServices;
-using Eagle.Enums;
-using Eagle.Models;
+using Eagle.DmServices;
+using Eagle.DomainModels;
 using Eagle.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Eagle
 {
@@ -57,13 +54,7 @@ namespace Eagle
 
             agents.ForEach(agent =>
             {
-                if (!context.Entities.Any(x => x.AgentId == agent.Id))
-                {
-                    context.Transaction(delegate
-                    {
-                        InitEntities(env, context, agent);
-                    });
-                }
+                InitEntities(env, context, agent);
             });
 
             agents.ForEach(agent =>
@@ -85,7 +76,7 @@ namespace Eagle
             intentNames.ForEach(entityName =>
             {
                 // Intent
-                var intentModel = LoadJson<IntentModel>(env, $"{agent.Name}\\Intents\\{entityName}");
+                var intentModel = LoadJson<DmIntent>(env, $"{agent.Name}\\Intents\\{entityName}");
                 intentModel.AgentId = agent.Id;
                 intentModel.Name = entityName;
 
@@ -99,7 +90,7 @@ namespace Eagle
                     expression.IntentId = intentRecord.Id;
 
                     // Markup
-                    var model = new AgentRequestModel { Text = expression.Text };
+                    var model = new DmAgentRequest { Text = expression.Text };
                     model.PosTagger(context).ForEach(itemModel =>
                     {
                         itemModel.IntentExpressionId = expression.Id;
@@ -123,15 +114,21 @@ namespace Eagle
 
             entityNames.ForEach(entityName =>
             {
-                // add entity
-                EntityModel entity = LoadEntityFromJsonFile(env, agent, entityName);
-                entity.AgentId = agent.Id;
-                entity.Name = entityName;
-                entity.Add(context);
+                context.Transaction(delegate
+                {
+                    if(context.Entities.Count(x => x.Name == entityName) == 0)
+                    {
+                        // add entity
+                        DmEntity entity = LoadEntityFromJsonFile(env, agent, entityName);
+                        entity.AgentId = agent.Id;
+                        entity.Name = entityName;
+                        entity.Add(context);
+                    }
+                });
             });
         }
 
-        private static EntityModel LoadEntityFromJsonFile(IHostingEnvironment env, Agents agent, string name)
+        private static DmEntity LoadEntityFromJsonFile(IHostingEnvironment env, Agents agent, string name)
         {
             string json;
             using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities\\{name}.json"))
@@ -139,7 +136,7 @@ namespace Eagle
                 json = SourceReader.ReadToEnd();
             }
 
-            return JsonConvert.DeserializeObject<EntityModel>(json);
+            return JsonConvert.DeserializeObject<DmEntity>(json);
         }
 
         private static T LoadJson<T>(IHostingEnvironment env, string fileName)

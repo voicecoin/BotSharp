@@ -1,15 +1,17 @@
 ﻿{
+  "id": "ac6a43a9-22b1-4e55-b620-01e5abcc0acf",
   "userSays": [
     { "text": "你是谁" },
     { "text": "你叫什么" },
     { "text": "你叫啥" },
     { "text": "你叫什么名字" },
     { "text": "贵姓" },
-    { "text": "尊姓大名" }
+    { "text": "尊姓大名" },
+    { "text": "何许人也" }
   ],
   "responses": [
     {
-      "action":  "",
+      "action": "",
       "messages": [
         {
           "speech": "叫我@agent.name就可以了。",

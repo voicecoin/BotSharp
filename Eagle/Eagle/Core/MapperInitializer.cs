@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Eagle.DbTables;
-using Eagle.Models;
+using Eagle.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +14,16 @@ namespace Eagle
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Agents, AgentModel>().ReverseMap();
-                cfg.CreateMap<Intents, IntentModel>().ReverseMap();
-                cfg.CreateMap<IntentExpressions, IntentExpressionModel>().ReverseMap();
-                cfg.CreateMap<IntentExpressionItems, IntentExpressionItemModel>().ReverseMap();
-                cfg.CreateMap<IntentResponses, IntentResponseModel>().ReverseMap();
-                cfg.CreateMap<IntentResponseContexts, IntentResponseContextModel>().ReverseMap();
-                cfg.CreateMap<IntentResponseMessages, IntentResponseMessageModel>().ReverseMap();
-                cfg.CreateMap<IntentResponseParameters, IntentResponseParameterModel>().ReverseMap();
-                cfg.CreateMap<Entities, EntityModel>().ReverseMap();
-                cfg.CreateMap<EntityEntries, EntityEntryModel>().ReverseMap();
+                cfg.CreateMap<Agents, DmAgent>().ReverseMap();
+                cfg.CreateMap<Intents, DmIntent>().ReverseMap();
+                cfg.CreateMap<IntentExpressions, DmIntentExpression>().ReverseMap();
+                cfg.CreateMap<IntentExpressionItems, DmIntentExpressionItem>().ReverseMap();
+                cfg.CreateMap<IntentResponses, DmIntentResponse>().ReverseMap();
+                cfg.CreateMap<IntentResponseContexts, DmIntentResponseContext>().ReverseMap();
+                cfg.CreateMap<IntentResponseMessages, DmIntentResponseMessage>().ReverseMap();
+                cfg.CreateMap<IntentResponseParameters, DmIntentResponseParameter>().ReverseMap();
+                cfg.CreateMap<Entities, DmEntity>().ReverseMap();
+                cfg.CreateMap<EntityEntries, DmEntityEntry>().ReverseMap();
             });
         }
     }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Models
+namespace Eagle.DomainModels
 {
-    public class AgentModel
+    public class DmAgent
     {
         public String Id { get; set; }
         public String Name { get; set; }
@@ -18,15 +18,15 @@ namespace Eagle.Models
         public Boolean IsPublic { get; set; }
     }
 
-    public class AgentRequestModel
+    public class DmAgentRequest
     {
         public String Text { get; set; }
         public String ClientAccessToken { get; set; }
         public String SessionId { get; set; }
-        public AgentModel Agent { get; set; }
+        public DmAgent Agent { get; set; }
     }
 
-    public class AgentResponseModel
+    public class DmAgentResponse
     {
         public String Text { get; set; }
     }

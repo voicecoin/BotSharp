@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.Models;
+using Eagle.DomainModels;
 using AutoMapper;
 using Eagle.Utility;
-using Eagle.DddServices;
+using Eagle.DmServices;
 
 namespace Eagle.Modules.Entity
 {
@@ -21,7 +21,7 @@ namespace Eagle.Modules.Entity
 
         // GET: api/Entities
         [HttpGet("{agentId}/Query")]
-        public PageResultModel<EntityModel> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
+        public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
             var query = _context.Entities.Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -33,8 +33,8 @@ namespace Eagle.Modules.Entity
 
             int size = 20;
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<EntityModel>()).ToList();
-            return new PageResultModel<EntityModel> { Total = total, Page = page, Size = size, Items = items };
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntity>()).ToList();
+            return new DmPageResult<DmEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Entities/5
@@ -53,7 +53,7 @@ namespace Eagle.Modules.Entity
                 return NotFound();
             }
 
-            var entity = _context.Entities.Find(id).Map<EntityModel>();
+            var entity = _context.Entities.Find(id).Map<DmEntity>();
 
             /*var items = (from entry in _context.EntityEntries
                          join synonym in _context.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
@@ -74,7 +74,7 @@ namespace Eagle.Modules.Entity
 
         // PUT: api/Entities/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEntities([FromRoute] string id, [FromBody] EntityModel entityModel)
+        public async Task<IActionResult> PutEntities([FromRoute] string id, [FromBody] DmEntity entityModel)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace Eagle.Modules.Entity
 
         // POST: v1/Entities
         [HttpPost("{agentId}")]
-        public async Task<IActionResult> PostEntities(string agentId, [FromBody] EntityModel entityModel)
+        public async Task<IActionResult> PostEntities(string agentId, [FromBody] DmEntity entityModel)
         {
             if (!ModelState.IsValid)
             {
@@ -127,7 +127,7 @@ namespace Eagle.Modules.Entity
             }
 
             _context.Transaction(delegate {
-                entities.Map<EntityModel>().Delete(_context);
+                entities.Map<DmEntity>().Delete(_context);
             });
 
             return Ok(entities.Id);

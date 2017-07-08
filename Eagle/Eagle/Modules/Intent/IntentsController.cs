@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.Utility;
-using Eagle.DddServices;
+using Eagle.DmServices;
 
 namespace Eagle.Modules.Intent
 {
@@ -20,7 +20,7 @@ namespace Eagle.Modules.Intent
 
         // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
-        public PageResultModel<IntentModel> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
+        public DmPageResult<DmIntent> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
             var query = _context.Intents.Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -32,8 +32,8 @@ namespace Eagle.Modules.Intent
 
             int size = 20;
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<IntentModel>()).ToList();
-            return new PageResultModel<IntentModel> { Total = total, Page = page, Size = size, Items = items };
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmIntent>()).ToList();
+            return new DmPageResult<DmIntent> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Intents/5
@@ -52,7 +52,7 @@ namespace Eagle.Modules.Intent
                 return NotFound();
             }
 
-            var intentModel = intents.Map<IntentModel>();
+            var intentModel = intents.Map<DmIntent>();
             intentModel.Load(_context);
 
             return Ok(intentModel);
@@ -60,7 +60,7 @@ namespace Eagle.Modules.Intent
 
         // PUT: api/Intents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] IntentModel intentModel)
+        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] DmIntent intentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace Eagle.Modules.Intent
 
         // POST: api/Intents
         [HttpPost("{agentId}")]
-        public async Task<IActionResult> PostIntents(string agentId, [FromBody] IntentModel intentModel)
+        public async Task<IActionResult> PostIntents(string agentId, [FromBody] DmIntent intentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -123,7 +123,7 @@ namespace Eagle.Modules.Intent
         [HttpGet("Markup")]
         public IEnumerable<Object> Markup([FromQuery] string text)
         {
-            var model = new AgentRequestModel { Text = text };
+            var model = new DmAgentRequest { Text = text };
 
             return model.PosTagger(_context).Select(x => new
             {

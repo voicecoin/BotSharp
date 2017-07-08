@@ -1,11 +1,15 @@
 ﻿{
+  "id": "696301fe-cf26-4b7f-b788-cf58a8cdaaeb",
   "userSays": [
-    { "text": "你多大" },
-    { "text": "你几岁" }
+    { "text": "多大了" },
+    { "text": "几岁" },
+    { "text": "贵庚" },
+    { "text": "芳龄" },
+    { "text": "多大年纪" }
   ],
   "responses": [
     {
-      "action":  "",
+      "action": "",
       "messages": [
         {
           "speech": "@agent.age。",

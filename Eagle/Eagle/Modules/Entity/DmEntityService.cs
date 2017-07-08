@@ -1,17 +1,17 @@
 ﻿using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.DddServices
+namespace Eagle.DmServices
 {
-    public static class DddEntityService
+    public static class DmEntityService
     {
-        public static void Add(this EntityModel entityModel, DataContexts dc)
+        public static void Add(this DmEntity entityModel, DataContexts dc)
         {
             entityModel.Id = Guid.NewGuid().ToString();
             var entityRecord = entityModel.Map<Entities>();
@@ -30,7 +30,7 @@ namespace Eagle.DddServices
             }
         }
 
-        public static void Delete(this EntityModel entityModel, DataContexts dc)
+        public static void Delete(this DmEntity entityModel, DataContexts dc)
         {
             Entities entityRecored = dc.Entities.Find(entityModel.Id);
 
@@ -39,7 +39,7 @@ namespace Eagle.DddServices
             dc.Entities.Remove(entityRecored);
         }
 
-        public static void DeleteEntries(this EntityModel entityModel, DataContexts dc, string entityId)
+        public static void DeleteEntries(this DmEntity entityModel, DataContexts dc, string entityId)
         {
             if (entityModel.Entries == null) return;
 
@@ -50,14 +50,14 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void Update(this EntityModel entityModel, DataContexts dc)
+        public static void Update(this DmEntity entityModel, DataContexts dc)
         {
             Entities entityRecored = dc.Entities.Find(entityModel.Id);
             entityRecored.Name = entityModel.Name;
             entityRecored.IsEnum = entityModel.IsEnum;
         }
 
-        public static void Add(this EntityEntryModel entityEntryModel, DataContexts dc)
+        public static void Add(this DmEntityEntry entityEntryModel, DataContexts dc)
         {
             entityEntryModel.Id = Guid.NewGuid().ToString();
             var entryRecord = entityEntryModel.Map<EntityEntries>();
@@ -68,7 +68,7 @@ namespace Eagle.DddServices
             entityEntryModel.AddSynonyms(dc, entryRecord.Id);
         }
 
-        public static void Delete(this EntityEntryModel entityEntryModel, DataContexts dc)
+        public static void Delete(this DmEntityEntry entityEntryModel, DataContexts dc)
         {
             EntityEntries entityEntryRecored = dc.EntityEntries.Find(entityEntryModel.Id);
 
@@ -76,7 +76,7 @@ namespace Eagle.DddServices
             dc.EntityEntries.Remove(entityEntryRecored);
         }
 
-        public static void Update(this EntityEntryModel entityEntryModel, DataContexts dc)
+        public static void Update(this DmEntityEntry entityEntryModel, DataContexts dc)
         {
             EntityEntries entityEntryRecored = dc.EntityEntries.Find(entityEntryModel.Id);
             entityEntryRecored.Value = entityEntryModel.Value;
@@ -85,7 +85,7 @@ namespace Eagle.DddServices
             entityEntryModel.AddSynonyms(dc, entityEntryModel.Id);
         }
 
-        public static void AddSynonyms(this EntityEntryModel entityEntryModel, DataContexts dc, string entityEntryId)
+        public static void AddSynonyms(this DmEntityEntry entityEntryModel, DataContexts dc, string entityEntryId)
         {
             if (entityEntryModel.Synonyms == null) return;
 
@@ -101,7 +101,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void DeleteSynonyms(this EntityEntryModel entityEntryModel, DataContexts dc, string entityEntryId)
+        public static void DeleteSynonyms(this DmEntityEntry entityEntryModel, DataContexts dc, string entityEntryId)
         {
             if (entityEntryModel.Synonyms == null) return;
 

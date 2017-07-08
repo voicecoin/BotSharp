@@ -1,5 +1,4 @@
 ﻿using Eagle.DbTables;
-using Eagle.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

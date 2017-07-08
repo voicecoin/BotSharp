@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Models
+namespace Eagle.DomainModels
 {
-    public class IntentModel
+    public class DmIntent
     {
-        public IntentModel()
+        public DmIntent()
         {
             Contexts = new List<string>();
             Templates = new List<string>();
-            UserSays = new List<IntentExpressionModel>();
-            Responses = new List<IntentResponseModel>();
+            UserSays = new List<DmIntentExpression>();
+            Responses = new List<DmIntentResponse>();
         }
 
         public String Id { get; set; }
@@ -25,15 +25,15 @@ namespace Eagle.Models
         /// </summary>
         public List<String> Contexts { get; set; }
         public List<String> Templates { get; set; }
-        public List<IntentExpressionModel> UserSays { get; set; }
-        public List<IntentResponseModel> Responses { get; set; }
+        public List<DmIntentExpression> UserSays { get; set; }
+        public List<DmIntentResponse> Responses { get; set; }
     }
 
-    public class IntentExpressionModel
+    public class DmIntentExpression
     {
-        public IntentExpressionModel()
+        public DmIntentExpression()
         {
-            Data = new List<IntentExpressionItemModel>();
+            Data = new List<DmIntentExpressionItem>();
         }
         public String Id { get; set; }
         public String IntentId { get; set; }
@@ -42,10 +42,10 @@ namespace Eagle.Models
         public String Text { get; set; }
         public String Template { get; set; }
         public double Similarity { get; set; }
-        public List<IntentExpressionItemModel> Data { get; set; }
+        public List<DmIntentExpressionItem> Data { get; set; }
     }
 
-    public class IntentExpressionItemModel
+    public class DmIntentExpressionItem
     {
         public String Id { get; set; }
         public String IntentExpressionId { get; set; }
@@ -69,23 +69,23 @@ namespace Eagle.Models
         public int Unit { get; set; }
     }
 
-    public class IntentResponseModel
+    public class DmIntentResponse
     {
-        public IntentResponseModel()
+        public DmIntentResponse()
         {
-            AffectedContexts = new List<IntentResponseContextModel>();
-            Messages = new List<IntentResponseMessageModel>();
-            Parameters = new List<IntentResponseParameterModel>();
+            AffectedContexts = new List<DmIntentResponseContext>();
+            Messages = new List<DmIntentResponseMessage>();
+            Parameters = new List<DmIntentResponseParameter>();
         }
         public String Id { get; set; }
         public String IntentId { get; set; }
         public String Action { get; set; }
-        public List<IntentResponseContextModel> AffectedContexts { get; set; }
-        public List<IntentResponseMessageModel> Messages { get; set; }
-        public List<IntentResponseParameterModel> Parameters { get; set; }
+        public List<DmIntentResponseContext> AffectedContexts { get; set; }
+        public List<DmIntentResponseMessage> Messages { get; set; }
+        public List<DmIntentResponseParameter> Parameters { get; set; }
     }
 
-    public class IntentResponseContextModel
+    public class DmIntentResponseContext
     {
         public String Id { get; set; }
         public String IntentResponseId { get; set; }
@@ -93,7 +93,7 @@ namespace Eagle.Models
         public int? Lifespan { get; set; }
     }
 
-    public class IntentResponseMessageModel
+    public class DmIntentResponseMessage
     {
         public String Id { get; set; }
         public String IntentResponseId { get; set; }
@@ -102,9 +102,9 @@ namespace Eagle.Models
         public IntentResponseMessagePlatform Platform { get; set; }
     }
 
-    public class IntentResponseParameterModel
+    public class DmIntentResponseParameter
     {
-        public IntentResponseParameterModel()
+        public DmIntentResponseParameter()
         {
             Prompts = new List<string>();
         }

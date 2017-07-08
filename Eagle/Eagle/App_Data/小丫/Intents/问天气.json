@@ -1,0 +1,20 @@
+﻿{
+  "userSays": [
+    { "text": "天气" },
+    { "text": "今天湖南天气怎么样" }
+  ],
+  "responses": [
+    {
+      "action":  "query.weather",
+      "messages": [
+        {
+          "speech": "我不知道",
+          "type": 0
+        }
+      ],
+      "parameters": [
+
+      ]
+    }
+  ]
+}

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.DbContexts;
-using Eagle.DddServices;
+using Eagle.DmServices;
 
 namespace Eagle.Modules.Analyzer
 {
@@ -22,7 +22,7 @@ namespace Eagle.Modules.Analyzer
         [HttpGet("Ner")]
         public IEnumerable<Object> Ner([FromQuery] string text)
         {
-            var model = new AgentRequestModel { Text = text };
+            var model = new DmAgentRequest { Text = text };
 
             return model.PosTagger(_context).Select(x => new
             {
@@ -35,11 +35,11 @@ namespace Eagle.Modules.Analyzer
         }
 
         [HttpGet("Markup")]
-        public IEnumerable<IntentExpressionItemModel> Markup([FromQuery] string text)
+        public IEnumerable<DmIntentExpressionItem> Markup([FromQuery] string text)
         {
-            var model = new AgentRequestModel { Text = text };
+            var model = new DmAgentRequest { Text = text };
 
-            return model.PosTagger(_context).Select(x => new IntentExpressionItemModel
+            return model.PosTagger(_context).Select(x => new DmIntentExpressionItem
             {
                 Text = x.Text,
                 EntityId = x.EntityId,

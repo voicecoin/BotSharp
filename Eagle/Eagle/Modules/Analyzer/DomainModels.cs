@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Models
+namespace Eagle.DomainModels
 {
-    public class DeepParsedModel
+    public class DmDeepParsed
     {
-        public List<IntentExpressionItemModel> Tags { get; set; }
+        public List<DmIntentExpressionItem> Tags { get; set; }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.Models;
 using Eagle.Utility;
+using Eagle.DomainModels;
 
 namespace Eagle.Modules.Agent
 {
@@ -19,7 +17,7 @@ namespace Eagle.Modules.Agent
 
         // GET: v1/Agents
         [HttpGet("{userId}/Query")]
-        public PageResultModel<AgentModel> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
+        public DmPageResult<DmAgent> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
             var query = _context.Agents.Where(x => x.UserId == userId);
             if (!String.IsNullOrEmpty(name))
@@ -31,8 +29,8 @@ namespace Eagle.Modules.Agent
 
             int size = 20;
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<AgentModel>()).ToList();
-            return new PageResultModel<AgentModel> { Total = total, Page = page, Size = size, Items = items };
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmAgent>()).ToList();
+            return new DmPageResult<DmAgent> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Agents/5
@@ -51,14 +49,14 @@ namespace Eagle.Modules.Agent
                 return NotFound();
             }
 
-            var agent = agents.Map<AgentModel>();
+            var agent = agents.Map<DmAgent>();
 
             return Ok(agent);
         }
 
         // PUT: v1/Agents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentModel agentModel)
+        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] DmAgent agentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -99,7 +97,7 @@ namespace Eagle.Modules.Agent
 
         // POST: v1/Agents
         [HttpPost]
-        public async Task<IActionResult> PostAgent([FromBody] AgentModel agentModel)
+        public async Task<IActionResult> PostAgent([FromBody] DmAgent agentModel)
         {
             if (!ModelState.IsValid)
             {

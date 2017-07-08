@@ -1,17 +1,17 @@
 ﻿using Eagle.DbContexts;
 using Eagle.DbTables;
-using Eagle.Models;
+using Eagle.DomainModels;
 using Eagle.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.DddServices
+namespace Eagle.DmServices
 {
-    public static partial class DddIntentService
+    public static partial class DmIntentService
     {
-        public static void Load(this IntentModel intentModel, DataContexts dc)
+        public static void Load(this DmIntent intentModel, DataContexts dc)
         {
             var intentExpressions = dc.IntentExpressions.Where(x => x.IntentId == intentModel.Id).ToList();
             var intentExpressionItems = (from item in dc.IntentExpressionItems
@@ -20,11 +20,11 @@ namespace Eagle.DddServices
                                          orderby item.Position
                                          select new { item, entity }).ToList();
 
-            intentModel.UserSays = intentExpressions.Select(expression => new IntentExpressionModel
+            intentModel.UserSays = intentExpressions.Select(expression => new DmIntentExpression
             {
                 Id = expression.Id,
                 Data = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id)
-                    .Select(item => new IntentExpressionItemModel
+                    .Select(item => new DmIntentExpressionItem
                     {
                         Text = item.item.Text,
                         Meta = item.entity == null ? null : $"@{item.entity?.Name}",
@@ -36,18 +36,18 @@ namespace Eagle.DddServices
 
             intentModel.Responses = dc.IntentResponses
                 .Where(x => x.IntentId == intentModel.Id)
-                .Select(x => x.Map<IntentResponseModel>())
+                .Select(x => x.Map<DmIntentResponse>())
                 .ToList();
 
             intentModel.Responses.ForEach(response =>
             {
                 response.Messages = dc.IntentResponseMessages.Where(x => x.IntentResponseId == response.Id)
-                    .Select(x => x.Map< IntentResponseMessageModel>()).ToList();
+                    .Select(x => x.Map< DmIntentResponseMessage>()).ToList();
             });
         }
 
 
-        public static void Add(this IntentModel intentModel, DataContexts dc)
+        public static void Add(this DmIntent intentModel, DataContexts dc)
         {
             intentModel.Id = Guid.NewGuid().ToString();
             var intentRecord = intentModel.Map<Intents>();
@@ -78,7 +78,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void Update(this IntentModel intentModel, DataContexts dc)
+        public static void Update(this DmIntent intentModel, DataContexts dc)
         {
             var intentRecord = dc.Intents.Find(intentModel.Id);
             intentRecord.Name = intentModel.Name;
@@ -90,7 +90,7 @@ namespace Eagle.DddServices
             intentModel.UpdateResponses(dc);
         }
 
-        public static void UpdateInputContexts(this IntentModel intentModel, DataContexts dc)
+        public static void UpdateInputContexts(this DmIntent intentModel, DataContexts dc)
         {
             dc.IntentInputContexts.RemoveRange(dc.IntentInputContexts.Where(x => x.IntentId == intentModel.Id));
 
@@ -105,7 +105,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void UpdateExpressions(this IntentModel intentModel, DataContexts dc)
+        public static void UpdateExpressions(this DmIntent intentModel, DataContexts dc)
         {
             // Remove
             dc.IntentExpressions.RemoveRange();
@@ -117,7 +117,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void UpdateResponses(this IntentModel intentModel, DataContexts dc)
+        public static void UpdateResponses(this DmIntent intentModel, DataContexts dc)
         {
             dc.IntentResponses.RemoveRange();
 
@@ -128,7 +128,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void Add(this IntentExpressionModel expressionModel, DataContexts dc)
+        public static void Add(this DmIntentExpression expressionModel, DataContexts dc)
         {
             var expressionRecord = expressionModel.Map<IntentExpressions>();
             expressionRecord.Template = String.Concat(expressionModel.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
@@ -141,7 +141,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static int Add(this IntentExpressionItemModel expressionItemModel, DataContexts dc, int pos)
+        public static int Add(this DmIntentExpressionItem expressionItemModel, DataContexts dc, int pos)
         {
             var entity = dc.Entities.FirstOrDefault(x => "@" + x.Name == expressionItemModel.Meta);
 
@@ -157,7 +157,7 @@ namespace Eagle.DddServices
             return pos + expressionItemRecord.Length;
         }
 
-        public static void Add(this IntentResponseModel responseModel, DataContexts dc)
+        public static void Add(this DmIntentResponse responseModel, DataContexts dc)
         {
             var responseRecord = responseModel.Map<IntentResponses>();
             responseRecord.Id = Guid.NewGuid().ToString();
@@ -184,7 +184,7 @@ namespace Eagle.DddServices
             });
         }
 
-        public static void Add(this IntentResponseContextModel responseContextModel, DataContexts dc)
+        public static void Add(this DmIntentResponseContext responseContextModel, DataContexts dc)
         {
             var responseContextRecord = responseContextModel.Map<IntentResponseContexts>();
             responseContextRecord.Id = Guid.NewGuid().ToString();
@@ -193,7 +193,7 @@ namespace Eagle.DddServices
             dc.IntentResponseContexts.Add(responseContextRecord);
         }
 
-        public static void Add(this IntentResponseMessageModel responseMessageModel, DataContexts dc)
+        public static void Add(this DmIntentResponseMessage responseMessageModel, DataContexts dc)
         {
             var responseMessageRecord = responseMessageModel.Map<IntentResponseMessages>();
             responseMessageRecord.Id = Guid.NewGuid().ToString();
@@ -202,7 +202,7 @@ namespace Eagle.DddServices
             dc.IntentResponseMessages.Add(responseMessageRecord);
         }
 
-        public static void Add(this IntentResponseParameterModel responseParameterModel, DataContexts dc)
+        public static void Add(this DmIntentResponseParameter responseParameterModel, DataContexts dc)
         {
             var responseParameterRecord = responseParameterModel.Map<IntentResponseParameters>();
             responseParameterRecord.Id = Guid.NewGuid().ToString();

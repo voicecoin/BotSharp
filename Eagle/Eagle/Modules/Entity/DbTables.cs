@@ -36,6 +36,7 @@ namespace Eagle.DbTables
         [Required]
         [StringLength(36)]
         public String EntityId { get; set; }
+
         [Required]
         [MaxLength(64)]
         public String Value { get; set; }
