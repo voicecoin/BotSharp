@@ -42,15 +42,16 @@ namespace Eagle.DbContexts
             modelBuilder.Entity<IntentExpressions>().HasIndex(b => b.Template);
         }
 
-        public void Transaction(Action action)
+        public int Transaction(Action action)
         {
             using (IDbContextTransaction transaction = Database.BeginTransaction())
             {
+                int affected = 0;
                 try
                 {
                     action();
+                    affected = SaveChanges();
                     transaction.Commit();
-                    SaveChanges();
                 }
                 catch (Exception ex)
                 {
@@ -64,7 +65,10 @@ namespace Eagle.DbContexts
                         throw ex;
                     }
                 }
+
+                return affected;
             }
         }
+
     }
 }

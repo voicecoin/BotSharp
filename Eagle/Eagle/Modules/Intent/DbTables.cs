@@ -54,8 +54,6 @@ namespace Eagle.DbTables
         public int Position { get; set; }
         [Required]
         public int Length { get; set; }
-        [Required]
-        public int Unit { get; set; }
     }
 
     public class IntentEvents : DbTable
@@ -93,11 +91,18 @@ namespace Eagle.DbTables
         [Required]
         [StringLength(36)]
         public String IntentResponseId { get; set; }
-        [Required]
-        [MaxLength(128)]
-        public String Speech { get; set; }
         public IntentResponseMessageType Type { get; set; }
         public IntentResponseMessagePlatform Platform { get; set; }
+    }
+
+    public class IntentResponseMessageContents : DbTable
+    {
+        [Required]
+        [StringLength(36)]
+        public String IntentResponseMessageId { get; set; }
+        [Required]
+        [MaxLength(512)]
+        public String Content { get; set; }
     }
 
     public class IntentResponseParameters : DbTable
@@ -112,9 +117,13 @@ namespace Eagle.DbTables
         /// <summary>
         /// Entity Id
         /// </summary>
-        public String DataType { get; set; }
+        [StringLength(36)]
+        public String EntityId { get; set; }
         public Boolean Required { get; set; }
+        [MaxLength(32)]
         public String Value { get; set; }
+        [MaxLength(64)]
+        public String DefaultValue { get; set; }
     }
 
     public class IntentResponseParameterPrompts : DbTable
@@ -122,6 +131,7 @@ namespace Eagle.DbTables
         [Required]
         [StringLength(36)]
         public String IntentResponseParameterId { get; set; }
+        [MaxLength(64)]
         public String Text { get; set; }
     }
 }

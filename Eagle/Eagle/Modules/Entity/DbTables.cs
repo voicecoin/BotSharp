@@ -25,6 +25,10 @@ namespace Eagle.DbTables
         /// </summary>
         public Boolean IsEnum { get; set; }
         public Boolean IsOverridable { get; set; }
+        /// <summary>
+        /// Markup color
+        /// </summary>
+        public String Color { get; set; }
     }
 
     /// <summary>

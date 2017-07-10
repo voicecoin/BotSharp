@@ -10,19 +10,17 @@ using Eagle.DbTables;
 using Eagle.DomainModels;
 using Eagle.Utility;
 using Eagle.DmServices;
+using Eagle.Core;
 
 namespace Eagle.Modules.Intent
 {
-    [Route("v1/Intents")]
-    public class IntentsController : ControllerBase
+    public class IntentsController : CoreController
     {
-        private readonly DataContexts _context = new DataContexts();
-
         // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
         public DmPageResult<DmIntent> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
-            var query = _context.Intents.Where(x => x.AgentId == agentId);
+            var query = dc.Intents.Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -45,7 +43,7 @@ namespace Eagle.Modules.Intent
                 return BadRequest(ModelState);
             }
 
-            var intents = await _context.Intents.SingleOrDefaultAsync(m => m.Id == id);
+            var intents = await dc.Intents.SingleOrDefaultAsync(m => m.Id == id);
 
             if (intents == null)
             {
@@ -53,7 +51,7 @@ namespace Eagle.Modules.Intent
             }
 
             var intentModel = intents.Map<DmIntent>();
-            intentModel.Load(_context);
+            intentModel.Load(dc);
 
             return Ok(intentModel);
         }
@@ -72,12 +70,12 @@ namespace Eagle.Modules.Intent
                 return BadRequest();
             }
 
-            _context.Transaction(delegate
+            dc.Transaction(delegate
             {
-                intentModel.Update(_context);
+                intentModel.Update(dc);
             });
 
-            return NoContent();
+            return Ok(id);
         }
 
         // POST: api/Intents
@@ -89,10 +87,10 @@ namespace Eagle.Modules.Intent
                 return BadRequest(ModelState);
             }
 
-            _context.Transaction(delegate
+            dc.Transaction(delegate
             {
                 intentModel.AgentId = agentId;
-                intentModel.Add(_context);
+                intentModel.Add(dc);
             });
 
             return CreatedAtAction("GetIntents", new { id = intentModel.Id }, intentModel.Id);
@@ -107,14 +105,14 @@ namespace Eagle.Modules.Intent
                 return BadRequest(ModelState);
             }
 
-            var intents = await _context.Intents.SingleOrDefaultAsync(m => m.Id == id);
+            var intents = await dc.Intents.SingleOrDefaultAsync(m => m.Id == id);
             if (intents == null)
             {
                 return NotFound();
             }
 
-            _context.Intents.Remove(intents);
-            await _context.SaveChangesAsync();
+            dc.Intents.Remove(intents);
+            await dc.SaveChangesAsync();
 
             return Ok(intents);
         }
@@ -125,21 +123,20 @@ namespace Eagle.Modules.Intent
         {
             var model = new DmAgentRequest { Text = text };
 
-            return model.PosTagger(_context).Select(x => new
+            return model.PosTagger(dc).Select(x => new
             {
                 x.Text,
                 x.Alias,
                 x.Meta,
                 x.Position,
                 x.Length,
-                x.Unit,
                 x.EntityId
-            }).OrderBy(x => x.Unit);
+            }).OrderBy(x => x.Position);
         }
 
         private bool IntentsExists(string id)
         {
-            return _context.Intents.Any(e => e.Id == id);
+            return dc.Intents.Any(e => e.Id == id);
         }
     }
 }

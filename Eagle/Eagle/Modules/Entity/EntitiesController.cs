@@ -11,19 +11,17 @@ using Eagle.DomainModels;
 using AutoMapper;
 using Eagle.Utility;
 using Eagle.DmServices;
+using Eagle.Core;
 
 namespace Eagle.Modules.Entity
 {
-    [Route("v1/Entities")]
-    public class EntitiesController : ControllerBase
+    public class EntitiesController : CoreController
     {
-        private readonly DataContexts _context = new DataContexts();
-
         // GET: api/Entities
         [HttpGet("{agentId}/Query")]
         public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
-            var query = _context.Entities.Where(x => x.AgentId == agentId);
+            var query = dc.Entities.Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -46,14 +44,14 @@ namespace Eagle.Modules.Entity
                 return BadRequest(ModelState);
             }
 
-            var entities = await _context.Entities.SingleOrDefaultAsync(m => m.Id == id);
+            var entities = await dc.Entities.SingleOrDefaultAsync(m => m.Id == id);
 
             if (entities == null)
             {
                 return NotFound();
             }
 
-            var entity = _context.Entities.Find(id).Map<DmEntity>();
+            var entity = dc.Entities.Find(id).Map<DmEntity>();
 
             /*var items = (from entry in _context.EntityEntries
                          join synonym in _context.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
@@ -86,8 +84,8 @@ namespace Eagle.Modules.Entity
                 return BadRequest();
             }
 
-            _context.Transaction(delegate {
-                entityModel.Update(_context);
+            dc.Transaction(delegate {
+                entityModel.Update(dc);
             });
 
             return Ok(entityModel.Id);
@@ -102,9 +100,9 @@ namespace Eagle.Modules.Entity
                 return BadRequest(ModelState);
             }
 
-            _context.Transaction(delegate {
+            dc.Transaction(delegate {
                 entityModel.AgentId = agentId;
-                entityModel.Add(_context);
+                entityModel.Add(dc);
             });
             
 
@@ -120,14 +118,14 @@ namespace Eagle.Modules.Entity
                 return BadRequest(ModelState);
             }
 
-            var entities = await _context.Entities.SingleOrDefaultAsync(m => m.Id == id);
+            var entities = await dc.Entities.SingleOrDefaultAsync(m => m.Id == id);
             if (entities == null)
             {
                 return NotFound();
             }
 
-            _context.Transaction(delegate {
-                entities.Map<DmEntity>().Delete(_context);
+            dc.Transaction(delegate {
+                entities.Map<DmEntity>().Delete(dc);
             });
 
             return Ok(entities.Id);
@@ -135,7 +133,7 @@ namespace Eagle.Modules.Entity
 
         private bool EntitiesExists(string id)
         {
-            return _context.Entities.Any(e => e.Id == id);
+            return dc.Entities.Any(e => e.Id == id);
         }
     }
 }

@@ -13,7 +13,12 @@ namespace Eagle.DmServices
     {
         public static void Add(this DmEntity entityModel, DataContexts dc)
         {
-            entityModel.Id = Guid.NewGuid().ToString();
+            if (String.IsNullOrEmpty(entityModel.Id))
+            {
+                entityModel.Id = Guid.NewGuid().ToString();
+            }
+            
+            entityModel.Color = ObjectExtensions.GetRandomColor();
             var entityRecord = entityModel.Map<Entities>();
             entityRecord.CreatedDate = DateTime.UtcNow;
 

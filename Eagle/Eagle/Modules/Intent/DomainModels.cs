@@ -55,6 +55,7 @@ namespace Eagle.DomainModels
         public String Meta { get; set; }
         public Boolean UserDefined { get; set; }
         public String EntityId { get; set; }
+        public String Color { get; set; }
         /// <summary>
         /// 字符串在句子中的起始位置
         /// </summary>
@@ -63,10 +64,6 @@ namespace Eagle.DomainModels
         /// 实体字符长度
         /// </summary>
         public int Length { get; set; }
-        /// <summary>
-        /// 以实体为单位在句子中的位置
-        /// </summary>
-        public int Unit { get; set; }
     }
 
     public class DmIntentResponse
@@ -95,9 +92,13 @@ namespace Eagle.DomainModels
 
     public class DmIntentResponseMessage
     {
+        public DmIntentResponseMessage()
+        {
+            Speech = new List<string>();
+        }
         public String Id { get; set; }
         public String IntentResponseId { get; set; }
-        public String Speech { get; set; }
+        public List<String> Speech { get; set; }
         public IntentResponseMessageType Type { get; set; }
         public IntentResponseMessagePlatform Platform { get; set; }
     }
@@ -112,9 +113,14 @@ namespace Eagle.DomainModels
         public String IntentResponseId { get; set; }
         public String Name { get; set; }
         public Boolean IsList { get; set; }
+        /// <summary>
+        /// Entity Type Name
+        /// </summary>
         public String DataType { get; set; }
+        public String EntityId { get; set; }
         public Boolean Required { get; set; }
         public String Value { get; set; }
+        public String DefaultValue { get; set; }
         public List<String> Prompts { get; set; }
     }
 }

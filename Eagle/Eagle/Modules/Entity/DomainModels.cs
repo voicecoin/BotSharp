@@ -13,6 +13,7 @@ namespace Eagle.DomainModels
         public String Name { get; set; }
         public Boolean IsEnum { get; set; }
         public Boolean IsOverridable { get; set; }
+        public String Color { get; set; }
         public IEnumerable<DmEntityEntry> Entries { get; set; }
     }
 

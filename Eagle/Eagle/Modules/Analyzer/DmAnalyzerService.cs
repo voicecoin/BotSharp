@@ -94,11 +94,6 @@ namespace Eagle.DmServices
                 }
             }
 
-            for(int unit =0; unit < merged.Count; unit++)
-            {
-                merged[unit].Unit = unit;
-            }
-
             return merged.OrderBy(x => x.Position).ToList();
         }
 
@@ -120,7 +115,6 @@ namespace Eagle.DmServices
                         {
                             Position = tag.Position + idx,
                             Length = 1,
-                            Unit = tag.Unit + idx,
                             Text = chars[idx].ToString()
                         });
                     }
@@ -140,16 +134,26 @@ namespace Eagle.DmServices
         /// </summary>
         /// <param name="responseModel"></param>
         /// <param name="dc"></param>
-        public static DmIntentResponseMessage PostResponse(this DmIntentResponse responseModel, DataContexts dc, DmAgent agent)
+        public static DmIntentResponseMessage PostResponse(this DmIntentResponse responseModel, DataContexts dc, DmAgentRequest agentRequestModel)
         {
             // 随机选择一个回答。
-            int randomMax = responseModel.Messages.Count;
-            int messageIdx = new Random().Next(0, randomMax);
-            DmIntentResponseMessage messageModel = responseModel.Messages[messageIdx];
+            DmIntentResponseMessage messageModel = responseModel.Messages.Random();
+
             // Replace system token
-            messageModel.ReplaceSystemToken(dc, agent);
+            messageModel.ReplaceSystemToken(dc, agentRequestModel);
+            messageModel.ReplaceParameterToken(dc, agentRequestModel, responseModel);
 
             return messageModel;
+        }
+
+        public static void ExtractParameter(this DmIntentResponse responseModel, DataContexts dc, DmAgentRequest agentRequestModel)
+        {
+            var segments = agentRequestModel.Segment(dc).Where(x => !String.IsNullOrEmpty(x.EntityId)).ToList();
+
+            responseModel.Parameters.ForEach(parameter =>
+            {
+                parameter.Value = segments.First(x => x.EntityId == parameter.EntityId).Text;
+            });
         }
 
         /// <summary>
@@ -158,19 +162,41 @@ namespace Eagle.DmServices
         /// <param name="messageModel"></param>
         /// <param name="dc"></param>
         /// <param name="agent"></param>
-        public static void ReplaceSystemToken(this DmIntentResponseMessage messageModel, DataContexts dc, DmAgent agent)
+        public static void ReplaceSystemToken(this DmIntentResponseMessage messageModel, DataContexts dc, DmAgentRequest agentRequestModel)
         {
-            /*Agents agent = (from agt in dc.Agents
-                                  join intent in dc.Intents on agt.Id equals intent.AgentId
-                                  join response in dc.IntentResponses on intent.Id equals response.IntentId
-                                  where response.Id == messageModel.IntentResponseId
-                                  select agt).First();*/
+            List<String> speechs = new List<string>();
 
-            messageModel.Speech = messageModel.Speech.Replace("@agent.name", agent.Name);
-            messageModel.Speech = messageModel.Speech.Replace("@agent.description", agent.Description);
+            messageModel.Speech.ForEach(speech => {
+                speech = speech.Replace("{@agent.name}", agentRequestModel.Agent.Name);
+                speech = speech.Replace("{@agent.description}", agentRequestModel.Agent.Description);
 
-            TimeSpan age = DateTime.UtcNow - agent.CreatedDate;
-            messageModel.Speech = messageModel.Speech.Replace("@agent.age", $"我刚出生{(int)age.TotalDays}天");
+                TimeSpan age = DateTime.UtcNow - agentRequestModel.Agent.CreatedDate;
+                speech = speech.Replace("{@agent.age}", $"我刚出生{(int)age.TotalDays}天");
+
+                speechs.Add(speech);
+            });
+
+            messageModel.Speech = speechs;
+        }
+
+        /// <summary>
+        /// 转换识别实体参数
+        /// </summary>
+        /// <param name="messageModel"></param>
+        /// <param name="dc"></param>
+        /// <param name="agent"></param>
+        public static void ReplaceParameterToken(this DmIntentResponseMessage messageModel, DataContexts dc, DmAgentRequest agentRequestModel, DmIntentResponse responseModel)
+        {
+            List<String> speechs = new List<string>();
+
+            messageModel.Speech.ForEach(speech => {
+                responseModel.Parameters.ForEach(parameter => {
+                    speech = speech.Replace("{$" + parameter.Name + "}", parameter.Value);
+                });
+                speechs.Add(speech);
+            });
+
+            messageModel.Speech = speechs;
         }
 
         private static int CorrectPosition(DmIntentExpressionItem compositedEntity, List<DmIntentExpressionItem> unitEntities, int pos)

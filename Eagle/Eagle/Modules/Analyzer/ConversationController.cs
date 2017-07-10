@@ -6,11 +6,11 @@ using Eagle.Utility;
 using Eagle.DbContexts;
 using Eagle.DmServices;
 using Eagle.DomainModels;
+using Eagle.Core;
 
 namespace Eagle.Modules.Analyzer
 {
-    [Route("v1/Conversation")]
-    public class ConversationController : ControllerBase
+    public class ConversationController : CoreController
     {
         private readonly DataContexts _context = new DataContexts();
 

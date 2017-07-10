@@ -56,9 +56,13 @@ namespace Eagle.DmServices
             intentModel.Load(dc);
 
             DmIntentResponse responseModel = intentModel.Responses.First();
-            DmIntentResponseMessage messageModel = responseModel.PostResponse(dc, agentRequestModel.Agent);
+            responseModel.ExtractParameter(dc, agentRequestModel);
 
-            return new DmAgentResponse { Text = messageModel.Speech };
+            DmIntentResponseMessage messageModel = responseModel.PostResponse(dc, agentRequestModel);
+
+
+
+            return new DmAgentResponse { Text = messageModel.Speech.Random() };
         }
 
         /// <summary>

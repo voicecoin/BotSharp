@@ -9,19 +9,17 @@ using Eagle.DbContexts;
 using Eagle.DomainModels;
 using Eagle.Utility;
 using Eagle.DmServices;
+using Eagle.Core;
 
 namespace Eagle.Modules.Entity
 {
-    [Route("v1/EntityEntries")]
-    public class EntityEntriesController : ControllerBase
+    public class EntityEntriesController : CoreController
     {
-        private readonly DataContexts _context = new DataContexts();
-
         // GET: v1/EntityEntries
         [HttpGet("{entityId}/Query")]
         public DmPageResult<DmEntityEntry> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1)
         {
-            var query = _context.EntityEntries.Where(x => x.EntityId == entityId);
+            var query = dc.EntityEntries.Where(x => x.EntityId == entityId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Value.Contains(name));
@@ -33,7 +31,7 @@ namespace Eagle.Modules.Entity
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntityEntry>()).ToList();
 
-            var synonyms = (from synonym in _context.EntityEntrySynonyms
+            var synonyms = (from synonym in dc.EntityEntrySynonyms
                          where items.Select(x => x.Id).Contains(synonym.EntityEntryId)
                          select new { synonym.EntityEntryId, synonym.Synonym}).ToList();
 
@@ -53,7 +51,7 @@ namespace Eagle.Modules.Entity
                 return BadRequest(ModelState);
             }
 
-            var entityEntries = await _context.EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
+            var entityEntries = await dc.EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
 
             if (entityEntries == null)
             {
@@ -77,8 +75,8 @@ namespace Eagle.Modules.Entity
                 return BadRequest();
             }
 
-            _context.Transaction(delegate {
-                entityEntryModel.Update(_context);
+            dc.Transaction(delegate {
+                entityEntryModel.Update(dc);
             });
 
             return Ok(entityEntryModel.Id);
@@ -93,9 +91,9 @@ namespace Eagle.Modules.Entity
                 return BadRequest(ModelState);
             }
 
-            _context.Transaction(delegate {
+            dc.Transaction(delegate {
                 entityEntryModel.EntityId = entityId;
-                entityEntryModel.Add(_context);
+                entityEntryModel.Add(dc);
             });
 
             return CreatedAtAction("GetEntityEntries", new { id = entityEntryModel.Id }, entityEntryModel.Id);
@@ -110,14 +108,14 @@ namespace Eagle.Modules.Entity
                 return BadRequest(ModelState);
             }
 
-            var entityEntries = await _context.EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
+            var entityEntries = await dc.EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
             if (entityEntries == null)
             {
                 return NotFound();
             }
 
-            _context.Transaction(delegate {
-                entityEntries.Map<DmEntityEntry>().Delete(_context);
+            dc.Transaction(delegate {
+                entityEntries.Map<DmEntityEntry>().Delete(dc);
             });
 
             return Ok(entityEntries.Id);
@@ -125,7 +123,7 @@ namespace Eagle.Modules.Entity
 
         private bool EntityEntriesExists(string id)
         {
-            return _context.EntityEntries.Any(e => e.Id == id);
+            return dc.EntityEntries.Any(e => e.Id == id);
         }
     }
 }

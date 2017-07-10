@@ -15,7 +15,7 @@ namespace Eagle.DbTables
         public String Name { get; set; }
         [MaxLength(256)]
         public String Description { get; set; }
-
+        [MaxLength(8)]
         public String Language { get; set; }
 
         [Required]

@@ -23,12 +23,19 @@ namespace Eagle.DmServices
             intentModel.UserSays = intentExpressions.Select(expression => new DmIntentExpression
             {
                 Id = expression.Id,
+                Text = expression.Text,
+                Template = expression.Template,
+                IntentId = expression.IntentId,
                 Data = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id)
                     .Select(item => new DmIntentExpressionItem
                     {
-                        Text = item.item.Text,
+                        EntityId = item.entity == null ? null : item.entity.Id,
                         Meta = item.entity == null ? null : $"@{item.entity?.Name}",
-                        Alias = item.entity?.Name
+                        Alias = item.entity?.Name,
+                        Color = item.entity == null ? String.Empty : item.entity.Color,
+                        Position = item.item.Position,
+                        Length = item.item.Length,
+                        Text = item.item.Text
                     }).ToList()
             }).ToList();
 
@@ -41,8 +48,34 @@ namespace Eagle.DmServices
 
             intentModel.Responses.ForEach(response =>
             {
+                // Load message
                 response.Messages = dc.IntentResponseMessages.Where(x => x.IntentResponseId == response.Id)
                     .Select(x => x.Map< DmIntentResponseMessage>()).ToList();
+
+                List<string> messageIds = response.Messages.Select(x => x.Id).ToList();
+                var contents = dc.IntentResponseMessageContents.Where(x => messageIds.Contains(x.IntentResponseMessageId)).ToList();
+
+                response.Messages.ForEach(message => {
+                    message.Speech = contents.Where(x => x.IntentResponseMessageId == message.Id).Select(x => x.Content).ToList();
+                });
+
+                // Load parameters
+                response.Parameters = dc.IntentResponseParameters.Where(x => x.IntentResponseId == response.Id)
+                                    .Select(x => x.Map<DmIntentResponseParameter>()).ToList();
+
+                List<string> parameterIds = response.Parameters.Select(x => x.Id).ToList();
+                List<string> entityIds = response.Parameters.Where(x => !String.IsNullOrEmpty(x.EntityId)).Select(x => x.EntityId).ToList();
+                var prompts = dc.IntentResponseParameterPrompts.Where(x => parameterIds.Contains(x.IntentResponseParameterId)).ToList();
+                var entities = dc.Entities.Where(x => entityIds.Contains(x.Id)).ToList();
+
+                response.Parameters.ForEach(parameter => {
+                    parameter.Prompts = prompts.Where(x => x.IntentResponseParameterId == parameter.Id).Select(x => x.Text).ToList();
+                    if (!String.IsNullOrEmpty(parameter.EntityId))
+                    {
+                        parameter.DataType = entities.Find(x => x.Id == parameter.EntityId).Name;
+                    }
+                });
+
             });
         }
 
@@ -85,9 +118,9 @@ namespace Eagle.DmServices
             intentRecord.ModifiedDate = DateTime.UtcNow;
 
             // Remove all related data then create with same IntentId
-            intentModel.UpdateInputContexts(dc);
+            /*intentModel.UpdateInputContexts(dc);
             intentModel.UpdateExpressions(dc);
-            intentModel.UpdateResponses(dc);
+            intentModel.UpdateResponses(dc);*/
         }
 
         public static void UpdateInputContexts(this DmIntent intentModel, DataContexts dc)
@@ -107,14 +140,22 @@ namespace Eagle.DmServices
 
         public static void UpdateExpressions(this DmIntent intentModel, DataContexts dc)
         {
-            // Remove
-            dc.IntentExpressions.RemoveRange();
+            intentModel.UserSays.ForEach(expression => UpdateExpression(expression, dc));
+        }
 
-            intentModel.UserSays.ForEach(userSay =>
+        public static void UpdateExpression(this DmIntentExpression intentExpression, DataContexts dc)
+        {
+            // Remove Items first
+
+            var intentExpressionRecord = dc.IntentExpressions.Find(intentExpression.Id);
+            dc.IntentExpressions.Remove(intentExpressionRecord);
+
+            /*intentModel.UserSays.ForEach(userSay =>
             {
                 userSay.IntentId = intentModel.Id;
                 userSay.Add(dc);
-            });
+            });*/
+            
         }
 
         public static void UpdateResponses(this DmIntent intentModel, DataContexts dc)
@@ -200,6 +241,15 @@ namespace Eagle.DmServices
             responseMessageRecord.CreatedDate = DateTime.UtcNow;
 
             dc.IntentResponseMessages.Add(responseMessageRecord);
+
+            responseMessageModel.Speech.ForEach(speech =>
+            {
+                dc.IntentResponseMessageContents.Add(new IntentResponseMessageContents
+                {
+                    IntentResponseMessageId = responseMessageRecord.Id,
+                    Content = speech
+                });
+            });
         }
 
         public static void Add(this DmIntentResponseParameter responseParameterModel, DataContexts dc)

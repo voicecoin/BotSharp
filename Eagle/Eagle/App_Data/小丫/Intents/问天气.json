@@ -1,19 +1,42 @@
 ﻿{
+  "id": "05d22cbf-c788-4413-bf83-d16bcbc77d",
   "userSays": [
     { "text": "天气" },
-    { "text": "今天湖南天气怎么样" }
+    { "text": "今天北京天气怎么样" }
   ],
   "responses": [
     {
-      "action":  "query.weather",
+      "id": "c3a79334-49ed-4206-9b87-a93a0295db9d",
+      "action": "query.weather",
+      "affectedContexts": [
+        {
+          "name": "Weather",
+          "lifespan": 5
+        }
+      ],
       "messages": [
         {
-          "speech": "我不知道",
+          "speech": [ "{$time}{$place}的天气还不错。", "等我问下{$place}气象局，我表哥在那里上班。" ],
           "type": 0
         }
       ],
       "parameters": [
-
+        {
+          "name": "time",
+          "entityId": "7102ef5e-8446-479d-bcec-d43e3ef22c30",
+          "required": true,
+          "Prompts": [ "你想问什么时候的？" ],
+          "value": "$time",
+          "defaultValue": "北京"
+        },
+        {
+          "name": "place",
+          "entityId": "b24a146f-c2b1-40bd-9b0f-665e2546017b",
+          "required": true,
+          "Prompts": [ "你是问什么地方的？" ],
+          "value": "$place",
+          "defaultValue": "当前位置"
+        }
       ]
     }
   ]

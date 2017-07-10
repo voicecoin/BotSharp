@@ -13,6 +13,8 @@ using Eagle.DbTables;
 using Eagle.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
+using Eagle.Core;
+using Microsoft.Net.Http.Headers;
 
 namespace Eagle
 {
@@ -26,6 +28,8 @@ namespace Eagle
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            CoreController.Configuration = Configuration;
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -33,15 +37,20 @@ namespace Eagle
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ApiExceptionFilter>();
+
             services.AddCors();
 
             DataContexts.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             // Add framework services.
-            services.AddMvc().AddJsonOptions(options =>
+            services.AddMvc(options =>
+            {
+                options.RespectBrowserAcceptHeader = true;
+            }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             });
         }
 
@@ -53,8 +62,11 @@ namespace Eagle
 
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
-            app.UseMvc(routes => {
-                routes.MapRoute(name: "API", template: "v1/{controller=Home}/{action=Index}/{id?}");
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "API",
+                    template: "v1/{controller=Home}/{action=Index}/{id?}");
             });
 
             MapperInitializer.Initialize();

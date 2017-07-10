@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Eagle.DomainModels;
 using Eagle.DbContexts;
 using Eagle.DmServices;
+using Eagle.Core;
 
 namespace Eagle.Modules.Analyzer
 {
-    [Route("v1/Analyzer")]
-    public class AnalyzerController : ControllerBase
+    public class AnalyzerController : CoreController
     {
         private readonly DataContexts _context = new DataContexts();
 
@@ -29,9 +29,8 @@ namespace Eagle.Modules.Analyzer
                 Text = x.Text,
                 Entity = x.Alias,
                 Position = x.Position,
-                Length = x.Length,
-                Unit = x.Unit
-            }).OrderBy(x => x.Unit);
+                Length = x.Length
+            }).OrderBy(x => x.Position);
         }
 
         [HttpGet("Markup")]
@@ -44,9 +43,8 @@ namespace Eagle.Modules.Analyzer
                 Text = x.Text,
                 EntityId = x.EntityId,
                 Position = x.Position,
-                Length = x.Length,
-                Unit = x.Unit
-            }).OrderBy(x => x.Unit);
+                Length = x.Length
+            }).OrderBy(x => x.Position);
         }
     }
 }

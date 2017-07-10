@@ -17,6 +17,7 @@ namespace Eagle.DbContexts
         public DbSet<IntentResponses> IntentResponses { get; set; }
         public DbSet<IntentResponseContexts> IntentResponseContexts { get; set; }
         public DbSet<IntentResponseMessages> IntentResponseMessages { get; set; }
+        public DbSet<IntentResponseMessageContents> IntentResponseMessageContents { get; set; }
         public DbSet<IntentResponseParameters> IntentResponseParameters { get; set; }
         public DbSet<IntentResponseParameterPrompts> IntentResponseParameterPrompts { get; set; }
     }

@@ -7,19 +7,17 @@ using Eagle.DbContexts;
 using Eagle.DbTables;
 using Eagle.Utility;
 using Eagle.DomainModels;
+using Eagle.Core;
 
 namespace Eagle.Modules.Agent
 {
-    [Route("v1/Agents")]
-    public class AgentsController : ControllerBase
+    public class AgentsController : CoreController
     {
-        private readonly DataContexts _context = new DataContexts();
-
         // GET: v1/Agents
         [HttpGet("{userId}/Query")]
         public DmPageResult<DmAgent> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
-            var query = _context.Agents.Where(x => x.UserId == userId);
+            var query = dc.Agents.Where(x => x.UserId == userId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -42,7 +40,7 @@ namespace Eagle.Modules.Agent
                 return BadRequest(ModelState);
             }
 
-            var agents = await _context.Agents.SingleOrDefaultAsync(m => m.Id == id);
+            var agents = await dc.Agents.SingleOrDefaultAsync(m => m.Id == id);
 
             if (agents == null)
             {
@@ -68,17 +66,17 @@ namespace Eagle.Modules.Agent
                 return BadRequest("Agent id not match.");
             }
 
-            var agentRecord = _context.Agents.Find(id);
+            var agentRecord = dc.Agents.Find(id);
 
             agentRecord.Name = agentModel.Name;
             agentRecord.Description = agentModel.Description;
             agentRecord.Language = agentModel.Language;
 
-            _context.Entry(agentRecord).State = EntityState.Modified;
+            dc.Entry(agentRecord).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await dc.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -111,8 +109,8 @@ namespace Eagle.Modules.Agent
             agentRecord.DeveloperAccessToken = Guid.NewGuid().ToString("N");
             agentRecord.CreatedDate = DateTime.UtcNow;
 
-            _context.Agents.Add(agentRecord);
-            await _context.SaveChangesAsync();
+            dc.Agents.Add(agentRecord);
+            await dc.SaveChangesAsync();
 
             return CreatedAtAction("GetAgents", new { id = agentRecord.Id }, new { id = agentRecord.Id });
         }
@@ -126,21 +124,21 @@ namespace Eagle.Modules.Agent
                 return BadRequest(ModelState);
             }
 
-            var agents = await _context.Agents.SingleOrDefaultAsync(m => m.Id == id);
+            var agents = await dc.Agents.SingleOrDefaultAsync(m => m.Id == id);
             if (agents == null)
             {
                 return NotFound();
             }
 
-            _context.Agents.Remove(agents);
-            await _context.SaveChangesAsync();
+            dc.Agents.Remove(agents);
+            await dc.SaveChangesAsync();
 
             return Ok(agents);
         }
 
         private bool AgentsExists(string id)
         {
-            return _context.Agents.Any(e => e.Id == id);
+            return dc.Agents.Any(e => e.Id == id);
         }
     }
 }
