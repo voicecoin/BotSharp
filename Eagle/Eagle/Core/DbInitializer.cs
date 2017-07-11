@@ -1,4 +1,6 @@
-﻿using Eagle.DbContexts;
+﻿using Eagle.Chatbot.DmServices;
+using Eagle.Chatbot.DomainModels;
+using Eagle.DataContexts;
 using Eagle.DbTables;
 using Eagle.DmServices;
 using Eagle.DomainModels;
@@ -11,13 +13,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Eagle
+namespace Eagle.Core
 {
     public class DbInitializer
     {
         public static void Initialize(IHostingEnvironment env)
         {
-            DataContexts context = new DataContexts(new DbContextOptions<DataContexts>());
+            CoreDbContext context = new CoreDbContext(new DbContextOptions<CoreDbContext>());
             //var dbContexts = serviceProvider.GetService<DataContexts>();
 
             context.Database.EnsureCreated();
@@ -25,7 +27,7 @@ namespace Eagle
             InitAgent(env, context);
         }
 
-        private static void InitAgent(IHostingEnvironment env, DataContexts context)
+        private static void InitAgent(IHostingEnvironment env, CoreDbContext context)
         {
             // create a agent
             var agentNames = LoadJson<List<String>>(env, "Agents");
@@ -63,7 +65,7 @@ namespace Eagle
             });
         }
 
-        private static void InitIntents(IHostingEnvironment env, DataContexts context, Agents agent)
+        private static void InitIntents(IHostingEnvironment env, CoreDbContext context, Agents agent)
         {
             var intentNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
@@ -112,7 +114,7 @@ namespace Eagle
             });*/
         }
 
-        private static void InitEntities(IHostingEnvironment env, DataContexts context, Agents agent)
+        private static void InitEntities(IHostingEnvironment env, CoreDbContext context, Agents agent)
         {
             var entityNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace Eagle.DomainModels
 {
-
     public class DmQuery<T>
     {
         public int Page { get; set; }

@@ -10,15 +10,16 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Eagle.DomainModels;
 using Eagle.DbTables;
-using Eagle.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Eagle.Core;
 using Microsoft.Net.Http.Headers;
+using Eagle.DataContexts;
+using Microsoft.AspNetCore.Http;
 
 namespace Eagle
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -41,7 +42,7 @@ namespace Eagle
 
             services.AddCors();
 
-            DataContexts.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            CoreDbContext.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             // Add framework services.
             services.AddMvc(options =>
@@ -62,11 +63,28 @@ namespace Eagle
 
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
+            ConfigureAuth(app);
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "API",
                     template: "v1/{controller=Home}/{action=Index}/{id?}");
+            });
+
+            // for wwwroot
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/static-files
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                //FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"AdminUI")),
+                //RequestPath = new PathString("/AdminUI"),
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
+                }
             });
 
             MapperInitializer.Initialize();

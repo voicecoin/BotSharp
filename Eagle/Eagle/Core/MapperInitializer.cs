@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Eagle.Chatbot.DomainModels;
 using Eagle.DbTables;
 using Eagle.DomainModels;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle
+namespace Eagle.Core
 {
     public class MapperInitializer
     {
