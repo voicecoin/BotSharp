@@ -24,22 +24,22 @@ namespace Eagle.DmServices
             {
                 Id = expression.Id,
                 Text = expression.Text,
-                Template = expression.Template,
+                Template = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id).Select(x => x.item.Map<DmIntentExpressionItem>()).GetTemplateString(),
                 IntentId = expression.IntentId,
                 Data = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id)
                     .Select(item => new DmIntentExpressionItem
                     {
                         EntityId = item.entity == null ? null : item.entity.Id,
                         Meta = item.entity == null ? null : $"@{item.entity?.Name}",
-                        Alias = item.entity?.Name,
-                        Color = item.entity == null ? String.Empty : item.entity.Color,
+                        Alias = item.item?.Alias,
+                        Color = item.entity == null ? String.Empty : item.item.Color,
                         Position = item.item.Position,
                         Length = item.item.Length,
                         Text = item.item.Text
                     }).ToList()
             }).ToList();
 
-            intentModel.Templates = intentExpressions.Select(x => x.Template).ToList();
+            intentModel.Templates = intentModel.UserSays.Where(x => !String.IsNullOrEmpty(x.Template)).Select(x => x.Template).ToList();
 
             intentModel.Responses = dc.IntentResponses
                 .Where(x => x.IntentId == intentModel.Id)
@@ -82,7 +82,11 @@ namespace Eagle.DmServices
 
         public static void Add(this DmIntent intentModel, DataContexts dc)
         {
-            intentModel.Id = Guid.NewGuid().ToString();
+            if (String.IsNullOrEmpty(intentModel.Id))
+            {
+                intentModel.Id = Guid.NewGuid().ToString();
+            }
+            
             var intentRecord = intentModel.Map<Intents>();
             intentRecord.CreatedDate = DateTime.UtcNow;
 
@@ -172,7 +176,6 @@ namespace Eagle.DmServices
         public static void Add(this DmIntentExpression expressionModel, DataContexts dc)
         {
             var expressionRecord = expressionModel.Map<IntentExpressions>();
-            expressionRecord.Template = String.Concat(expressionModel.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
             dc.IntentExpressions.Add(expressionRecord);
 
             int pos = 0;
@@ -184,11 +187,8 @@ namespace Eagle.DmServices
 
         public static int Add(this DmIntentExpressionItem expressionItemModel, DataContexts dc, int pos)
         {
-            var entity = dc.Entities.FirstOrDefault(x => "@" + x.Name == expressionItemModel.Meta);
-
             var expressionItemRecord = expressionItemModel.Map<IntentExpressionItems>();
             expressionItemRecord.Id = Guid.NewGuid().ToString();
-            expressionItemRecord.EntityId = entity?.Id;
             expressionItemRecord.Length = expressionItemRecord.Text.Length;
             expressionItemRecord.Position = pos;
             expressionItemRecord.CreatedDate = DateTime.UtcNow;

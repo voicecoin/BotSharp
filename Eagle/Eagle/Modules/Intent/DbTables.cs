@@ -35,9 +35,6 @@ namespace Eagle.DbTables
         [Required]
         [MaxLength(128)]
         public String Text { get; set; }
-        [Required]
-        [MaxLength(128)]
-        public String Template { get; set; }
     }
 
     public class IntentExpressionItems : DbTable
@@ -50,6 +47,13 @@ namespace Eagle.DbTables
         public String Text { get; set; }
         [StringLength(36)]
         public String EntityId { get; set; }
+        [StringLength(32)]
+        public String Alias { get; set; }
+        /// <summary>
+        /// Parameter Color, override entity color
+        /// </summary>
+        [StringLength(7)]
+        public String Color { get; set; }
         [Required]
         public int Position { get; set; }
         [Required]

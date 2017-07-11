@@ -1,8 +1,39 @@
 ﻿{
   "id": "05d22cbf-c788-4413-bf83-d16bcbc77d",
   "userSays": [
-    { "text": "天气" },
-    { "text": "今天北京天气怎么样" }
+    {
+      "id": "47fd3985-1b19-45bc-9632-74288016d3cc",
+      "text": "天气",
+      "template": "天气",
+      "data": [
+        {
+          "text": "天气"
+        }
+      ]
+    },
+    {
+      "id": "fc09bf3c-0e9b-4a32-9d68-922d2a55f8d6",
+      "text": "今天北京天气怎么样",
+      "data": [
+        {
+          "text": "今天",
+          "alias": "day",
+          "meta": "@时间",
+          "entityId": "7102ef5e-8446-479d-bcec-d43e3ef22c30",
+          "color": "#83EE1F"
+        },
+        {
+          "text": "北京",
+          "alias": "area",
+          "meta": "@行政区划-市",
+          "entityId": "b24a146f-c2b1-40bd-9b0f-665e2546017b",
+          "color": "#E3DF00"
+        },
+        {
+          "text": "天气怎么样"
+        }
+      ]
+    }
   ],
   "responses": [
     {

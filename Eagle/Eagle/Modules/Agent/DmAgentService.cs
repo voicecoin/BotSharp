@@ -20,7 +20,7 @@ namespace Eagle.DmServices
                             select exp;
 
             // 精确匹配
-            var intents = queryable.Where(x => x.Text == agentRequestModel.Text || x.Template == agentRequestModel.Text).ToList();
+            var intents = queryable.Where(x => x.Text == agentRequestModel.Text).ToList();
 
             // 相似匹配
             if (intents.Count() == 0)

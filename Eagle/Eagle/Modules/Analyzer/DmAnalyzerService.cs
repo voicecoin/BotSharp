@@ -124,7 +124,7 @@ namespace Eagle.DmServices
             return segments;
         }
 
-        public static string GetTemplateString(this List<DmIntentExpressionItem> items)
+        public static string GetTemplateString(this IEnumerable<DmIntentExpressionItem> items)
         {
             return String.Concat(items.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
         }

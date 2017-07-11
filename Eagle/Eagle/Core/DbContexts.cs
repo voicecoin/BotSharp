@@ -39,7 +39,6 @@ namespace Eagle.DbContexts
             modelBuilder.Entity<EntityEntrySynonyms>().HasIndex(b => b.Synonym);
 
             modelBuilder.Entity<IntentExpressions>().HasIndex(b => b.Text);
-            modelBuilder.Entity<IntentExpressions>().HasIndex(b => b.Template);
         }
 
         public int Transaction(Action action)

@@ -59,13 +59,7 @@ namespace Eagle
 
             agents.ForEach(agent =>
             {
-                if (!context.Intents.Any(x => x.AgentId == agent.Id))
-                {
-                    context.Transaction(delegate
-                    {
-                        InitIntents(env, context, agent);
-                    });
-                }
+                InitIntents(env, context, agent);
             });
         }
 
@@ -73,39 +67,49 @@ namespace Eagle
         {
             var intentNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
-            intentNames.ForEach(entityName =>
+            intentNames.ForEach(intentName =>
             {
-                // Intent
-                var intentModel = LoadJson<DmIntent>(env, $"{agent.Name}\\Intents\\{entityName}");
-                intentModel.AgentId = agent.Id;
-                intentModel.Name = entityName;
+                if (!context.Intents.Any(x => x.AgentId == agent.Id && x.Name.Equals(intentName)))
+                {
+                    // Intent
+                    var intentModel = LoadJson<DmIntent>(env, $"{agent.Name}\\Intents\\{intentName}");
+                    intentModel.AgentId = agent.Id;
+                    intentModel.Name = intentName;
 
-                var intentRecord = intentModel.Map<Intents>();
-                context.Intents.Add(intentRecord);
-
-                // User expression
-                intentModel.UserSays.ForEach(expression => {
-
-                    expression.Id = Guid.NewGuid().ToString();
-                    expression.IntentId = intentRecord.Id;
-
-                    // Markup
-                    var model = new DmAgentRequest { Text = expression.Text };
-                    model.PosTagger(context).ForEach(itemModel =>
+                    context.Transaction(delegate
                     {
-                        itemModel.IntentExpressionId = expression.Id;
-                        expression.Data.Add(itemModel);
+                        intentModel.Add(context);
                     });
-
-                    expression.Add(context);
-                });
-
-                // Bot response
-                intentModel.Responses.ForEach(response => {
-                    response.IntentId = intentRecord.Id;
-                    response.Add(context);
-                });
+                }
             });
+
+            /*var intentRecord = intentModel.Map<Intents>();
+            context.Intents.Add(intentRecord);
+
+            // User expression
+            intentModel.UserSays.ForEach(expression =>
+            {
+
+                expression.Id = Guid.NewGuid().ToString();
+                expression.IntentId = intentRecord.Id;
+
+                // Markup
+                var model = new DmAgentRequest { Text = expression.Text };
+                model.PosTagger(context).ForEach(itemModel =>
+                {
+                    itemModel.IntentExpressionId = expression.Id;
+                    expression.Data.Add(itemModel);
+                });
+
+                expression.Add(context);
+            });
+
+            // Bot response
+            intentModel.Responses.ForEach(response =>
+            {
+                response.IntentId = intentRecord.Id;
+                response.Add(context);
+            });*/
         }
 
         private static void InitEntities(IHostingEnvironment env, DataContexts context, Agents agent)

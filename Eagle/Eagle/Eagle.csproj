@@ -6,11 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="App_Data\Logs\20170708.log" />
+    <Compile Remove="App_Data\Logs\**" />
+    <Content Remove="App_Data\Logs\**" />
+    <EmbeddedResource Remove="App_Data\Logs\**" />
+    <None Remove="App_Data\Logs\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="App_Data\Logs\" />
     <Folder Include="App_Data\笑话大全\Entities\" />
     <Folder Include="App_Data\花灵溪\Entities\" />
     <Folder Include="wwwroot\" />
