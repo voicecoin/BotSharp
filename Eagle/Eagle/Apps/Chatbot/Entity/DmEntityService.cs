@@ -1,4 +1,4 @@
-﻿using Eagle.Chatbot.DomainModels;
+﻿using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.DataContexts;
 using Eagle.DbTables;
 using Eagle.DomainModels;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Chatbot.DmServices
+namespace Eagle.Apps.Chatbot.DmServices
 {
     public static class DmEntityService
     {

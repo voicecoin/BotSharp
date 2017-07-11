@@ -10,10 +10,10 @@ using AutoMapper;
 using Eagle.Utility;
 using Eagle.DmServices;
 using Eagle.Core;
-using Eagle.Chatbot.DomainModels;
-using Eagle.Chatbot.DmServices;
+using Eagle.Apps.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.DmServices;
 
-namespace Eagle.Chatbot.Entity
+namespace Eagle.Apps.Chatbot.Entity
 {
     public class EntitiesController : CoreController
     {

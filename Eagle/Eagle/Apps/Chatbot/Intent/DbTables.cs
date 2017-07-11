@@ -1,4 +1,4 @@
-﻿using Eagle.Chatbot.Enums;
+﻿using Eagle.Apps.Chatbot.Enums;
 using Eagle.Enums;
 using Newtonsoft.Json;
 using System;

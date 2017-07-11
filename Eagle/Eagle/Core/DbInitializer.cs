@@ -1,5 +1,5 @@
-﻿using Eagle.Chatbot.DmServices;
-using Eagle.Chatbot.DomainModels;
+﻿using Eagle.Apps.Chatbot.DmServices;
+using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.DataContexts;
 using Eagle.DbTables;
 using Eagle.DmServices;

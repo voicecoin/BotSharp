@@ -7,9 +7,9 @@ using Eagle.DbTables;
 using Eagle.Utility;
 using Eagle.DomainModels;
 using Eagle.Core;
-using Eagle.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.DomainModels;
 
-namespace Eagle.Chatbot.Agent
+namespace Eagle.Apps.Chatbot.Agent
 {
     public class AgentsController : CoreController
     {

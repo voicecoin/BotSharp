@@ -10,10 +10,10 @@ using Eagle.DomainModels;
 using Eagle.Utility;
 using Eagle.DmServices;
 using Eagle.Core;
-using Eagle.Chatbot.DomainModels;
-using Eagle.Chatbot.DmServices;
+using Eagle.Apps.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.DmServices;
 
-namespace Eagle.Chatbot.Intent
+namespace Eagle.Apps.Chatbot
 {
     public class IntentsController : CoreController
     {
@@ -68,7 +68,7 @@ namespace Eagle.Chatbot.Intent
 
             if (id != intentModel.Id)
             {
-                return BadRequest();
+                return BadRequest("Id is not match");
             }
 
             dc.Transaction(delegate

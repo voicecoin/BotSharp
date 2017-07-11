@@ -35,5 +35,7 @@ namespace Eagle.DbTables
         public String DeveloperAccessToken { get; set; }
 
         public bool IsPublic { get; set; }
+        [MaxLength(4096)]
+        public String Avatar { get; set; }
     }
 }

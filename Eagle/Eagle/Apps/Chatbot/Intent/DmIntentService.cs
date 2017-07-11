@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Eagle.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.DomainModels;
 
-namespace Eagle.Chatbot.DmServices
+namespace Eagle.Apps.Chatbot.DmServices
 {
     public static partial class DmIntentService
     {
@@ -128,9 +128,9 @@ namespace Eagle.Chatbot.DmServices
             intentRecord.ModifiedDate = DateTime.UtcNow;
 
             // Remove all related data then create with same IntentId
-            /*intentModel.UpdateInputContexts(dc);
-            intentModel.UpdateExpressions(dc);
-            intentModel.UpdateResponses(dc);*/
+            intentModel.UpdateInputContexts(dc);
+            intentModel.UserSays.ForEach(expression => expression.Update(dc));
+            intentModel.Responses.ForEach(response => response.Update(dc));
         }
 
         public static void UpdateInputContexts(this DmIntent intentModel, CoreDbContext dc)
@@ -144,134 +144,6 @@ namespace Eagle.Chatbot.DmServices
                     Id = Guid.NewGuid().ToString(),
                     IntentId = intentModel.Id,
                     Name = context
-                });
-            });
-        }
-
-        public static void UpdateExpressions(this DmIntent intentModel, CoreDbContext dc)
-        {
-            intentModel.UserSays.ForEach(expression => UpdateExpression(expression, dc));
-        }
-
-        public static void UpdateExpression(this DmIntentExpression intentExpression, CoreDbContext dc)
-        {
-            // Remove Items first
-
-            var intentExpressionRecord = dc.IntentExpressions.Find(intentExpression.Id);
-            dc.IntentExpressions.Remove(intentExpressionRecord);
-
-            /*intentModel.UserSays.ForEach(userSay =>
-            {
-                userSay.IntentId = intentModel.Id;
-                userSay.Add(dc);
-            });*/
-            
-        }
-
-        public static void UpdateResponses(this DmIntent intentModel, CoreDbContext dc)
-        {
-            dc.IntentResponses.RemoveRange();
-
-            intentModel.Responses.ForEach(response =>
-            {
-                response.IntentId = intentModel.Id;
-                response.Add(dc);
-            });
-        }
-
-        public static void Add(this DmIntentExpression expressionModel, CoreDbContext dc)
-        {
-            var expressionRecord = expressionModel.Map<IntentExpressions>();
-            dc.IntentExpressions.Add(expressionRecord);
-
-            int pos = 0;
-            expressionModel.Data.ForEach(item => {
-                item.IntentExpressionId = expressionRecord.Id;
-                pos = item.Add(dc, pos);
-            });
-        }
-
-        public static int Add(this DmIntentExpressionItem expressionItemModel, CoreDbContext dc, int pos)
-        {
-            var expressionItemRecord = expressionItemModel.Map<IntentExpressionItems>();
-            expressionItemRecord.Id = Guid.NewGuid().ToString();
-            expressionItemRecord.Length = expressionItemRecord.Text.Length;
-            expressionItemRecord.Position = pos;
-            expressionItemRecord.CreatedDate = DateTime.UtcNow;
-
-            dc.IntentExpressionItems.Add(expressionItemRecord);
-
-            return pos + expressionItemRecord.Length;
-        }
-
-        public static void Add(this DmIntentResponse responseModel, CoreDbContext dc)
-        {
-            var responseRecord = responseModel.Map<IntentResponses>();
-            responseRecord.Id = Guid.NewGuid().ToString();
-            responseRecord.CreatedDate = DateTime.UtcNow;
-
-            dc.IntentResponses.Add(responseRecord);
-
-            responseModel.AffectedContexts.ForEach(context =>
-            {
-                context.IntentResponseId = responseRecord.Id;
-                context.Add(dc);
-            });
-
-            responseModel.Messages.ForEach(message =>
-            {
-                message.IntentResponseId = responseRecord.Id;
-                message.Add(dc);
-            });
-
-            responseModel.Parameters.ForEach(parameter =>
-            {
-                parameter.IntentResponseId = responseRecord.Id;
-                parameter.Add(dc);
-            });
-        }
-
-        public static void Add(this DmIntentResponseContext responseContextModel, CoreDbContext dc)
-        {
-            var responseContextRecord = responseContextModel.Map<IntentResponseContexts>();
-            responseContextRecord.Id = Guid.NewGuid().ToString();
-            responseContextRecord.CreatedDate = DateTime.UtcNow;
-
-            dc.IntentResponseContexts.Add(responseContextRecord);
-        }
-
-        public static void Add(this DmIntentResponseMessage responseMessageModel, CoreDbContext dc)
-        {
-            var responseMessageRecord = responseMessageModel.Map<IntentResponseMessages>();
-            responseMessageRecord.Id = Guid.NewGuid().ToString();
-            responseMessageRecord.CreatedDate = DateTime.UtcNow;
-
-            dc.IntentResponseMessages.Add(responseMessageRecord);
-
-            responseMessageModel.Speech.ForEach(speech =>
-            {
-                dc.IntentResponseMessageContents.Add(new IntentResponseMessageContents
-                {
-                    IntentResponseMessageId = responseMessageRecord.Id,
-                    Content = speech
-                });
-            });
-        }
-
-        public static void Add(this DmIntentResponseParameter responseParameterModel, CoreDbContext dc)
-        {
-            var responseParameterRecord = responseParameterModel.Map<IntentResponseParameters>();
-            responseParameterRecord.Id = Guid.NewGuid().ToString();
-            responseParameterRecord.CreatedDate = DateTime.UtcNow;
-
-            dc.IntentResponseParameters.Add(responseParameterRecord);
-
-            responseParameterModel.Prompts.ForEach(prompt =>
-            {
-                dc.IntentResponseParameterPrompts.Add(new IntentResponseParameterPrompts
-                {
-                    IntentResponseParameterId = responseParameterRecord.Id,
-                    Text = prompt
                 });
             });
         }

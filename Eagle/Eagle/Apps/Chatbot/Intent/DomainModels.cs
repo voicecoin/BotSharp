@@ -1,4 +1,4 @@
-﻿using Eagle.Chatbot.Enums;
+﻿using Eagle.Apps.Chatbot.Enums;
 using Eagle.Enums;
 using Newtonsoft.Json;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Chatbot.DomainModels
+namespace Eagle.Apps.Chatbot.DomainModels
 {
     public class DmIntent
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eagle.Chatbot.DomainModels
+namespace Eagle.Apps.Chatbot.DomainModels
 {
     public class DmAgent : Agents
     {

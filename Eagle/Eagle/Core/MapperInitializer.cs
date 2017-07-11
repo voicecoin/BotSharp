@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Eagle.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.DbTables;
 using Eagle.DomainModels;
 using System;

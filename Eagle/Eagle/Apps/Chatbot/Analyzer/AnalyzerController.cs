@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Eagle.DomainModels;
 using Eagle.DmServices;
 using Eagle.Core;
-using Eagle.Chatbot.DomainModels;
-using Eagle.Chatbot.DmServices;
+using Eagle.Apps.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.DmServices;
 
-namespace Eagle.Chatbot.Analyzer
+namespace Eagle.Apps.Chatbot.Analyzer
 {
     public class AnalyzerController : CoreController
     {
