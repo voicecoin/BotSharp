@@ -28,7 +28,7 @@ namespace Eagle.DbTables
         [StringLength(32)]
         public String ClientAccessToken { get; set; }
         /// <summary>
-        /// 给第三方开发者API调用的
+        /// 给SDK调用的
         /// </summary>
         [Required]
         [StringLength(32)]

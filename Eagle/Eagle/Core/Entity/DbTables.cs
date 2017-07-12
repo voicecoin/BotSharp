@@ -73,11 +73,15 @@ namespace Eagle.DbTables
         public byte[] RowVersion { get; set; }
         //[Required]
         public DateTime CreatedDate { get; set; }
-        //[Required]
+#if AUTH_REQUIRED
+        [Required]
+#endif
         public string CreatedUserId { get; set; }
         //[Required]
         public DateTime ModifiedDate { get; set; }
-        //[Required]
+#if AUTH_REQUIRED
+        [Required]
+#endif
         public string ModifiedUserId { get; set; }
     }
 

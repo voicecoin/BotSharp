@@ -97,13 +97,7 @@ namespace Eagle.Apps.Chatbot.Agent
         [HttpPost]
         public async Task<IActionResult> PostAgent([FromBody] DmAgent agentModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             Agents agentRecord = agentModel.Map<Agents>();
-
             agentRecord.Language = "zh-cn";
             agentRecord.ClientAccessToken = Guid.NewGuid().ToString("N");
             agentRecord.DeveloperAccessToken = Guid.NewGuid().ToString("N");

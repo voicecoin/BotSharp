@@ -62,6 +62,27 @@ namespace Eagle.Utility
             MethodInfo method = type.GetMethod(methodName);
             return method.Invoke(obj, parameters);
         }
+
+        public static List<Type> GetClassesWithInterface<T>()
+        {
+            List<Type> types = Assembly.GetEntryAssembly()
+                .GetTypes().ToList();
+
+            types = types.Where(x => x.GetInterfaces().Contains(typeof(T))).ToList();
+
+            return types;
+        }
+
+        public static List<T> GetInstanceWithInterface<T>()
+        {
+            List<Type> types = Assembly.GetEntryAssembly()
+                .GetTypes().ToList();
+
+            var instances = types.Where(x => x.GetInterfaces().Contains(typeof(T))).Select(x => (T)Activator.CreateInstance(x)).ToList();
+
+            return instances;
+        }
+
     }
 
 }

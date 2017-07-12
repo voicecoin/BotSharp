@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 
 namespace Eagle.Core
 {
-    //[Authorize]
+#if AUTH_REQUIRED
+    [Authorize]
+#endif
     //[Produces("application/json", "application/xml")]
     [Route("v1/[controller]")]
     [ServiceFilter(typeof(ApiExceptionFilter))]

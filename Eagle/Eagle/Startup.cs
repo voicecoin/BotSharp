@@ -44,6 +44,8 @@ namespace Eagle
 
             CoreDbContext.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
+            services.AddAuthentication();
+
             // Add framework services.
             services.AddMvc(options =>
             {
