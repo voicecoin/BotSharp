@@ -13,10 +13,21 @@ namespace Eagle.Apps.Chatbot
     {
         public static void Update(this DmIntentResponse responseModel, CoreDbContext dc)
         {
-            // Remove Items first
-            responseModel.Delete(dc);
-            // Add back
-            responseModel.Add(dc);
+            var response = dc.IntentResponses.Find(responseModel.Id);
+            response.Action = responseModel.Action;
+
+            responseModel.AffectedContexts.ForEach(context => {
+
+            });
+
+            responseModel.Messages.ForEach(context => {
+
+
+            });
+
+            responseModel.Parameters.ForEach(parameter => {
+
+            });
         }
 
         public static void Delete(this DmIntentResponse responseModel, CoreDbContext dc)

@@ -132,20 +132,5 @@ namespace Eagle.Apps.Chatbot.DmServices
             intentModel.UserSays.ForEach(expression => expression.Update(dc));
             intentModel.Responses.ForEach(response => response.Update(dc));
         }
-
-        public static void UpdateInputContexts(this DmIntent intentModel, CoreDbContext dc)
-        {
-            dc.IntentInputContexts.RemoveRange(dc.IntentInputContexts.Where(x => x.IntentId == intentModel.Id));
-
-            intentModel.Contexts.ForEach(context =>
-            {
-                dc.IntentInputContexts.Add(new IntentInputContexts
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    IntentId = intentModel.Id,
-                    Name = context
-                });
-            });
-        }
     }
 }

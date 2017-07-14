@@ -212,9 +212,9 @@ namespace Eagle.Apps.Chatbot.DmServices
                             join t in target on s equals t.Meta
                             select t).OrderBy(x => x.Position).ToList();
 
-                if (join.Count == source.Count)
+                if (join.Count > 0 && join.Count == source.Count)
                 {
-                    compositedEntity.Position = join.First().Position;
+                    compositedEntity.Position = join.FirstOrDefault().Position;
                     compositedEntity.Length = join.Sum(x => x.Length);
                     compositedEntity.Text = String.Concat(join.Select(x => x.Text));
                     pos += source.Count;
