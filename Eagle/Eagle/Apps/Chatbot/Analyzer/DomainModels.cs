@@ -9,4 +9,15 @@ namespace Eagle.Apps.Chatbot.DomainModels
     {
         public List<DmIntentExpressionItem> Tags { get; set; }
     }
+
+    public class NlpirResult
+    {
+        public List<NlpirSegment> WordSplit { get; set; }
+    }
+
+    public class NlpirSegment
+    {
+        public string Word { get; set; }
+        public string Entity { get; set; }
+    }
 }

@@ -71,34 +71,6 @@ namespace Eagle.Apps.Chatbot.Agent
                     intentModel.Add(context);
                 }
             });
-
-            /*var intentRecord = intentModel.Map<Intents>();
-            context.Intents.Add(intentRecord);
-
-            // User expression
-            intentModel.UserSays.ForEach(expression =>
-            {
-
-                expression.Id = Guid.NewGuid().ToString();
-                expression.IntentId = intentRecord.Id;
-
-                // Markup
-                var model = new DmAgentRequest { Text = expression.Text };
-                model.PosTagger(context).ForEach(itemModel =>
-                {
-                    itemModel.IntentExpressionId = expression.Id;
-                    expression.Data.Add(itemModel);
-                });
-
-                expression.Add(context);
-            });
-
-            // Bot response
-            intentModel.Responses.ForEach(response =>
-            {
-                response.IntentId = intentRecord.Id;
-                response.Add(context);
-            });*/
         }
 
         private static void InitEntities(IHostingEnvironment env, CoreDbContext context, Agents agent)

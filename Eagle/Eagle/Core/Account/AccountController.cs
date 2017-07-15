@@ -21,6 +21,16 @@ namespace Eagle.Core.Account
             return Ok(user);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("{userName}/Exist")]
+        public async Task<IActionResult> UserExist([FromRoute] String userName)
+        {
+            var user = dc.Users.Any(x => x.UserName == userName);
+
+            return Ok(user);
+        }
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] String id)

@@ -15,26 +15,22 @@ namespace Eagle.Apps.Chatbot
         {
             var response = dc.IntentResponses.Find(responseModel.Id);
             response.Action = responseModel.Action;
+            response.AffectedContexts = responseModel.AffectedContexts.ToArray();
 
-            responseModel.AffectedContexts.ForEach(context => {
-
+            dc.IntentResponseMessages.RemoveRange(dc.IntentResponseMessages.Where(x => x.IntentResponseId == responseModel.Id));
+            responseModel.Messages.ForEach(message => {
+                dc.IntentResponseMessages.Add(message.Map<IntentResponseMessages>());
             });
 
-            responseModel.Messages.ForEach(context => {
-
-
-            });
-
+            dc.IntentResponseParameters.RemoveRange(dc.IntentResponseParameters.Where(x => x.IntentResponseId == responseModel.Id));
             responseModel.Parameters.ForEach(parameter => {
-
+                dc.IntentResponseParameters.Add(parameter.Map<IntentResponseParameters>());
             });
         }
 
         public static void Delete(this DmIntentResponse responseModel, CoreDbContext dc)
         {
             // Remove Items first
-            dc.IntentResponseContexts.RemoveRange(dc.IntentResponseContexts.Where(x => x.IntentResponseId == responseModel.Id));
-
             responseModel.Parameters.ForEach(parameter => {
 
             });
@@ -53,14 +49,8 @@ namespace Eagle.Apps.Chatbot
             var responseRecord = responseModel.Map<IntentResponses>();
             responseRecord.Id = Guid.NewGuid().ToString();
             responseRecord.CreatedDate = DateTime.UtcNow;
-
+            responseRecord.AffectedContexts = responseModel.AffectedContexts.ToArray();
             dc.IntentResponses.Add(responseRecord);
-
-            responseModel.AffectedContexts.ForEach(context =>
-            {
-                context.IntentResponseId = responseRecord.Id;
-                context.Add(dc);
-            });
 
             responseModel.Messages.ForEach(message =>
             {
@@ -75,31 +65,12 @@ namespace Eagle.Apps.Chatbot
             });
         }
 
-        public static void Add(this DmIntentResponseContext responseContextModel, CoreDbContext dc)
-        {
-            var responseContextRecord = responseContextModel.Map<IntentResponseContexts>();
-            responseContextRecord.Id = Guid.NewGuid().ToString();
-            responseContextRecord.CreatedDate = DateTime.UtcNow;
-
-            dc.IntentResponseContexts.Add(responseContextRecord);
-        }
-
         public static void Add(this DmIntentResponseMessage responseMessageModel, CoreDbContext dc)
         {
             var responseMessageRecord = responseMessageModel.Map<IntentResponseMessages>();
             responseMessageRecord.Id = Guid.NewGuid().ToString();
             responseMessageRecord.CreatedDate = DateTime.UtcNow;
-
             dc.IntentResponseMessages.Add(responseMessageRecord);
-
-            responseMessageModel.Speech.ForEach(speech =>
-            {
-                dc.IntentResponseMessageContents.Add(new IntentResponseMessageContents
-                {
-                    IntentResponseMessageId = responseMessageRecord.Id,
-                    Content = speech
-                });
-            });
         }
 
         public static void Add(this DmIntentResponseParameter responseParameterModel, CoreDbContext dc)
@@ -107,17 +78,8 @@ namespace Eagle.Apps.Chatbot
             var responseParameterRecord = responseParameterModel.Map<IntentResponseParameters>();
             responseParameterRecord.Id = Guid.NewGuid().ToString();
             responseParameterRecord.CreatedDate = DateTime.UtcNow;
-
+            responseParameterRecord.Prompts = responseParameterModel.Prompts.ToArray();
             dc.IntentResponseParameters.Add(responseParameterRecord);
-
-            responseParameterModel.Prompts.ForEach(prompt =>
-            {
-                dc.IntentResponseParameterPrompts.Add(new IntentResponseParameterPrompts
-                {
-                    IntentResponseParameterId = responseParameterRecord.Id,
-                    Text = prompt
-                });
-            });
         }
     }
 }

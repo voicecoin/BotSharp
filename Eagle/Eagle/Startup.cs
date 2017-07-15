@@ -31,6 +31,7 @@ namespace Eagle
             Configuration = builder.Build();
 
             CoreController.Configuration = Configuration;
+            CoreDbContext.Configuration = Configuration;
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -41,8 +42,6 @@ namespace Eagle
             services.AddScoped<ApiExceptionFilter>();
 
             services.AddCors();
-
-            CoreDbContext.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddAuthentication();
 

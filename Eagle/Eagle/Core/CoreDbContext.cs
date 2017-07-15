@@ -2,6 +2,7 @@
 using Eagle.DomainModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Eagle.DataContexts
 {
     public partial class CoreDbContext : DbContext
     {
-        public static string ConnectionString { get; set; }
+        public static IConfigurationRoot Configuration { get; set; }
 
         public CoreDbContext() { }
 
@@ -21,7 +22,9 @@ namespace Eagle.DataContexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connStr = String.IsNullOrEmpty(ConnectionString) ? "Server=(localdb)\\MSSQLLocalDB;Database=YayaBot;Trusted_Connection=True;MultipleActiveResultSets=true" : ConnectionString;
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            string connStr = String.IsNullOrEmpty(connectionString) ? "Server=(localdb)\\MSSQLLocalDB;Database=YayaBot;Trusted_Connection=True;MultipleActiveResultSets=true" : connectionString;
 
             optionsBuilder.UseSqlServer(connStr);
 
@@ -39,6 +42,14 @@ namespace Eagle.DataContexts
             modelBuilder.Entity<EntityEntrySynonyms>().HasIndex(b => b.Synonym);
 
             modelBuilder.Entity<IntentExpressions>().HasIndex(b => b.Text);
+
+            // Json column
+            modelBuilder.Entity<Intents>().Property(b => b._Contexts).HasColumnName("Contexts");
+            modelBuilder.Entity<Intents>().Property(b => b._Events).HasColumnName("Events");
+            modelBuilder.Entity<IntentExpressions>().Property(b => b._Items).HasColumnName("Items");
+            modelBuilder.Entity<IntentResponses>().Property(b => b._AffectedContexts).HasColumnName("AffectedContexts");
+            modelBuilder.Entity<IntentResponseMessages>().Property(b => b._Speeches).HasColumnName("Speeches");
+            modelBuilder.Entity<IntentResponseParameters>().Property(b => b._Prompts).HasColumnName("Prompts");
         }
 
         public int Transaction(Action action)

@@ -56,11 +56,6 @@ namespace Eagle.Apps.Chatbot.Agent
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] DmAgent agentModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != agentModel.Id)
             {
                 return BadRequest("Agent id not match.");

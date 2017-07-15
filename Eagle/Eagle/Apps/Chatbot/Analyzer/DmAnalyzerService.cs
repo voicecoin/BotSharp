@@ -3,6 +3,8 @@ using Eagle.DataContexts;
 using Eagle.DbTables;
 using Eagle.DomainModels;
 using Eagle.Utility;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +32,6 @@ namespace Eagle.Apps.Chatbot.DmServices
                                          where text.Contains(entry.Value)
                                          select new DmIntentExpressionItem
                                          {
-                                             EntryId = entry.Id,
-                                             EntityId = entity.Id,
                                              Text = entry.Value,
                                              Meta = $"@{entity.Name}",
                                              Alias = entity.Name,
@@ -45,13 +45,35 @@ namespace Eagle.Apps.Chatbot.DmServices
                                        where text.Contains(synonym.Synonym)
                                        select new DmIntentExpressionItem
                                        {
-                                           EntryId = entry.Id,
-                                           EntityId = entity.Id,
                                            Text = synonym.Synonym,
                                            Meta = $"@{entity.Name}",
                                            Alias = entity.Name,
                                            Length = entry.Value.Length
                                        }).ToList();
+
+
+            // 未识别出的词，再用系统库识别一次
+            var client = new RestClient(CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value);
+            var request = new RestRequest("nlpir/wordsplit/" + text, Method.GET);
+            var response = client.Rest(request);
+            var result = JsonConvert.DeserializeObject<NlpirResult>(response.Result.Content);
+            result.WordSplit.ForEach(x => {
+                MatchCollection mc = Regex.Matches(x.Entity, "\".+\"");
+                foreach (Match m in mc)
+                {
+                    x.Entity = x.Entity.Replace(m.Value, String.Empty);
+                }
+
+                unitEntityInEntry.Add(new DmIntentExpressionItem
+                {
+                    Text = x.Word,
+                    Meta = "@" + x.Entity,
+                    Alias = x.Entity,
+                    Length = x.Word.Length
+                });
+            });
+
+            unitEntityInEntry = unitEntityInEntry.Distinct(x => x.Text).ToList();
 
             var unitEntityTotal = new List<DmIntentExpressionItem>();
             unitEntityTotal.AddRange(unitEntityInEntry);
@@ -66,13 +88,12 @@ namespace Eagle.Apps.Chatbot.DmServices
                                              where entity.IsEnum && template.Contains(entry.Value)
                                              select new DmIntentExpressionItem
                                              {
-                                                 EntityId = entity.Id,
                                                  Text = entry.Value,
                                                  Meta = $"@{entity.Name}",
                                                  Alias = entity.Name
                                              }).ToList();
 
-            var compositEntities = Process(template, compositEntitiesQueryable).Where(x => x.EntityId != null).ToList();
+            var compositEntities = Process(template, compositEntitiesQueryable).Where(x => x.Meta != null).ToList();
 
             int pos = 0;
 
@@ -103,9 +124,9 @@ namespace Eagle.Apps.Chatbot.DmServices
             var taggers = PosTagger(analyzerModel, dc);
 
             List<DmIntentExpressionItem> segments = new List<DmIntentExpressionItem>();
-            segments.AddRange(taggers.Where(x => !String.IsNullOrEmpty(x.EntityId)));
+            segments.AddRange(taggers.Where(x => !String.IsNullOrEmpty(x.Meta)));
 
-            taggers.Where(x => String.IsNullOrEmpty(x.EntityId))
+            taggers.Where(x => String.IsNullOrEmpty(x.Meta))
                 .ToList()
                 .ForEach(tag =>
                 {
@@ -149,11 +170,11 @@ namespace Eagle.Apps.Chatbot.DmServices
 
         public static void ExtractParameter(this DmIntentResponse responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
         {
-            var segments = agentRequestModel.Segment(dc).Where(x => !String.IsNullOrEmpty(x.EntityId)).ToList();
+            var segments = agentRequestModel.Segment(dc).Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
 
             responseModel.Parameters.ForEach(parameter =>
             {
-                parameter.Value = segments.First(x => x.EntityId == parameter.EntityId).Text;
+                parameter.Value = segments.First(x => x.Meta == parameter.Name).Text;
             });
         }
 
@@ -167,7 +188,7 @@ namespace Eagle.Apps.Chatbot.DmServices
         {
             List<String> speechs = new List<string>();
 
-            messageModel.Speech.ForEach(speech => {
+            messageModel.Speeches.ForEach(speech => {
                 speech = speech.Replace("{@agent.name}", agentRequestModel.Agent.Name);
                 speech = speech.Replace("{@agent.description}", agentRequestModel.Agent.Description);
 
@@ -177,7 +198,7 @@ namespace Eagle.Apps.Chatbot.DmServices
                 speechs.Add(speech);
             });
 
-            messageModel.Speech = speechs;
+            messageModel.Speeches = speechs;
         }
 
         /// <summary>
@@ -190,14 +211,14 @@ namespace Eagle.Apps.Chatbot.DmServices
         {
             List<String> speechs = new List<string>();
 
-            messageModel.Speech.ForEach(speech => {
+            messageModel.Speeches.ForEach(speech => {
                 responseModel.Parameters.ForEach(parameter => {
                     speech = speech.Replace("{$" + parameter.Name + "}", parameter.Value);
                 });
                 speechs.Add(speech);
             });
 
-            messageModel.Speech = speechs;
+            messageModel.Speeches = speechs;
         }
 
         private static int CorrectPosition(DmIntentExpressionItem compositedEntity, List<DmIntentExpressionItem> unitEntities, int pos)
@@ -264,13 +285,9 @@ namespace Eagle.Apps.Chatbot.DmServices
                     {
                         Position = m.Index,
                         Length = m.Length,
-                        EntityId = token.EntityId,
                         Alias = token.Alias,
                         Text = token.Text,
-                        Meta = token.Meta,
-                        Id = token.Id,
-                        EntryId = token.EntryId,
-                        IntentExpressionId = token.IntentExpressionId
+                        Meta = token.Meta
                     };
 
                     tags.Add(temp);

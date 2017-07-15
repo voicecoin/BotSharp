@@ -15,34 +15,16 @@ namespace Eagle.Apps.Chatbot.DmServices
         public static void Load(this DmIntent intentModel, CoreDbContext dc)
         {
             var intentExpressions = dc.IntentExpressions.Where(x => x.IntentId == intentModel.Id).ToList();
-            var intentExpressionItems = (from item in dc.IntentExpressionItems
-                                         from entity in dc.Entities.Where(x => item.EntityId == x.Id).DefaultIfEmpty()
-                                         where intentExpressions.Select(expression => expression.Id).Contains(item.IntentExpressionId)
-                                         orderby item.Position
-                                         select new { item, entity }).ToList();
+            var intentExpressionItems = (from item in dc.IntentExpressions
+                                         where intentExpressions.Select(expression => expression.Id).Contains(item.Id)
+                                         select item).ToList();
 
             intentModel.UserSays = intentExpressions.Select(expression => new DmIntentExpression
             {
                 Id = expression.Id,
                 Text = expression.Text,
-                /*Template = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id)
-                    .Select(x => {
-                        var expressionItem = x.item.Map<DmIntentExpressionItem>();
-                        expressionItem.Meta = x.entity.Name;
-                        return expressionItem;
-                    }).GetTemplateString(),*/
                 IntentId = expression.IntentId,
-                Data = intentExpressionItems.Where(item => item.item.IntentExpressionId == expression.Id)
-                    .Select(item => new DmIntentExpressionItem
-                    {
-                        EntityId = item.entity == null ? null : item.entity.Id,
-                        Meta = item.entity == null ? null : $"@{item.entity?.Name}",
-                        Alias = item.item?.Alias,
-                        Color = item.entity == null ? String.Empty : item.item.Color,
-                        Position = item.item.Position,
-                        Length = item.item.Length,
-                        Text = item.item.Text
-                    }).ToList()
+                Data = expression.Items.ToList()
             }).ToList();
 
             intentModel.Templates = intentModel.UserSays.Select(x => x.Data.GetTemplateString()).ToList();
@@ -56,32 +38,11 @@ namespace Eagle.Apps.Chatbot.DmServices
             {
                 // Load message
                 response.Messages = dc.IntentResponseMessages.Where(x => x.IntentResponseId == response.Id)
-                    .Select(x => x.Map< DmIntentResponseMessage>()).ToList();
-
-                List<string> messageIds = response.Messages.Select(x => x.Id).ToList();
-                var contents = dc.IntentResponseMessageContents.Where(x => messageIds.Contains(x.IntentResponseMessageId)).ToList();
-
-                response.Messages.ForEach(message => {
-                    message.Speech = contents.Where(x => x.IntentResponseMessageId == message.Id).Select(x => x.Content).ToList();
-                });
+                    .Select(x => x.Map<DmIntentResponseMessage>()).ToList();
 
                 // Load parameters
                 response.Parameters = dc.IntentResponseParameters.Where(x => x.IntentResponseId == response.Id)
                                     .Select(x => x.Map<DmIntentResponseParameter>()).ToList();
-
-                List<string> parameterIds = response.Parameters.Select(x => x.Id).ToList();
-                List<string> entityIds = response.Parameters.Where(x => !String.IsNullOrEmpty(x.EntityId)).Select(x => x.EntityId).ToList();
-                var prompts = dc.IntentResponseParameterPrompts.Where(x => parameterIds.Contains(x.IntentResponseParameterId)).ToList();
-                var entities = dc.Entities.Where(x => entityIds.Contains(x.Id)).ToList();
-
-                response.Parameters.ForEach(parameter => {
-                    parameter.Prompts = prompts.Where(x => x.IntentResponseParameterId == parameter.Id).Select(x => x.Text).ToList();
-                    if (!String.IsNullOrEmpty(parameter.EntityId))
-                    {
-                        parameter.DataType = entities.Find(x => x.Id == parameter.EntityId).Name;
-                    }
-                });
-
             });
         }
 
@@ -95,18 +56,9 @@ namespace Eagle.Apps.Chatbot.DmServices
             
             var intentRecord = intentModel.Map<Intents>();
             intentRecord.CreatedDate = DateTime.UtcNow;
+            intentRecord.Contexts = intentModel.Contexts.ToArray();
 
             dc.Intents.Add(intentRecord);
-
-            intentModel.Contexts.ForEach(context =>
-            {
-                dc.IntentInputContexts.Add(new IntentInputContexts
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    IntentId = intentModel.Id,
-                    Name = context
-                });
-            });
 
             intentModel.UserSays.ForEach(userSay =>
             {
@@ -128,7 +80,6 @@ namespace Eagle.Apps.Chatbot.DmServices
             intentRecord.ModifiedDate = DateTime.UtcNow;
 
             // Remove all related data then create with same IntentId
-            intentModel.UpdateInputContexts(dc);
             intentModel.UserSays.ForEach(expression => expression.Update(dc));
             intentModel.Responses.ForEach(response => response.Update(dc));
         }

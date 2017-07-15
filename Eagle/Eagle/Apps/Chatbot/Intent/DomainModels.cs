@@ -48,14 +48,10 @@ namespace Eagle.Apps.Chatbot.DomainModels
 
     public class DmIntentExpressionItem
     {
-        public String Id { get; set; }
-        public String IntentExpressionId { get; set; }
-        public String EntryId { get; set; }
         public String Text { get; set; }
         public String Alias { get; set; }
         public String Meta { get; set; }
         public Boolean UserDefined { get; set; }
-        public String EntityId { get; set; }
         public String Color { get; set; }
         /// <summary>
         /// 字符串在句子中的起始位置
@@ -85,8 +81,6 @@ namespace Eagle.Apps.Chatbot.DomainModels
 
     public class DmIntentResponseContext
     {
-        public String Id { get; set; }
-        public String IntentResponseId { get; set; }
         public String Name { get; set; }
         public int? Lifespan { get; set; }
     }
@@ -95,11 +89,11 @@ namespace Eagle.Apps.Chatbot.DomainModels
     {
         public DmIntentResponseMessage()
         {
-            Speech = new List<string>();
+            Speeches = new List<string>();
         }
         public String Id { get; set; }
         public String IntentResponseId { get; set; }
-        public List<String> Speech { get; set; }
+        public List<String> Speeches { get; set; }
         public IntentResponseMessageType Type { get; set; }
         public IntentResponseMessagePlatform Platform { get; set; }
     }
@@ -118,7 +112,6 @@ namespace Eagle.Apps.Chatbot.DomainModels
         /// Entity Type Name
         /// </summary>
         public String DataType { get; set; }
-        public String EntityId { get; set; }
         public Boolean Required { get; set; }
         public String Value { get; set; }
         public String DefaultValue { get; set; }

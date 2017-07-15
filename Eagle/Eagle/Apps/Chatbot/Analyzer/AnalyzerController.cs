@@ -7,6 +7,9 @@ using Eagle.DmServices;
 using Eagle.Core;
 using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.Apps.Chatbot.DmServices;
+using System.Threading.Tasks;
+using Eagle.Utility;
+using System.Text.RegularExpressions;
 
 namespace Eagle.Apps.Chatbot.Analyzer
 {
@@ -37,13 +40,15 @@ namespace Eagle.Apps.Chatbot.Analyzer
         {
             var model = new DmAgentRequest { Text = text };
 
-            return model.PosTagger(dc).Select(x => new DmIntentExpressionItem
+            var segments = model.PosTagger(dc).Select(x => new DmIntentExpressionItem
             {
                 Text = x.Text,
-                EntityId = x.EntityId,
+                Meta = x.Meta,
                 Position = x.Position,
                 Length = x.Length
-            }).OrderBy(x => x.Position);
+            }).OrderBy(x => x.Position).ToList();
+
+            return segments;
         }
     }
 }

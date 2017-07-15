@@ -13,7 +13,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 {
     public static class DmAgentService
     {
-        public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc)
+        public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc, String nerUrl)
         {
             var queryable = from intent in dc.Intents
                             join exp in dc.IntentExpressions on intent.Id equals exp.IntentId
@@ -32,7 +32,7 @@ namespace Eagle.Apps.Chatbot.DmServices
                 {
                     DmIntentExpression model = expression.Map<DmIntentExpression>();
                     model.Similarity = CompareSimilarity(intents.Select(x => x.Text).ToList(), agentRequestModel.Text, expression.Text, dc);
-                    if(model.Similarity > 0.6)
+                    if (model.Similarity > 0.6)
                     {
                         similarities.Add(model);
                     }
@@ -63,7 +63,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
 
 
-            return new DmAgentResponse { Text = messageModel.Speech.Random() };
+            return new DmAgentResponse { Text = messageModel.Speeches.Random() };
         }
 
         /// <summary>

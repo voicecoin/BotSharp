@@ -19,14 +19,12 @@
           "text": "今天",
           "alias": "day",
           "meta": "@时间",
-          "entityId": "7102ef5e-8446-479d-bcec-d43e3ef22c30",
           "color": "#83EE1F"
         },
         {
           "text": "北京",
           "alias": "area",
-          "meta": "@行政区划-市",
-          "entityId": "b24a146f-c2b1-40bd-9b0f-665e2546017b",
+          "meta": "@地名",
           "color": "#E3DF00"
         },
         {
@@ -47,26 +45,26 @@
       ],
       "messages": [
         {
-          "speech": [ "{$time}{$place}的天气还不错。", "等我问下{$place}气象局，我表哥在那里上班。" ],
+          "speeches": [ "{$time}{$place}的天气还不错。", "等我问下{$place}气象局，我表哥在那里上班。" ],
           "type": 0
         }
       ],
       "parameters": [
         {
           "name": "time",
-          "entityId": "7102ef5e-8446-479d-bcec-d43e3ef22c30",
+          "dataType": "@时间",
           "required": true,
           "Prompts": [ "你想问什么时候的？" ],
           "value": "$time",
-          "defaultValue": "北京"
+          "defaultValue": "今天"
         },
         {
           "name": "place",
-          "entityId": "b24a146f-c2b1-40bd-9b0f-665e2546017b",
+          "dataType": "@地名",
           "required": true,
           "Prompts": [ "你是问什么地方的？" ],
           "value": "$place",
-          "defaultValue": "当前位置"
+          "defaultValue": "北京"
         }
       ]
     }

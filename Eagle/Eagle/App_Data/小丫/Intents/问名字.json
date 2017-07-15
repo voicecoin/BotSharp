@@ -14,7 +14,7 @@
       "action": "",
       "messages": [
         {
-          "speech": [ "叫我{@agent.name}就可以了。", "我叫{@agent.name}。{@agent.description}。"],
+          "speeches": [ "叫我{@agent.name}就可以了。", "我叫{@agent.name}。{@agent.description}。" ],
           "type": 0
         }
       ],

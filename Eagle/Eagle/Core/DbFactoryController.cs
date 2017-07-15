@@ -12,19 +12,14 @@ namespace Eagle.Core
     [Route("v1")]
     public class DbFactoryController : CoreController
     {
-        /*public IEnumerable<Object> Query(string from, EfQueryModel filter)
+        /*[HttpGet("{table}/Any")]
+        public IEnumerable<Object> Any([FromRoute] string table, [FromQuery] JObject parameters)
         {
-            return Dc.Query(typeof(Mercury.DbExtension.DbExtension), from, filter);
         }*/
 
         [HttpGet("{table}/{id}")]
         public Object Find(string table, string id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             Type tableType = Assembly.GetEntryAssembly()
                 .GetTypes()
                 .FirstOrDefault(t => t.Name == table);
@@ -44,11 +39,6 @@ namespace Eagle.Core
         [HttpPut("{table}/{id}")]
         public async Task<IActionResult> UpdateById([FromRoute] string table, [FromRoute] string id, [FromBody] JObject model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             Type tableType = Assembly.GetEntryAssembly()
                 .GetTypes()
                 .FirstOrDefault(t => t.Name == table);
@@ -98,11 +88,6 @@ namespace Eagle.Core
             Type tableType = Assembly.GetEntryAssembly()
                 .GetTypes()
                 .FirstOrDefault(t => t.Name == table);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var row = dc.Find(tableType, id);
 

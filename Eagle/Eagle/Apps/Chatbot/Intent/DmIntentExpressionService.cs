@@ -23,7 +23,6 @@ namespace Eagle.Apps.Chatbot
         public static void Delete(this DmIntentExpression intentExpression, CoreDbContext dc)
         {
             // Remove Items first
-            dc.IntentExpressionItems.RemoveRange(dc.IntentExpressionItems.Where(x => x.IntentExpressionId == intentExpression.Id));
             dc.IntentExpressions.Remove(dc.IntentExpressions.Find(intentExpression.Id));
             dc.SaveChanges();
         }
@@ -33,13 +32,16 @@ namespace Eagle.Apps.Chatbot
             var expressionRecord = intentExpression.MapByJsonString<IntentExpressions>();
             expressionRecord.CreatedDate = DateTime.UtcNow;
             expressionRecord.ModifiedDate = DateTime.UtcNow;
-            dc.IntentExpressions.Add(expressionRecord);
 
             int pos = 0;
             intentExpression.Data.ForEach(item => {
-                item.IntentExpressionId = expressionRecord.Id;
-                pos = item.Add(dc, pos);
+                item.Length = item.Text.Length;
+                item.Position = pos;
+                pos += item.Text.Length;
             });
+            expressionRecord.Items = intentExpression.Data.ToArray();
+
+            dc.IntentExpressions.Add(expressionRecord);
         }
     }
 }

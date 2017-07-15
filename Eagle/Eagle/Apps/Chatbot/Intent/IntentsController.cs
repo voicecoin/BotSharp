@@ -120,7 +120,7 @@ namespace Eagle.Apps.Chatbot
 
         // GET: v1/Intent?text=
         [HttpGet("Markup")]
-        public IEnumerable<Object> Markup([FromQuery] string text)
+        public IEnumerable<object> Markup([FromQuery] string text)
         {
             var model = new DmAgentRequest { Text = text };
 
@@ -130,8 +130,7 @@ namespace Eagle.Apps.Chatbot
                 x.Alias,
                 x.Meta,
                 x.Position,
-                x.Length,
-                x.EntityId
+                x.Length
             }).OrderBy(x => x.Position);
         }
 

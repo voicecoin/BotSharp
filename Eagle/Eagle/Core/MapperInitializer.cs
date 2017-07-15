@@ -18,9 +18,7 @@ namespace Eagle.Core
                 cfg.CreateMap<Agents, DmAgent>().ReverseMap();
                 cfg.CreateMap<Intents, DmIntent>().ReverseMap();
                 cfg.CreateMap<IntentExpressions, DmIntentExpression>().ReverseMap();
-                cfg.CreateMap<IntentExpressionItems, DmIntentExpressionItem>().ReverseMap();
                 cfg.CreateMap<IntentResponses, DmIntentResponse>().ReverseMap();
-                cfg.CreateMap<IntentResponseContexts, DmIntentResponseContext>().ReverseMap();
                 cfg.CreateMap<IntentResponseMessages, DmIntentResponseMessage>().ReverseMap();
                 cfg.CreateMap<IntentResponseParameters, DmIntentResponseParameter>().ReverseMap();
                 cfg.CreateMap<Entities, DmEntity>().ReverseMap();

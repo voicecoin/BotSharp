@@ -12,7 +12,7 @@
       "action": "",
       "messages": [
         {
-          "speech": ["{@agent.age}。"],
+          "speeches": ["{@agent.age}。"],
           "type": 0
         }
       ],

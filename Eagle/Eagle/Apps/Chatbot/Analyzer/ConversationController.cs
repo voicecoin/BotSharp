@@ -23,7 +23,7 @@ namespace Eagle.Apps.Chatbot.Analyzer
             var agentRecord = dc.Agents.First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
             DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord.Map<DmAgent>(), Text = analyzerModel.Text };
 
-            var response = agentRequestModel.TextRequest(dc);
+            var response = agentRequestModel.TextRequest(dc, Configuration.GetSection("NlpApi:NlpirUrl").Value);
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {
