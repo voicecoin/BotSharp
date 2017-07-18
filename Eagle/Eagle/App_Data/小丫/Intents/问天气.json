@@ -16,16 +16,18 @@
       "text": "今天北京天气怎么样",
       "data": [
         {
-          "text": "今天",
+          "text": "今日",
           "alias": "day",
           "meta": "@时间",
-          "color": "#83EE1F"
+          "color": "#83EE1F",
+          "value": "今天"
         },
         {
-          "text": "北京",
+          "text": "首都",
           "alias": "area",
           "meta": "@地名",
-          "color": "#E3DF00"
+          "color": "#E3DF00",
+          "value": "北京"
         },
         {
           "text": "天气怎么样"

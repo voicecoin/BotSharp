@@ -9,6 +9,6 @@ namespace Eagle.DataContexts
 {
     public partial class CoreDbContext
     {
-        public DbSet<Agents> Agents { get; set; }
+        public DbSet<Agents> Chatbot_Agents { get; set; }
     }
 }

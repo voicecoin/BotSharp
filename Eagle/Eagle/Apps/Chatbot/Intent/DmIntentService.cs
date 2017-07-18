@@ -14,8 +14,8 @@ namespace Eagle.Apps.Chatbot.DmServices
     {
         public static void Load(this DmIntent intentModel, CoreDbContext dc)
         {
-            var intentExpressions = dc.IntentExpressions.Where(x => x.IntentId == intentModel.Id).ToList();
-            var intentExpressionItems = (from item in dc.IntentExpressions
+            var intentExpressions = dc.Chatbot_IntentExpressions.Where(x => x.IntentId == intentModel.Id).ToList();
+            var intentExpressionItems = (from item in dc.Chatbot_IntentExpressions
                                          where intentExpressions.Select(expression => expression.Id).Contains(item.Id)
                                          select item).ToList();
 
@@ -29,7 +29,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
             intentModel.Templates = intentModel.UserSays.Select(x => x.Data.GetTemplateString()).ToList();
 
-            intentModel.Responses = dc.IntentResponses
+            intentModel.Responses = dc.Chatbot_IntentResponses
                 .Where(x => x.IntentId == intentModel.Id)
                 .Select(x => x.Map<DmIntentResponse>())
                 .ToList();
@@ -37,11 +37,11 @@ namespace Eagle.Apps.Chatbot.DmServices
             intentModel.Responses.ForEach(response =>
             {
                 // Load message
-                response.Messages = dc.IntentResponseMessages.Where(x => x.IntentResponseId == response.Id)
+                response.Messages = dc.Chatbot_IntentResponseMessages.Where(x => x.IntentResponseId == response.Id)
                     .Select(x => x.Map<DmIntentResponseMessage>()).ToList();
 
                 // Load parameters
-                response.Parameters = dc.IntentResponseParameters.Where(x => x.IntentResponseId == response.Id)
+                response.Parameters = dc.Chatbot_IntentResponseParameters.Where(x => x.IntentResponseId == response.Id)
                                     .Select(x => x.Map<DmIntentResponseParameter>()).ToList();
             });
         }
@@ -58,7 +58,7 @@ namespace Eagle.Apps.Chatbot.DmServices
             intentRecord.CreatedDate = DateTime.UtcNow;
             intentRecord.Contexts = intentModel.Contexts.ToArray();
 
-            dc.Intents.Add(intentRecord);
+            dc.Chatbot_Intents.Add(intentRecord);
 
             intentModel.UserSays.ForEach(userSay =>
             {
@@ -75,7 +75,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
         public static void Update(this DmIntent intentModel, CoreDbContext dc)
         {
-            var intentRecord = dc.Intents.Find(intentModel.Id);
+            var intentRecord = dc.Chatbot_Intents.Find(intentModel.Id);
             intentRecord.Name = intentModel.Name;
             intentRecord.ModifiedDate = DateTime.UtcNow;
 

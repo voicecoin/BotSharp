@@ -1,0 +1,10 @@
+﻿{
+  "id": "2da99fd6-ec96-4a6a-a64e-efc6344fb371",
+  "isEnum": true,
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "{@数词:number}{@量词:unit}"
+    }
+  ]
+}

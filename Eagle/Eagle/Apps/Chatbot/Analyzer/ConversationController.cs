@@ -20,7 +20,7 @@ namespace Eagle.Apps.Chatbot.Analyzer
             // Yaya UserName: gh_0a3fe78f2d13, key: ce36fa6d0ec047248da3354519658734
             // Lingxihuagu UserName: gh_c96a6311ab6d, key: f8bc556e63364c5a8b4e37000d897704
 
-            var agentRecord = dc.Agents.First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
+            var agentRecord = dc.Chatbot_Agents.First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
             DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord.Map<DmAgent>(), Text = analyzerModel.Text };
 
             var response = agentRequestModel.TextRequest(dc, Configuration.GetSection("NlpApi:NlpirUrl").Value);

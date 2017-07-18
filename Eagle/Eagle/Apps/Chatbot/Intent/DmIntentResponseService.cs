@@ -13,18 +13,27 @@ namespace Eagle.Apps.Chatbot
     {
         public static void Update(this DmIntentResponse responseModel, CoreDbContext dc)
         {
-            var response = dc.IntentResponses.Find(responseModel.Id);
+            var response = dc.Chatbot_IntentResponses.Find(responseModel.Id);
+            if(response == null)
+            {
+                
+            }
             response.Action = responseModel.Action;
             response.AffectedContexts = responseModel.AffectedContexts.ToArray();
 
-            dc.IntentResponseMessages.RemoveRange(dc.IntentResponseMessages.Where(x => x.IntentResponseId == responseModel.Id));
+            dc.Chatbot_IntentResponseMessages.RemoveRange(dc.Chatbot_IntentResponseMessages.Where(x => x.IntentResponseId == responseModel.Id));
+            dc.SaveChanges();
+
             responseModel.Messages.ForEach(message => {
-                dc.IntentResponseMessages.Add(message.Map<IntentResponseMessages>());
+                dc.Chatbot_IntentResponseMessages.Add(message.Map<IntentResponseMessages>());
             });
 
-            dc.IntentResponseParameters.RemoveRange(dc.IntentResponseParameters.Where(x => x.IntentResponseId == responseModel.Id));
+            dc.Chatbot_IntentResponseParameters.RemoveRange(dc.Chatbot_IntentResponseParameters.Where(x => x.IntentResponseId == responseModel.Id));
+            dc.SaveChanges();
+
             responseModel.Parameters.ForEach(parameter => {
-                dc.IntentResponseParameters.Add(parameter.Map<IntentResponseParameters>());
+                parameter.IntentResponseId = responseModel.Id;
+                dc.Chatbot_IntentResponseParameters.Add(parameter.Map<IntentResponseParameters>());
             });
         }
 
@@ -39,7 +48,7 @@ namespace Eagle.Apps.Chatbot
 
             });
 
-            dc.IntentResponses.Remove(dc.IntentResponses.Find(responseModel.Id));
+            dc.Chatbot_IntentResponses.Remove(dc.Chatbot_IntentResponses.Find(responseModel.Id));
 
             dc.SaveChanges();
         }
@@ -50,7 +59,7 @@ namespace Eagle.Apps.Chatbot
             responseRecord.Id = Guid.NewGuid().ToString();
             responseRecord.CreatedDate = DateTime.UtcNow;
             responseRecord.AffectedContexts = responseModel.AffectedContexts.ToArray();
-            dc.IntentResponses.Add(responseRecord);
+            dc.Chatbot_IntentResponses.Add(responseRecord);
 
             responseModel.Messages.ForEach(message =>
             {
@@ -70,7 +79,7 @@ namespace Eagle.Apps.Chatbot
             var responseMessageRecord = responseMessageModel.Map<IntentResponseMessages>();
             responseMessageRecord.Id = Guid.NewGuid().ToString();
             responseMessageRecord.CreatedDate = DateTime.UtcNow;
-            dc.IntentResponseMessages.Add(responseMessageRecord);
+            dc.Chatbot_IntentResponseMessages.Add(responseMessageRecord);
         }
 
         public static void Add(this DmIntentResponseParameter responseParameterModel, CoreDbContext dc)
@@ -79,7 +88,7 @@ namespace Eagle.Apps.Chatbot
             responseParameterRecord.Id = Guid.NewGuid().ToString();
             responseParameterRecord.CreatedDate = DateTime.UtcNow;
             responseParameterRecord.Prompts = responseParameterModel.Prompts.ToArray();
-            dc.IntentResponseParameters.Add(responseParameterRecord);
+            dc.Chatbot_IntentResponseParameters.Add(responseParameterRecord);
         }
     }
 }

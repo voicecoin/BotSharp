@@ -9,9 +9,8 @@ namespace Eagle.DataContexts
 {
     public partial class CoreDbContext
     {
-        public DbSet<Entities> Entities { get; set; }
-        public DbSet<EntityEntries> EntityEntries { get; set; }
-        //public DbSet<EntityEntryLables> EntityEntryLables { get; set; }
-        public DbSet<EntityEntrySynonyms> EntityEntrySynonyms { get; set; }
+        public DbSet<Entities> Chatbot_Entities { get; set; }
+        public DbSet<EntityEntries> Chatbot_EntityEntries { get; set; }
+        public DbSet<EntityEntrySynonyms> Chatbot_EntityEntrySynonyms { get; set; }
     }
 }

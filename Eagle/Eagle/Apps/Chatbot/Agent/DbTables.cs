@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace Eagle.DbTables
 {
-    public class Agents : DbTable
+    public class Agents : DbRecordWithNameColumn
     {
-        [Required]
-        [MaxLength(32)]
-        public String Name { get; set; }
         [MaxLength(256)]
         public String Description { get; set; }
         [MaxLength(8)]

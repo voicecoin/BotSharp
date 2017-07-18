@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Eagle.DataContexts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Eagle.DataContexts;
 
 namespace Eagle.Core
 {

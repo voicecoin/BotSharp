@@ -1,4 +1,5 @@
 ﻿using Eagle.Apps.Chatbot.DomainModels;
+using Eagle.Apps.Chatbot.Enums;
 using Eagle.DataContexts;
 using Eagle.DbTables;
 using Eagle.DomainModels;
@@ -24,52 +25,63 @@ namespace Eagle.Apps.Chatbot.DmServices
         public static List<DmIntentExpressionItem> PosTagger(this DmAgentRequest analyzerModel, CoreDbContext dc)
         {
             string text = analyzerModel.Text;
+            List<DmEntity> allEntities = dc.Chatbot_Entities/*.Where(x => x.AgentId == analyzerModel.Agent.Id || x.AgentId == Constants.GenesisAgentId)*/.Select(x => x.Map<DmEntity>()).ToList();
 
             // 识别所有单元实体
             // 用Entry识别
-            var unitEntityInEntry = (from entity in dc.Entities
-                                         join entry in dc.EntityEntries on entity.Id equals entry.EntityId
+            var unitEntityInEntry = (from entity in dc.Chatbot_Entities
+                                         join entry in dc.Chatbot_EntityEntries on entity.Id equals entry.EntityId
                                          where text.Contains(entry.Value)
                                          select new DmIntentExpressionItem
                                          {
                                              Text = entry.Value,
                                              Meta = $"@{entity.Name}",
                                              Alias = entity.Name,
-                                             Length = entry.Value.Length
+                                             Length = entry.Value.Length,
+                                             Color = entity.Color,
+                                             Value = entry.Value
                                          }).ToList();
 
             // 用Synonym识别一次
-            var unitEntityInSynonym = (from entity in dc.Entities
-                                       join entry in dc.EntityEntries on entity.Id equals entry.EntityId
-                                       join synonym in dc.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
+            var unitEntityInSynonym = (from entity in dc.Chatbot_Entities
+                                       join entry in dc.Chatbot_EntityEntries on entity.Id equals entry.EntityId
+                                       join synonym in dc.Chatbot_EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
                                        where text.Contains(synonym.Synonym)
                                        select new DmIntentExpressionItem
                                        {
                                            Text = synonym.Synonym,
                                            Meta = $"@{entity.Name}",
                                            Alias = entity.Name,
-                                           Length = entry.Value.Length
+                                           Length = entry.Value.Length,
+                                           Color = entity.Color,
+                                           Value = entry.Value
                                        }).ToList();
 
 
-            // 未识别出的词，再用系统库识别一次
+            // 未识别出的词，再用识别一次
             var client = new RestClient(CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value);
             var request = new RestRequest("nlpir/wordsplit/" + text, Method.GET);
             var response = client.Rest(request);
-            var result = JsonConvert.DeserializeObject<NlpirResult>(response.Result.Content);
-            result.WordSplit.ForEach(x => {
-                MatchCollection mc = Regex.Matches(x.Entity, "\".+\"");
+            string jsongContent = response.Result.Content;
+            var result = JsonConvert.DeserializeObject<NlpirResult>(jsongContent);
+
+            // 只需要识别实体
+            List<String> entityNames = allEntities.Select(x => x.Name).ToList();
+            result.WordSplit.Where(x => entityNames.Contains(x.Entity)).ToList().ForEach(seg => {
+                MatchCollection mc = Regex.Matches(seg.Entity, "\".+\"");
                 foreach (Match m in mc)
                 {
-                    x.Entity = x.Entity.Replace(m.Value, String.Empty);
+                    seg.Entity = seg.Entity.Replace(m.Value, String.Empty);
                 }
 
                 unitEntityInEntry.Add(new DmIntentExpressionItem
                 {
-                    Text = x.Word,
-                    Meta = "@" + x.Entity,
-                    Alias = x.Entity,
-                    Length = x.Word.Length
+                    Text = seg.Word,
+                    Meta = "@" + seg.Entity,
+                    Alias = seg.Entity,
+                    Length = seg.Word.Length,
+                    Color = allEntities.First(x => x.Name == seg.Entity).Color,
+                    Value = seg.Word
                 });
             });
 
@@ -83,14 +95,17 @@ namespace Eagle.Apps.Chatbot.DmServices
 
             string template = unitEntities.GetTemplateString(); // String.Concat(unitEntities.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToArray());
             // 识别组合实体
-            var compositEntitiesQueryable = (from entity in dc.Entities
-                                             join entry in dc.EntityEntries on entity.Id equals entry.EntityId
-                                             where entity.IsEnum && template.Contains(entry.Value)
+            var compositEntitiesQueryable = (from entity in dc.Chatbot_Entities
+                                             join entry in dc.Chatbot_EntityEntries on entity.Id equals entry.EntityId
+                                             where entity.IsEnum // && (entity.AgentId == analyzerModel.Agent.Id || entity.AgentId == Constants.GenesisAgentId)
                                              select new DmIntentExpressionItem
                                              {
                                                  Text = entry.Value,
                                                  Meta = $"@{entity.Name}",
-                                                 Alias = entity.Name
+                                                 Alias = entity.Name,
+                                                 IsEnum = entity.IsEnum,
+                                                 Color = entity.Color,
+                                                 Value = entry.Value
                                              }).ToList();
 
             var compositEntities = Process(template, compositEntitiesQueryable).Where(x => x.Meta != null).ToList();
@@ -124,8 +139,17 @@ namespace Eagle.Apps.Chatbot.DmServices
             var taggers = PosTagger(analyzerModel, dc);
 
             List<DmIntentExpressionItem> segments = new List<DmIntentExpressionItem>();
-            segments.AddRange(taggers.Where(x => !String.IsNullOrEmpty(x.Meta)));
 
+            // 把识别出的实体标准化
+            taggers.Where(x => !String.IsNullOrEmpty(x.Meta))
+                .ToList()
+                .ForEach(x => {
+                    //x.Text = x.Alias;
+                    segments.Add(x);
+                });
+            
+
+            // 分隔未识别的词，每个词分成字符。
             taggers.Where(x => String.IsNullOrEmpty(x.Meta))
                 .ToList()
                 .ForEach(tag =>
@@ -174,7 +198,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
             responseModel.Parameters.ForEach(parameter =>
             {
-                parameter.Value = segments.First(x => x.Meta == parameter.Name).Text;
+                parameter.Value = segments.First(x => x.Meta == parameter.DataType).Text;
             });
         }
 
@@ -278,6 +302,20 @@ namespace Eagle.Apps.Chatbot.DmServices
 
             entities.ForEach(token =>
             {
+                // 是组合实体
+                if (token.IsEnum)
+                {
+                    MatchCollection mcc = Regex.Matches(token.Text, @"\{(.+?)\}");
+                    List<String> entityNames = new List<String>();
+                    foreach (Match m in mcc)
+                    {
+                        var entityName = Regex.Match(m.Value, "@.+:").ToString().Replace("@", "").Replace(":", "");
+                        entityNames.Add("{@" + entityName + ":" + entityName + "}");
+                    }
+
+                    token.Text =  String.Concat(entityNames);
+                }
+
                 MatchCollection mc = Regex.Matches(text, token.Text);
                 foreach (Match m in mc)
                 {
@@ -287,11 +325,14 @@ namespace Eagle.Apps.Chatbot.DmServices
                         Length = m.Length,
                         Alias = token.Alias,
                         Text = token.Text,
-                        Meta = token.Meta
+                        Meta = token.Meta,
+                        Color = token.Color,
+                        Value = token.Text
                     };
 
                     tags.Add(temp);
                 }
+
             });
 
             tags = tags.OrderBy(x => x.Position).ToList();
@@ -321,7 +362,8 @@ namespace Eagle.Apps.Chatbot.DmServices
                     {
                         Text = text.Substring(pos, length),
                         Position = pos,
-                        Length = length
+                        Length = length,
+                        Value = text.Substring(pos, length)
                     };
 
                     results.Add(item);

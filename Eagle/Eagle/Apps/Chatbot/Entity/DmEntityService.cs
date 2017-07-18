@@ -23,7 +23,7 @@ namespace Eagle.Apps.Chatbot.DmServices
             var entityRecord = entityModel.Map<Entities>();
             entityRecord.CreatedDate = DateTime.UtcNow;
 
-            dc.Entities.Add(entityRecord);
+            dc.Chatbot_Entities.Add(entityRecord);
 
             // add entries
             if (entityModel.Entries != null)
@@ -38,11 +38,11 @@ namespace Eagle.Apps.Chatbot.DmServices
 
         public static void Delete(this DmEntity entityModel, CoreDbContext dc)
         {
-            Entities entityRecored = dc.Entities.Find(entityModel.Id);
+            Entities entityRecored = dc.Chatbot_Entities.Find(entityModel.Id);
 
             // remove entries
             entityModel.DeleteEntries(dc, entityRecored.Id);
-            dc.Entities.Remove(entityRecored);
+            dc.Chatbot_Entities.Remove(entityRecored);
         }
 
         public static void DeleteEntries(this DmEntity entityModel, CoreDbContext dc, string entityId)
@@ -58,7 +58,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
         public static void Update(this DmEntity entityModel, CoreDbContext dc)
         {
-            Entities entityRecored = dc.Entities.Find(entityModel.Id);
+            Entities entityRecored = dc.Chatbot_Entities.Find(entityModel.Id);
             entityRecored.Name = entityModel.Name;
             entityRecored.IsEnum = entityModel.IsEnum;
         }
@@ -69,22 +69,22 @@ namespace Eagle.Apps.Chatbot.DmServices
             var entryRecord = entityEntryModel.Map<EntityEntries>();
             entryRecord.CreatedDate = DateTime.UtcNow;
 
-            dc.EntityEntries.Add(entryRecord);
+            dc.Chatbot_EntityEntries.Add(entryRecord);
             // add synonyms
             entityEntryModel.AddSynonyms(dc, entryRecord.Id);
         }
 
         public static void Delete(this DmEntityEntry entityEntryModel, CoreDbContext dc)
         {
-            EntityEntries entityEntryRecored = dc.EntityEntries.Find(entityEntryModel.Id);
+            EntityEntries entityEntryRecored = dc.Chatbot_EntityEntries.Find(entityEntryModel.Id);
 
             entityEntryModel.DeleteSynonyms(dc, entityEntryModel.Id);
-            dc.EntityEntries.Remove(entityEntryRecored);
+            dc.Chatbot_EntityEntries.Remove(entityEntryRecored);
         }
 
         public static void Update(this DmEntityEntry entityEntryModel, CoreDbContext dc)
         {
-            EntityEntries entityEntryRecored = dc.EntityEntries.Find(entityEntryModel.Id);
+            EntityEntries entityEntryRecored = dc.Chatbot_EntityEntries.Find(entityEntryModel.Id);
             entityEntryRecored.Value = entityEntryModel.Value;
 
             entityEntryModel.DeleteSynonyms(dc, entityEntryRecored.Id);
@@ -97,7 +97,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
             entityEntryModel.Synonyms.Where(x => !String.IsNullOrEmpty(x)).ToList().ForEach(synonym =>
             {
-                dc.EntityEntrySynonyms.Add(new EntityEntrySynonyms
+                dc.Chatbot_EntityEntrySynonyms.Add(new EntityEntrySynonyms
                 {
                     EntityEntryId = entityEntryId,
                     Synonym = synonym,
@@ -111,7 +111,7 @@ namespace Eagle.Apps.Chatbot.DmServices
         {
             if (entityEntryModel.Synonyms == null) return;
 
-            dc.EntityEntrySynonyms.RemoveRange(dc.EntityEntrySynonyms.Where(x => x.EntityEntryId == entityEntryId));
+            dc.Chatbot_EntityEntrySynonyms.RemoveRange(dc.Chatbot_EntityEntrySynonyms.Where(x => x.EntityEntryId == entityEntryId));
         }
     }
 }

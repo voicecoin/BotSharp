@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Eagle.DomainModels;
-using Eagle.DmServices;
 using Eagle.Core;
 using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.Apps.Chatbot.DmServices;
-using System.Threading.Tasks;
-using Eagle.Utility;
-using System.Text.RegularExpressions;
 
 namespace Eagle.Apps.Chatbot.Analyzer
 {
@@ -26,13 +21,28 @@ namespace Eagle.Apps.Chatbot.Analyzer
         {
             var model = new DmAgentRequest { Text = text };
 
-            return model.PosTagger(dc).Select(x => new
-            {
-                Text = x.Text,
-                Entity = x.Alias,
-                Position = x.Position,
-                Length = x.Length
-            }).OrderBy(x => x.Position);
+            return model.PosTagger(dc)
+                .Where(x => !String.IsNullOrEmpty(x.Meta))
+                .OrderBy(x => x.Position)
+                .Select(x => new
+                {
+                    Word = x.Text,
+                    Entity = x.Alias
+                });
+        }
+
+        [HttpGet("Pos")]
+        public IEnumerable<Object> Pos([FromQuery] string text)
+        {
+            var model = new DmAgentRequest { Text = text };
+
+            return model.PosTagger(dc)
+                .OrderBy(x => x.Position)
+                .Select(x => new
+                {
+                    Word = x.Text,
+                    Entity = x.Alias
+                });
         }
 
         [HttpGet("Markup")]
@@ -45,7 +55,8 @@ namespace Eagle.Apps.Chatbot.Analyzer
                 Text = x.Text,
                 Meta = x.Meta,
                 Position = x.Position,
-                Length = x.Length
+                Length = x.Length,
+                Color = x.Color
             }).OrderBy(x => x.Position).ToList();
 
             return segments;

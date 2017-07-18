@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eagle.DbTables;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using Eagle.Enums;
 
 namespace Eagle.DbTables
 {
-    public class BundleEntity : NamedEntity
+    public class BundleEntity : DbRecordWithNameColumn
     {
         [Required]
         public string EntityName { get; set; }
@@ -16,7 +17,7 @@ namespace Eagle.DbTables
         public List<BundleFieldEntity> Fields { get; set; }
     }
 
-    public class BundleFieldEntity : NamedEntity
+    public class BundleFieldEntity : DbRecordWithNameColumn
     {
         [Required]
         public string BundleId { get; set; }
@@ -24,7 +25,7 @@ namespace Eagle.DbTables
         public FieldTypes FieldTypeId { get; set; }
     }
 
-    public class BundleFieldSettingEntity : NamedEntity
+    public class BundleFieldSettingEntity : DbRecordWithNameColumn
     {
         [Required]
         public string BundleFieldId { get; set; }

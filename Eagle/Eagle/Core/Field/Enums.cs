@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 
 namespace Eagle.Enums
 {
+    public enum BundleFieldSettings
+    {
+        DisplayName = 1
+    }
+
     public enum FieldTypes
     {
         Text = 1,
@@ -13,7 +18,7 @@ namespace Eagle.Enums
         Image = 4,
         Boolean = 5,
         Address = 6,
-        RichText = 7
+        RichText = 7,
+        DateTime = 8
     }
-
 }

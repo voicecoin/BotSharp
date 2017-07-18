@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,7 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Eagle.Core.Account
+namespace Eagle.Core
 {
     public class CustomJwtDataFormat : ISecureDataFormat<AuthenticationTicket>
     {
@@ -72,5 +75,4 @@ namespace Eagle.Core.Account
             throw new NotImplementedException();
         }
     }
-
 }

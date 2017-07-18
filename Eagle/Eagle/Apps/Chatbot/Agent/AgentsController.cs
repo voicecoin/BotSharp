@@ -17,7 +17,7 @@ namespace Eagle.Apps.Chatbot.Agent
         [HttpGet("{userId}/Query")]
         public DmPageResult<DmAgent> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
-            var query = dc.Agents.Where(x => x.UserId == userId);
+            var query = dc.Chatbot_Agents.Where(x => x.UserId == userId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -40,7 +40,7 @@ namespace Eagle.Apps.Chatbot.Agent
                 return BadRequest(ModelState);
             }
 
-            var agents = await dc.Agents.SingleOrDefaultAsync(m => m.Id == id);
+            var agents = await dc.Chatbot_Agents.SingleOrDefaultAsync(m => m.Id == id);
 
             if (agents == null)
             {
@@ -61,11 +61,12 @@ namespace Eagle.Apps.Chatbot.Agent
                 return BadRequest("Agent id not match.");
             }
 
-            var agentRecord = dc.Agents.Find(id);
+            var agentRecord = dc.Chatbot_Agents.Find(id);
 
             agentRecord.Name = agentModel.Name;
             agentRecord.Description = agentModel.Description;
             agentRecord.Language = agentModel.Language;
+            agentRecord.Avatar = agentModel.Avatar;
 
             dc.Entry(agentRecord).State = EntityState.Modified;
 
@@ -98,7 +99,7 @@ namespace Eagle.Apps.Chatbot.Agent
             agentRecord.DeveloperAccessToken = Guid.NewGuid().ToString("N");
             agentRecord.CreatedDate = DateTime.UtcNow;
 
-            dc.Agents.Add(agentRecord);
+            dc.Chatbot_Agents.Add(agentRecord);
             await dc.SaveChangesAsync();
 
             return CreatedAtAction("GetAgents", new { id = agentRecord.Id }, new { id = agentRecord.Id });
@@ -113,13 +114,13 @@ namespace Eagle.Apps.Chatbot.Agent
                 return BadRequest(ModelState);
             }
 
-            var agents = await dc.Agents.SingleOrDefaultAsync(m => m.Id == id);
+            var agents = await dc.Chatbot_Agents.SingleOrDefaultAsync(m => m.Id == id);
             if (agents == null)
             {
                 return NotFound();
             }
 
-            dc.Agents.Remove(agents);
+            dc.Chatbot_Agents.Remove(agents);
             await dc.SaveChangesAsync();
 
             return Ok(agents);
@@ -127,7 +128,7 @@ namespace Eagle.Apps.Chatbot.Agent
 
         private bool AgentsExists(string id)
         {
-            return dc.Agents.Any(e => e.Id == id);
+            return dc.Chatbot_Agents.Any(e => e.Id == id);
         }
     }
 }

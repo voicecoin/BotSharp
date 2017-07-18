@@ -20,7 +20,7 @@ namespace Eagle.Apps.Chatbot.Entity
         [HttpGet("{entityId}/Query")]
         public DmPageResult<DmEntityEntry> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1)
         {
-            var query = dc.EntityEntries.Where(x => x.EntityId == entityId);
+            var query = dc.Chatbot_EntityEntries.Where(x => x.EntityId == entityId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Value.Contains(name));
@@ -32,7 +32,7 @@ namespace Eagle.Apps.Chatbot.Entity
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntityEntry>()).ToList();
 
-            var synonyms = (from synonym in dc.EntityEntrySynonyms
+            var synonyms = (from synonym in dc.Chatbot_EntityEntrySynonyms
                          where items.Select(x => x.Id).Contains(synonym.EntityEntryId)
                          select new { synonym.EntityEntryId, synonym.Synonym}).ToList();
 
@@ -52,7 +52,7 @@ namespace Eagle.Apps.Chatbot.Entity
                 return BadRequest(ModelState);
             }
 
-            var entityEntries = await dc.EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
+            var entityEntries = await dc.Chatbot_EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
 
             if (entityEntries == null)
             {
@@ -109,7 +109,7 @@ namespace Eagle.Apps.Chatbot.Entity
                 return BadRequest(ModelState);
             }
 
-            var entityEntries = await dc.EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
+            var entityEntries = await dc.Chatbot_EntityEntries.SingleOrDefaultAsync(m => m.Id == id);
             if (entityEntries == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace Eagle.Apps.Chatbot.Entity
 
         private bool EntityEntriesExists(string id)
         {
-            return dc.EntityEntries.Any(e => e.Id == id);
+            return dc.Chatbot_EntityEntries.Any(e => e.Id == id);
         }
     }
 }

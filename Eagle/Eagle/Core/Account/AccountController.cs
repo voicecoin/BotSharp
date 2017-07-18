@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Eagle.DataContexts;
-using Eagle.DbTables;
 using Microsoft.AspNetCore.Authorization;
+using Eagle.DbTables;
 
 namespace Eagle.Core.Account
 {
@@ -16,7 +15,7 @@ namespace Eagle.Core.Account
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
-            var user = dc.Users.FirstOrDefault(x => x.Id == GetCurrentUser().Id);
+            var user = dc.Users.Find(GetCurrentUser().Id);
 
             return Ok(user);
         }
@@ -31,8 +30,7 @@ namespace Eagle.Core.Account
             return Ok(user);
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] String id)
         {
             if (!ModelState.IsValid)
@@ -40,13 +38,10 @@ namespace Eagle.Core.Account
                 return BadRequest(ModelState);
             }
 
-            var user = dc.Users.FirstOrDefault(x => x.Id == id);
-
-            return Ok(user);
+            return Ok(dc.Users.Find(id));
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser([FromRoute] String id, UserEntity accountModel)
         {
             if (!ModelState.IsValid)
@@ -60,16 +55,10 @@ namespace Eagle.Core.Account
         // POST: api/Account
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> CreateUser(UserEntity accountModel)
+        public async Task<IActionResult> CreateUser([FromBody] UserEntity accountModel)
         {
-            if (dc.Users.Count(x => x.UserName == accountModel.UserName) > 0) {
-                var error = new ApiError("User already exists.");
-                error.isError = true;
-                return BadRequest(error);
-            }
-
-            accountModel.Id = Guid.NewGuid().ToString();
             accountModel.BundleId = dc.Bundles.First(x => x.Name == "User Profile").Id;
+            accountModel.Id = Guid.NewGuid().ToString();
             accountModel.CreatedUserId = accountModel.Id;
             accountModel.CreatedDate = DateTime.UtcNow;
             accountModel.ModifiedUserId = accountModel.Id;
@@ -78,10 +67,7 @@ namespace Eagle.Core.Account
             dc.Users.Add(accountModel);
             await dc.SaveChangesAsync();
 
-            //return CreatedAtAction("CreateUser", new { id = accountModel.Id }, accountModel.Id);
-            return Ok(new { id = accountModel.Id });
+            return CreatedAtAction("CreateUser", new { id = accountModel.Id }, accountModel.Id);
         }
     }
 }
-
-

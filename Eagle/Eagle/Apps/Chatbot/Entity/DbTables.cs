@@ -12,7 +12,7 @@ namespace Eagle.DbTables
     /// 实体，用于做大的分类。
     /// 比如地名，时间，计量单位，机构名，品牌，职位，产品名
     /// </summary>
-    public class Entities : DbTable
+    public class Entities : DbRecord
     {
         [Required]
         [StringLength(36)]
@@ -36,7 +36,7 @@ namespace Eagle.DbTables
     /// 实体条目。
     /// 比如“北京”，“上海”，这些属于地点。
     /// </summary>
-    public class EntityEntries : DbTable
+    public class EntityEntries : DbRecord
     {
         [Required]
         [StringLength(36)]
@@ -63,7 +63,7 @@ namespace Eagle.DbTables
     /// <summary>
     /// 实体条目同义词
     /// </summary>
-    public class EntityEntrySynonyms : DbTable
+    public class EntityEntrySynonyms : DbRecord
     {
         [Required]
         [JsonIgnore]

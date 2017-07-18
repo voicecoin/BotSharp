@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Eagle.Core.Account
+namespace Eagle.Core
 {
     public class TokenProviderOptions
     {
@@ -117,8 +117,7 @@ namespace Eagle.Core.Account
             {
                 access_token = encodedJwt,
                 expires_in = (int)_options.Expiration.TotalSeconds,
-                user_id = claims.First(x => x.Type == "UserId").Value,
-                msg = "success"
+                user_id = claims.First(x => x.Type == "UserId").Value
             };
 
             // Serialize and return the response
@@ -128,5 +127,4 @@ namespace Eagle.Core.Account
 
 
     }
-
 }

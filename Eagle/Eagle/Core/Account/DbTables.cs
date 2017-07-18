@@ -9,7 +9,7 @@ using Eagle.DataContexts;
 
 namespace Eagle.DbTables
 {
-    public class UserEntity : DbTable, IBundle
+    public class UserEntity : DbRecord, IBundle
     {
         [Required]
         public string BundleId { get; set; }

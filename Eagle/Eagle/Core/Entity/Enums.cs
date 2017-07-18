@@ -33,6 +33,3 @@ namespace Eagle.Enums
         Hidden = 11
     }
 }
-
-
-

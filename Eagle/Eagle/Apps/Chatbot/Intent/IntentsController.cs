@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Eagle.DbTables;
-using Eagle.DomainModels;
 using Eagle.Utility;
-using Eagle.DmServices;
 using Eagle.Core;
 using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.Apps.Chatbot.DmServices;
@@ -21,7 +17,7 @@ namespace Eagle.Apps.Chatbot
         [HttpGet("{agentId}/Query")]
         public DmPageResult<DmIntent> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
-            var query = dc.Intents.Where(x => x.AgentId == agentId);
+            var query = dc.Chatbot_Intents.Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -44,7 +40,7 @@ namespace Eagle.Apps.Chatbot
                 return BadRequest(ModelState);
             }
 
-            var intents = await dc.Intents.SingleOrDefaultAsync(m => m.Id == id);
+            var intents = await dc.Chatbot_Intents.SingleOrDefaultAsync(m => m.Id == id);
 
             if (intents == null)
             {
@@ -106,13 +102,13 @@ namespace Eagle.Apps.Chatbot
                 return BadRequest(ModelState);
             }
 
-            var intents = await dc.Intents.SingleOrDefaultAsync(m => m.Id == id);
+            var intents = await dc.Chatbot_Intents.SingleOrDefaultAsync(m => m.Id == id);
             if (intents == null)
             {
                 return NotFound();
             }
 
-            dc.Intents.Remove(intents);
+            dc.Chatbot_Intents.Remove(intents);
             await dc.SaveChangesAsync();
 
             return Ok(intents);
@@ -130,13 +126,14 @@ namespace Eagle.Apps.Chatbot
                 x.Alias,
                 x.Meta,
                 x.Position,
-                x.Length
+                x.Length,
+                Color = x.Color
             }).OrderBy(x => x.Position);
         }
 
         private bool IntentsExists(string id)
         {
-            return dc.Intents.Any(e => e.Id == id);
+            return dc.Chatbot_Intents.Any(e => e.Id == id);
         }
     }
 }

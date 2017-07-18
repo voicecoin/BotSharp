@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Eagle.Core.Interfaces;
 using Eagle.Enums;
 
 namespace Eagle.DbTables
@@ -18,42 +19,42 @@ namespace Eagle.DbTables
     /// Add-Migration Initial -context "VDbContext"
     /// Update-Database -context "VDbContext"
     /// </summary>
-    public abstract class DbTable
+    public abstract class DbRecord : IDbRecord
     {
-        static DbTable()
+        static DbRecord()
         {
-            Triggers<DbTable>.Inserting += entry =>
+            Triggers<DbRecord>.Inserting += entry =>
             {
                 entry.Entity.CreatedDate = DateTime.UtcNow;
                 entry.Entity.ModifiedDate = entry.Entity.CreatedDate;
             };
 
-            Triggers<DbTable>.Inserted += entry =>
+            Triggers<DbRecord>.Inserted += entry =>
             {
 
             };
 
-            Triggers<DbTable>.Deleting += entry =>
+            Triggers<DbRecord>.Deleting += entry =>
             {
 
             };
 
-            Triggers<DbTable>.Deleted += entry =>
+            Triggers<DbRecord>.Deleted += entry =>
             {
 
             };
 
-            Triggers<DbTable>.Updating += entry =>
+            Triggers<DbRecord>.Updating += entry =>
             {
                 entry.Entity.ModifiedDate = DateTime.UtcNow;
             };
 
-            Triggers<DbTable>.Updated += entry =>
+            Triggers<DbRecord>.Updated += entry =>
             {
 
             };
 
-            Triggers<DbTable>.UpdateFailed += entry =>
+            Triggers<DbRecord>.UpdateFailed += entry =>
             {
 
             };
@@ -71,27 +72,26 @@ namespace Eagle.DbTables
         /// </summary>
         [Timestamp]
         public byte[] RowVersion { get; set; }
-        //[Required]
+        [Required]
         public DateTime CreatedDate { get; set; }
 #if AUTH_REQUIRED
         [Required]
 #endif
+        [StringLength(36)]
         public string CreatedUserId { get; set; }
-        //[Required]
+        [Required]
         public DateTime ModifiedDate { get; set; }
 #if AUTH_REQUIRED
         [Required]
 #endif
+        [StringLength(36)]
         public string ModifiedUserId { get; set; }
     }
 
-    public abstract class NamedEntity : DbTable
+    public abstract class DbRecordWithNameColumn : DbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
     }
 }
-
-
-

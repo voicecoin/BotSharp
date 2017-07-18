@@ -23,12 +23,19 @@ namespace Eagle.Apps.Chatbot
         public static void Delete(this DmIntentExpression intentExpression, CoreDbContext dc)
         {
             // Remove Items first
-            dc.IntentExpressions.Remove(dc.IntentExpressions.Find(intentExpression.Id));
+            if (String.IsNullOrEmpty(intentExpression.Id)) return;
+
+            dc.Chatbot_IntentExpressions.Remove(dc.Chatbot_IntentExpressions.Find(intentExpression.Id));
             dc.SaveChanges();
         }
 
         public static void Add(this DmIntentExpression intentExpression, CoreDbContext dc)
         {
+            if (String.IsNullOrEmpty(intentExpression.Id))
+            {
+                intentExpression.Id = Guid.NewGuid().ToString();
+            }
+
             var expressionRecord = intentExpression.MapByJsonString<IntentExpressions>();
             expressionRecord.CreatedDate = DateTime.UtcNow;
             expressionRecord.ModifiedDate = DateTime.UtcNow;
@@ -41,7 +48,8 @@ namespace Eagle.Apps.Chatbot
             });
             expressionRecord.Items = intentExpression.Data.ToArray();
 
-            dc.IntentExpressions.Add(expressionRecord);
+            dc.Chatbot_IntentExpressions.Add(expressionRecord);
+            dc.SaveChanges();
         }
     }
 }

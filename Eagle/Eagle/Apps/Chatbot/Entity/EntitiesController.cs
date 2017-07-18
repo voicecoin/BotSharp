@@ -21,7 +21,7 @@ namespace Eagle.Apps.Chatbot.Entity
         [HttpGet("{agentId}/Query")]
         public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
-            var query = dc.Entities.Where(x => x.AgentId == agentId);
+            var query = dc.Chatbot_Entities.Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -44,14 +44,14 @@ namespace Eagle.Apps.Chatbot.Entity
                 return BadRequest(ModelState);
             }
 
-            var entities = await dc.Entities.SingleOrDefaultAsync(m => m.Id == id);
+            var entities = await dc.Chatbot_Entities.SingleOrDefaultAsync(m => m.Id == id);
 
             if (entities == null)
             {
                 return NotFound();
             }
 
-            var entity = dc.Entities.Find(id).Map<DmEntity>();
+            var entity = dc.Chatbot_Entities.Find(id).Map<DmEntity>();
 
             /*var items = (from entry in _context.EntityEntries
                          join synonym in _context.EntityEntrySynonyms on entry.Id equals synonym.EntityEntryId
@@ -118,7 +118,7 @@ namespace Eagle.Apps.Chatbot.Entity
                 return BadRequest(ModelState);
             }
 
-            var entities = await dc.Entities.SingleOrDefaultAsync(m => m.Id == id);
+            var entities = await dc.Chatbot_Entities.SingleOrDefaultAsync(m => m.Id == id);
             if (entities == null)
             {
                 return NotFound();
@@ -133,7 +133,7 @@ namespace Eagle.Apps.Chatbot.Entity
 
         private bool EntitiesExists(string id)
         {
-            return dc.Entities.Any(e => e.Id == id);
+            return dc.Chatbot_Entities.Any(e => e.Id == id);
         }
     }
 }

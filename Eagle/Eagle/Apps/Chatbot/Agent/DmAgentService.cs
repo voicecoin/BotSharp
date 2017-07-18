@@ -15,9 +15,9 @@ namespace Eagle.Apps.Chatbot.DmServices
     {
         public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc, String nerUrl)
         {
-            var queryable = from intent in dc.Intents
-                            join exp in dc.IntentExpressions on intent.Id equals exp.IntentId
-                            where intent.AgentId == agentRequestModel.Agent.Id || intent.AgentId == Chatbot.Enums.Constants.GenesisAgentId
+            var queryable = from intent in dc.Chatbot_Intents
+                            join exp in dc.Chatbot_IntentExpressions on intent.Id equals exp.IntentId
+                            where intent.AgentId == agentRequestModel.Agent.Id //|| intent.AgentId == Constants.GenesisAgentId
                             select exp;
 
             // 精确匹配
@@ -26,13 +26,34 @@ namespace Eagle.Apps.Chatbot.DmServices
             // 相似匹配
             if (intents.Count() == 0)
             {
-                List<DmIntentExpression> similarities = new List<DmIntentExpression>();
+                // 预处理语料库，替换实体。
+                List<String> corpus = new List<String>();
                 intents = queryable.ToList();
+                intents.ForEach(exp => {
+                    if (exp.Items == null || exp.Items.Count() == 0)
+                    {
+                        corpus.Add(exp.Text);
+                    }
+                    else
+                    {
+                        corpus.Add(String.Join("", exp.Items.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta)));
+                    }
+                });
+
+                // 传入句子先分词
+                DmAgentRequest agentRequestModel1 = new DmAgentRequest { Text = agentRequestModel.Text };
+                var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
+
+                List<DmIntentExpression> similarities = new List<DmIntentExpression>();
+
                 intents.ForEach(expression =>
                 {
+                    DmAgentRequest agentRequestModel2 = new DmAgentRequest { Text = expression.Text };
+                    var comparedTextSplitted = agentRequestModel2.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
+
                     DmIntentExpression model = expression.Map<DmIntentExpression>();
-                    model.Similarity = CompareSimilarity(intents.Select(x => x.Text).ToList(), agentRequestModel.Text, expression.Text, dc);
-                    if (model.Similarity > 0.6)
+                    model.Similarity = CompareSimilarity(corpus, requestedTextSplitted, comparedTextSplitted);
+                    if (model.Similarity > 0.5)
                     {
                         similarities.Add(model);
                     }
@@ -51,7 +72,7 @@ namespace Eagle.Apps.Chatbot.DmServices
 
             if (intents.Count() == 0) return null;
 
-            var intentRecord = dc.Intents.First(m => m.Id == intents.First().IntentId);
+            var intentRecord = dc.Chatbot_Intents.First(m => m.Id == intents.First().IntentId);
 
             var intentModel = intentRecord.Map<DmIntent>();
             intentModel.Load(dc);
@@ -60,8 +81,6 @@ namespace Eagle.Apps.Chatbot.DmServices
             responseModel.ExtractParameter(dc, agentRequestModel);
 
             DmIntentResponseMessage messageModel = responseModel.PostResponse(dc, agentRequestModel);
-
-
 
             return new DmAgentResponse { Text = messageModel.Speeches.Random() };
         }
@@ -75,22 +94,16 @@ namespace Eagle.Apps.Chatbot.DmServices
         /// <param name="destination"></param>
         /// <param name="dc"></param>
         /// <returns></returns>
-        private static double CompareSimilarity(List<String> corpus, String source, String destination, CoreDbContext dc)
+        private static double CompareSimilarity(List<String> corpus, List<String> requestedTextSplitted, List<String> comparedTextSplitted)
         {
-            DmAgentRequest agentRequestModel1 = new DmAgentRequest { Text = source };
-            var items1 = agentRequestModel1.Segment(dc).Select(x => x.Text).ToList();
-
-            DmAgentRequest agentRequestModel2 = new DmAgentRequest { Text = destination };
-            var items2 = agentRequestModel2.Segment(dc).Select(x => x.Text).ToList();
-
             var items = new List<String>();
-            items.AddRange(items1);
-            items.AddRange(items2);
+            items.AddRange(requestedTextSplitted);
+            items.AddRange(comparedTextSplitted);
             var distinctItems = items.Distinct().ToList();
 
             // term frequency inverted documnet frequency
-            double[] vector1 = tfIdfVector(items1, items2, distinctItems, corpus);
-            double[] vector2 = tfIdfVector(items2, items1, distinctItems, corpus);
+            double[] vector1 = tfIdfVector(requestedTextSplitted, comparedTextSplitted, distinctItems, corpus);
+            double[] vector2 = tfIdfVector(comparedTextSplitted, requestedTextSplitted, distinctItems, corpus);
 
             double n = 0;
             double n1 = 0;

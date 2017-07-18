@@ -10,11 +10,14 @@ using Newtonsoft.Json;
 using Eagle.Apps.Chatbot.DomainModels;
 using Eagle.DbTables;
 using Eagle.Apps.Chatbot.DmServices;
+using Eagle.Core.Interfaces;
 
 namespace Eagle.Apps.Chatbot.Agent
 {
     public class Hooks : IDbInitializer
     {
+        public int Priority => 1000;
+
         public void Load(IHostingEnvironment env, CoreDbContext dc)
         {
             InitAgent(env, dc);
@@ -36,9 +39,9 @@ namespace Eagle.Apps.Chatbot.Agent
             {
                 var agent = LoadJson<Agents>(env, $"{agentName}\\Agent");
 
-                if (!context.Agents.Any(x => x.Name == agentName))
+                if (!context.Chatbot_Agents.Any(x => x.Name == agentName))
                 {
-                    context.Agents.Add(agent);
+                    context.Chatbot_Agents.Add(agent);
                 }
 
                 agents.Add(agent);
@@ -61,7 +64,7 @@ namespace Eagle.Apps.Chatbot.Agent
 
             intentNames.ForEach(intentName =>
             {
-                if (!context.Intents.Any(x => x.AgentId == agent.Id && x.Name.Equals(intentName)))
+                if (!context.Chatbot_Intents.Any(x => x.AgentId == agent.Id && x.Name.Equals(intentName)))
                 {
                     // Intent
                     var intentModel = LoadJson<DmIntent>(env, $"{agent.Name}\\Intents\\{intentName}");
@@ -79,7 +82,7 @@ namespace Eagle.Apps.Chatbot.Agent
 
             entityNames.ForEach(entityName =>
             {
-                if (context.Entities.Count(x => x.Name == entityName) == 0)
+                if (context.Chatbot_Entities.Count(x => x.Name == entityName) == 0)
                 {
                     // add entity
                     DmEntity entity = LoadEntityFromJsonFile(env, agent, entityName);

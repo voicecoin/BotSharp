@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Eagle.DbTables
 {
-    public class Intents : DbTable
+    public class Intents : DbRecord
     {
         [Required]
         [StringLength(36)]
@@ -38,7 +38,7 @@ namespace Eagle.DbTables
         }
     }
 
-    public class IntentExpressions : DbTable
+    public class IntentExpressions : DbRecord
     {
         [Required]
         [StringLength(36)]
@@ -57,7 +57,7 @@ namespace Eagle.DbTables
         }
     }
 
-    public class IntentResponses : DbTable
+    public class IntentResponses : DbRecord
     {
         [Required]
         [StringLength(36)]
@@ -76,7 +76,7 @@ namespace Eagle.DbTables
         }
     }
 
-    public class IntentResponseMessages : DbTable
+    public class IntentResponseMessages : DbRecord
     {
         [Required]
         [StringLength(36)]
@@ -93,7 +93,7 @@ namespace Eagle.DbTables
         }
     }
 
-    public class IntentResponseParameters : DbTable
+    public class IntentResponseParameters : DbRecord
     {
         [Required]
         [StringLength(36)]
