@@ -138,6 +138,20 @@ const Settings = (location,cb) => {
     },'Settings')
 }
 
+//add a router for design layout Page
+const PageLayout = (location,cb) => {
+    require.ensure([],require => {
+      cb(null,require('../containers/PageLayout/PageLayout').default)
+    },'PageLayout')
+}
+
+//add a router for createa layout Page
+const NewPage = (location,cb) => {
+    require.ensure([],require => {
+      cb(null,require('../containers/PageLayout/NewPage').default)
+    },'NewPage')
+}
+
 function requireAuth(nextState, replace, callback){
   if(localStorage.getItem('access_token')){
     http.HttpAjax({
@@ -188,6 +202,10 @@ const RootRoter = (
         <Route path="NewRules" getComponent={NewRulesContainer}/>
       </Route>
       <Route path="Views" getComponent={ViewsContainer}/>
+      <Route path="Pages" getComponent={NewPage}/>
+      <Route path='Pages'>
+        <Route path="PageLayout" getComponent={PageLayout}/>
+      </Route>
       <Route path="Bundles" getComponent={HomeContainer} />
       <Route path='Bundles'>
         <Route path="fields" getComponent={FieldsContainer}/>
@@ -199,10 +217,12 @@ const RootRoter = (
     <Route component={ AppContainer } onEnter={requireAuth}>
       <Route path='/Settings' getComponent={ Settings }/>
     </Route>
+    <Route path='/Shared' component={ AppContainer } onEnter={requireAuth}>
+      <Route path='Page/:value' getComponent={ SharedContainer }/>
+    </Route>
     <Route path='/Configuration' component={ AppContainer } onEnter={requireAuth}>
       <Route path='People'>
         <Route path="Profile" getComponent={ProfileContainer}/>
-        <Route path='List' getComponent={ SharedContainer }/>
       </Route>
       <Route path='Development'>
         <Route path="Profile" getComponent={ProfileContainer}/>

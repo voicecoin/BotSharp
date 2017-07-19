@@ -8,14 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using Eagle.DomainModels;
-using Eagle.DbTables;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
-using Eagle.Core;
 using Microsoft.Net.Http.Headers;
-using Eagle.DataContexts;
 using Microsoft.AspNetCore.Http;
+using Core;
+using Core.DataContexts;
 
 namespace Eagle
 {

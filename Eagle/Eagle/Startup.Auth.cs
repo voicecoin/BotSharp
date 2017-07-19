@@ -1,6 +1,5 @@
-﻿using Eagle.Core;
-using Eagle.Core.Account;
-using Eagle.DataContexts;
+﻿using Core.DataContexts;
+using Eagle.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

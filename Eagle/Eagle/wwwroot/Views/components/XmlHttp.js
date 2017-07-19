@@ -33,7 +33,6 @@ export class Http {
         }
         options.async = options.async === false ? false : true;
         var xhr = options.xhr = options.xhr || new XMLHttpRequest();
-        xhr.headers = {'authorization':'Bearer ' + localStorage.getItem('access_token')};
         return new Promise(function(resolve, reject){
             xhr.open(options.method,options.url,options.async);
             xhr.timeout = options.timeout;

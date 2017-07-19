@@ -12,15 +12,14 @@ export class SharedContainer extends React.Component {
     this.state = {
       tData : []
     }
+    console.log(props);
   }
 
   fetchFn = () => {
-    let query = '';
-    for(var i in this.props.location.query){
-      query += this.props.location.query[i];
-    }
+
     http.HttpAjax({
-        url: DataURL + query,
+        url: DataURL + '/api/Page/' + this.props.params.value,
+        headers: {'authorization':'Bearer ' + localStorage.getItem('access_token')}
     }).then((data)=>{
       this.setState({tData : data});
     }).catch((e)=>{
@@ -28,7 +27,7 @@ export class SharedContainer extends React.Component {
     })
   }
   componentWillMount() {
-      this.fetchFn();
+      // this.fetchFn();
   }
   render() {
     return (
