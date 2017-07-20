@@ -1,5 +1,4 @@
-﻿using Core.DataContexts;
-using Core.DbTables;
+﻿using Core.Bundle;
 using Core.DomainModels;
 using Core.Enums;
 using System;
@@ -14,7 +13,7 @@ namespace Core.Taxonomy
     {
         public static void Add(this DmTaxonomy taxonomyModel, CoreDbContext dc)
         {
-            if (dc.Bundles.Any(x => x.Name == taxonomyModel.Name && x.EntityName == "Taxonomy")) return;
+            if (dc.Table<BundleEntity>().Any(x => x.Name == taxonomyModel.Name && x.EntityName == "Taxonomy")) return;
 
             var dbRecord = taxonomyModel.Map<BundleEntity>();
 
@@ -24,7 +23,7 @@ namespace Core.Taxonomy
             dbRecord.ModifiedUserId = dc.CurrentUser.Id;
             dbRecord.ModifiedDate = DateTime.UtcNow;
 
-            dc.Bundles.Add(dbRecord);
+            dc.Table<BundleEntity>().Add(dbRecord);
         }
 
         public static TaxonomyTermEntity AddTerm(this TaxonomyEntity taxonomy, CoreDbContext dc, string name, EntityStatus status = EntityStatus.Active)
@@ -39,7 +38,7 @@ namespace Core.Taxonomy
                 TaxonomyId = taxonomy.Id,
                 Status = status
             };
-            TaxonomyTermEntity term = dc.TaxonomyTerms.Add(entity).Entity;
+            TaxonomyTermEntity term = dc.Table<TaxonomyTermEntity>().Add(entity).Entity;
             dc.SaveChanges();
 
             return term;
@@ -57,7 +56,7 @@ namespace Core.Taxonomy
                 Status = status
             };
 
-            TaxonomyEntity term = dc.Taxonomies.Add(entity).Entity;
+            TaxonomyEntity term = dc.Table<TaxonomyEntity>().Add(entity).Entity;
             dc.SaveChanges();
 
             return term;
@@ -85,7 +84,7 @@ namespace Core.Taxonomy
                 Status = EntityStatus.Active
             };
 
-            TaxonomyTermEntity childTerm = dc.TaxonomyTerms.Add(entity).Entity;
+            TaxonomyTermEntity childTerm = dc.Table<TaxonomyTermEntity>().Add(entity).Entity;
             dc.SaveChanges();
 
             return parentTerm;
@@ -104,7 +103,7 @@ namespace Core.Taxonomy
                 Status = EntityStatus.Active
             };
 
-            TaxonomyTermEntity term = dc.TaxonomyTerms.Add(entity).Entity;
+            TaxonomyTermEntity term = dc.Table<TaxonomyTermEntity>().Add(entity).Entity;
             dc.SaveChanges();
 
             return term;

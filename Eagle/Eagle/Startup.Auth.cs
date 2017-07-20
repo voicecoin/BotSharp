@@ -1,4 +1,5 @@
-﻿using Core.DataContexts;
+﻿using Core;
+using Core.Account;
 using Eagle.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -70,10 +71,11 @@ namespace Eagle
 
         private Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            CoreDbContext dc = new CoreDbContext(new DbContextOptions<CoreDbContext>());
+            CoreDbContext dc = new CoreDbContext();
+            dc.InitDb();
 
             // DON'T do this in production, obviously!
-            var user = dc.Users.FirstOrDefault(x => x.UserName == username && x.Password == password);
+            var user = dc.Table<UserEntity>().FirstOrDefault(x => x.UserName == username && x.Password == password);
             if (user != null)
             {
                 return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(username, "Token"),

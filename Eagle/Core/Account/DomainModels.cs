@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core;
 using Core.Bundle;
-using Core.DataContexts;
 using Core.Interfaces;
 
 namespace Core.Account
@@ -29,7 +28,7 @@ namespace Core.Account
         }
         public string Password { get; set; }
         public string Email { get; set; }
-        public string Description { get; set; }
+        public String Description { get; set; }
 
         public void LoadFieldRecords(CoreDbContext dc)
         {

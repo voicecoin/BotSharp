@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Models;
+using Core.Bundle;
 
 namespace Core.Taxonomy
 {
@@ -13,8 +14,8 @@ namespace Core.Taxonomy
         [HttpGet("{id}")]
         public IEnumerable<Object> GetTaxonomyEntities([FromRoute] string id)
         {
-            var taxonomies = from b in dc.Bundles
-                        join t in dc.Taxonomies on b.Id equals t.BundleId
+            var taxonomies = from b in dc.Table<BundleEntity>()
+                        join t in dc.Table<TaxonomyEntity>() on b.Id equals t.BundleId
                         where b.Id == id
                         select new { Name = b.Name, EntityName = b.EntityName, BundleName = b.Name, Status = t.Status.ToString() };
 

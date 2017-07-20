@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Core.DbTables;
 using DbExtensions;
 
 namespace Core.Taxonomy
@@ -17,7 +16,7 @@ namespace Core.Taxonomy
         [HttpGet]
         public IEnumerable<TaxonomyTermEntity> GetTaxonomyTerms()
         {
-            return dc.TaxonomyTerms;
+            return dc.Table<TaxonomyTermEntity>();
         }
 
         // GET: api/TaxonomyTerm/5
@@ -29,7 +28,7 @@ namespace Core.Taxonomy
                 return BadRequest(ModelState);
             }
 
-            var taxonomyTermEntity = await dc.TaxonomyTerms.SingleOrDefaultAsync(m => m.Id == id);
+            var taxonomyTermEntity = await dc.Table<TaxonomyTermEntity>().SingleOrDefaultAsync(m => m.Id == id);
 
             if (taxonomyTermEntity == null)
             {
@@ -53,24 +52,6 @@ namespace Core.Taxonomy
                 return BadRequest();
             }
 
-            dc.Entry(taxonomyTermEntity).State = EntityState.Modified;
-
-            try
-            {
-                await dc.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaxonomyTermEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
@@ -83,8 +64,6 @@ namespace Core.Taxonomy
                 return BadRequest(ModelState);
             }
 
-            dc.TaxonomyTerms.Add(taxonomyTermEntity);
-            await dc.SaveChangesAsync();
 
             return CreatedAtAction("GetTaxonomyTermEntity", new { id = taxonomyTermEntity.Id }, taxonomyTermEntity);
         }
@@ -98,21 +77,13 @@ namespace Core.Taxonomy
                 return BadRequest(ModelState);
             }
 
-            var taxonomyTermEntity = await dc.TaxonomyTerms.SingleOrDefaultAsync(m => m.Id == id);
-            if (taxonomyTermEntity == null)
-            {
-                return NotFound();
-            }
 
-            dc.TaxonomyTerms.Remove(taxonomyTermEntity);
-            await dc.SaveChangesAsync();
-
-            return Ok(taxonomyTermEntity);
+            return Ok(null);
         }
 
         private bool TaxonomyTermEntityExists(string id)
         {
-            return dc.TaxonomyTerms.Any(e => e.Id == id);
+            return dc.Table<TaxonomyTermEntity>().Any(e => e.Id == id);
         }
     }
 }

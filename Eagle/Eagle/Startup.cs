@@ -13,7 +13,6 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Core;
-using Core.DataContexts;
 
 namespace Eagle
 {

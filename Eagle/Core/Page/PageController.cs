@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Block;
+using Core.Interfaces;
+using Core.Node;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,19 +17,25 @@ namespace Core.Page
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPage([FromRoute] string id)
         {
-            if (!ModelState.IsValid)
+            var page = new DmPage {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Users",
+                Description = "List all authorized users."
+            };
+
+            page.Blocks.Add(new DmBlock
             {
-                return BadRequest(ModelState);
-            }
+                DataUrl = "/api/View/1/Execute",
+                Name = "Users List",
+                Priority = 1,
+                Position = new DmBlockPosition { Width = 12, Height = 5, X = 0, Y = 0 },
+                Menus = new List<KeyValuePair<String, String>>() {
+                    new KeyValuePair<string, string>("Menu1", "/"),
+                    new KeyValuePair<string, string>("Menu1", "/")
+                }
+            });
 
-            var node = await dc.Nodes.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (node == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(node);
+            return Ok(page);
         }
 
         [HttpPost]
@@ -36,7 +46,7 @@ namespace Core.Page
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction(delegate
+            dc.Transaction<IDbRecord4SqlServer>(delegate
             {
                 pageModel.Add(dc);
             });

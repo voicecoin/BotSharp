@@ -11,8 +11,7 @@ using Newtonsoft.Json.Linq;
 using Core.Enums;
 using Core.Interfaces;
 using Core.Bundle;
-using Core.DataContexts;
-using Core.DbTables;
+using Core.Node;
 
 namespace DomainModels
 {
@@ -31,8 +30,8 @@ namespace DomainModels
 
         public IQueryable<NodeTextFieldEntity> LoadTextFields(CoreDbContext dc)
         {
-            var query = from bundleField in dc.BundleFields
-                        join textField in dc.NodeTextFields on bundleField.Id equals textField.BundleFieldId
+            var query = from bundleField in dc.Table<BundleFieldEntity>()
+                        join textField in dc.Table<NodeTextFieldEntity>() on bundleField.Id equals textField.BundleFieldId
                         where bundleField.BundleId == BundleId
                             && bundleField.FieldTypeId.Equals(FieldTypes.Text)
                             && textField.EntityId == Id
@@ -46,12 +45,12 @@ namespace DomainModels
         public void LoadFieldRecords(CoreDbContext dc)
         {
             var FieldRecords = new List<object>();
-            dc.BundleFields.Where(x => x.BundleId == BundleId).ToList().ForEach(field =>
+            dc.Table<BundleFieldEntity>().Where(x => x.BundleId == BundleId).ToList().ForEach(field =>
             {
                 switch (field.FieldTypeId)
                 {
                     case FieldTypes.Text:
-                        FieldRecords.AddRange(dc.NodeTextFields.Where(x => x.BundleFieldId == field.Id));
+                        FieldRecords.AddRange(dc.Table<NodeTextFieldEntity>().Where(x => x.BundleFieldId == field.Id));
                         break;
                 }
             });

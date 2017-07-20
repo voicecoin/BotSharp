@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using Utility;
 using Core.Field;
 using Core.Interfaces;
-using Core.DbTables;
-using Core.DataContexts;
+using Core.Account;
 
 namespace Core
 {
@@ -16,9 +15,10 @@ namespace Core
     {
         public static void Initialize(IHostingEnvironment env)
         {
-            CoreDbContext dc = new CoreDbContext(new DbContextOptions<CoreDbContext>());
-            dc.CurrentUser = new Account.DmAccount { Id = Constants.SystemUserId };
-            dc.Database.EnsureCreated();
+            CoreDbContext dc = new CoreDbContext();
+            dc.InitDb();
+            dc.CurrentUser = new DmAccount { Id = Constants.SystemUserId };
+            dc.EnsureCreated(typeof(UserEntity));
 
             var instances = TypeHelper.GetInstanceWithInterface<IDbInitializer>("Core");
 
@@ -26,7 +26,7 @@ namespace Core
             instances.OrderBy(x => x.Priority).ToList()
                 .ForEach(instance =>
                 {
-                    dc.Transaction(delegate
+                    dc.Transaction<IDbRecord4SqlServer>(delegate
                     {
                         instance.Load(env, dc);
                     });
@@ -38,7 +38,7 @@ namespace Core
             instances.OrderBy(x => x.Priority).ToList()
                 .ForEach(instance =>
                 {
-                    dc.Transaction(delegate
+                    dc.Transaction<IDbRecord4SqlServer>(delegate
                     {
                         instance.Load(env, dc);
                     });

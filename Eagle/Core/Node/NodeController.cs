@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Microsoft.EntityFrameworkCore;
-using Core.DbTables;
 using DomainModels;
 using Utility;
+using Core.Interfaces;
+using Core.Bundle;
 
 namespace Core.Node
 {
@@ -18,8 +19,8 @@ namespace Core.Node
         [HttpGet("{bundleId}")]
         public IEnumerable<Object> GetNodes([FromRoute] string bundleId)
         {
-            var query = from node in dc.Nodes
-                        join bundle in dc.Bundles on node.BundleId equals bundle.Id
+            var query = from node in dc.Table<NodeEntity>()
+                        join bundle in dc.Table<BundleEntity>() on node.BundleId equals bundle.Id
                         where bundle.Id == bundleId
                         select new
                         {
@@ -43,7 +44,7 @@ namespace Core.Node
                 return BadRequest(ModelState);
             }
 
-            var node = await dc.Nodes.SingleOrDefaultAsync(m => m.Id == id);
+            var node = await dc.Table<NodeEntity>().SingleOrDefaultAsync(m => m.Id == id);
 
             if (node == null)
             {
@@ -62,10 +63,10 @@ namespace Core.Node
             node.ModifiedUserId = GetCurrentUser().Id;
             node.ModifiedTime = DateTime.UtcNow;
 
-            dc.Transaction(delegate
+            dc.Transaction<IDbRecord4SqlServer>(delegate
             {
                 NodeEntity nodeRecord = node.Map<NodeEntity>();
-                dc.Nodes.Add(nodeRecord);
+                dc.Table<NodeEntity>().Add(nodeRecord);
 
                 dc.SaveChanges();
 
@@ -78,7 +79,7 @@ namespace Core.Node
                             var record = data.ToObject<NodeTextFieldEntity>();
                             record.EntityId = nodeRecord.Id;
                             record.BundleFieldId = fieldRecord.BundleFieldId;
-                            dc.NodeTextFields.Add(record);
+                            dc.Table<NodeTextFieldEntity>().Add(record);
                         });
                     });
 
@@ -91,7 +92,7 @@ namespace Core.Node
                             var record = data.ToObject<NodeAddressFieldEntity>();
                             record.EntityId = nodeRecord.Id;
                             record.BundleFieldId = fieldRecord.BundleFieldId;
-                            dc.NodeAddressFields.Add(record);
+                            dc.Table<NodeAddressFieldEntity>().Add(record);
                         });
                     });
             });

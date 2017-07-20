@@ -3,20 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.DataContexts;
 
 namespace Core.Interfaces
 {
     /// <summary>
     /// All table should implement this table inteface
     /// </summary>
-    public interface IDbRecord { }
+    public interface IDbRecord
+    {
+        bool IsExist(CoreDbContext dc);
+        String GetEntityName();
+    }
+    public interface IDbRecord4SqlServer { }
 
     /// <summary>
     /// Domain model, based on Domain-Driven Design concept.
     /// Business model shold implement this interface.
     /// </summary>
-    public interface IDomainModel { }
+    public interface IDomainModel
+    {
+    }
+
+    public interface IDomainModel<T> where T : IDbRecord
+    {
+        Boolean Add();
+        void Remove();
+    }
+
     /// <summary>
     /// Initialize data for modules
     /// </summary>

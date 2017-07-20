@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using Core.DataContexts;
 
 namespace Core.Bundle
 {
@@ -12,5 +12,11 @@ namespace Core.Bundle
     {
         string BundleId { get; set; }
         void LoadFieldRecords(CoreDbContext dc);
+    }
+
+    public interface IBundlable<T> where T : IDbRecord
+    {
+        string BundleId { get; set; }
+        void LoadFieldRecords();
     }
 }

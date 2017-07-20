@@ -1,4 +1,6 @@
-﻿using Core.DataContexts;
+﻿using Core.Bundle;
+using Core.Entity;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,39 +8,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.DbTables
+namespace Core.Account
 {
-    public class UserEntity : DbRecord
+    [Table("Users")]
+    public class UserEntity : BundleDbRecord, IDbRecord4SqlServer
     {
-        [Required]
-        public string BundleId { get; set; }
-        [NotMapped]
-        public List<Object> FieldRecords { get; set; }
-        public void LoadFieldRecords(CoreDbContext dc)
-        {
-            FieldRecords = new List<object>();
-
-            List<BundleFieldEntity> fields = dc.BundleFields.Where(x => x.BundleId == BundleId).ToList();
-            foreach (BundleFieldEntity field in fields)
-            {
-                /*if (field.FieldTypeName.Equals("Address"))
-                {
-                    var records = dc.LocationAddressRecords.Where(x => x.EntityId == Id && x.BundleId == field.BundleId);
-                    FieldRecords.AddRange(records);
-                }
-                else if (field.FieldTypeName.Equals("Email"))
-                {
-                    var records = dc.LocationEmailRecords.Where(x => x.EntityId == Id && x.BundleId == field.BundleId);
-                    FieldRecords.AddRange(records);
-                }
-                else if (field.FieldTypeName.Equals("Phone"))
-                {
-                    var records = dc.LocationPhoneRecords.Where(x => x.EntityId == Id && x.BundleId == field.BundleId);
-                    FieldRecords.AddRange(records);
-                }*/
-            }
-        }
-
         [Required]
         [StringLength(32)]
         public String UserName { get; set; }
@@ -60,5 +34,10 @@ namespace Core.DbTables
         public String Avatar { get; set; }
         [MaxLength(256)]
         public String Description { get; set; }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<UserEntity>().Any(x => x.UserName == UserName);
+        }
     }
 }

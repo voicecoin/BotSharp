@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Core.DbTables;
+using Core.Interfaces;
+using Core.Node;
 
 namespace Core.Account
 {
@@ -15,7 +16,7 @@ namespace Core.Account
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
-            var user = dc.Users.Find(GetCurrentUser().Id);
+            var user = dc.Table<UserEntity>().Find(GetCurrentUser().Id);
 
             return Ok(user);
         }
@@ -25,7 +26,7 @@ namespace Core.Account
         [Route("{userName}/Exist")]
         public async Task<IActionResult> UserExist([FromRoute] String userName)
         {
-            var user = dc.Users.Any(x => x.UserName == userName);
+            var user = dc.Table<UserEntity>().Any(x => x.UserName == userName);
 
             return Ok(user);
         }
@@ -38,7 +39,7 @@ namespace Core.Account
                 return BadRequest(ModelState);
             }
 
-            return Ok(dc.Users.Find(id));
+            return Ok(dc.Table<UserEntity>().Find(id));
         }
 
         [HttpPut("{id}")]
@@ -57,15 +58,10 @@ namespace Core.Account
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserEntity accountModel)
         {
-            accountModel.BundleId = dc.Bundles.First(x => x.Name == "User Profile").Id;
-            accountModel.Id = Guid.NewGuid().ToString();
-            accountModel.CreatedUserId = accountModel.Id;
-            accountModel.CreatedDate = DateTime.UtcNow;
-            accountModel.ModifiedUserId = accountModel.Id;
-            accountModel.ModifiedDate = DateTime.UtcNow;
-
-            dc.Users.Add(accountModel);
-            await dc.SaveChangesAsync();
+            dc.Transaction<IDbRecord4SqlServer>(delegate {
+                var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
+                dm.Add();
+            });
 
             return CreatedAtAction("CreateUser", new { id = accountModel.Id }, accountModel.Id);
         }

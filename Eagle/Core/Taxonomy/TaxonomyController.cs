@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Core.DbTables;
+using Core.Bundle;
 
 namespace Core.Taxonomy
 {
@@ -17,8 +17,8 @@ namespace Core.Taxonomy
         public IEnumerable<Object> GetTaxonomies()
         {
             
-            var query = from b in dc.Bundles
-                        join t in dc.Taxonomies on b.Id equals t.BundleId
+            var query = from b in dc.Table<BundleEntity>()
+                        join t in dc.Table<TaxonomyEntity>() on b.Id equals t.BundleId
                         select new
                         {
                             Id = t.Id,
@@ -41,7 +41,7 @@ namespace Core.Taxonomy
                 return BadRequest(ModelState);
             }
 
-            var taxonomy = await dc.Taxonomies.SingleOrDefaultAsync(m => m.Id == id);
+            var taxonomy = await dc.Table<TaxonomyEntity>().SingleOrDefaultAsync(m => m.Id == id);
 
             if (taxonomy == null)
             {
@@ -54,10 +54,10 @@ namespace Core.Taxonomy
         [HttpGet("{id}/Terms")]
         public IEnumerable<Object> GetTaxonomyTerms([FromRoute] string id)
         {
-            var query = from t in dc.Taxonomies
-                        join bundle in dc.Bundles on t.BundleId equals bundle.Id
-                        join tt in dc.TaxonomyTerms on t.Id equals tt.TaxonomyId
-                        from ttp in dc.TaxonomyTerms.Where(x => tt.ParentId == x.Id).DefaultIfEmpty()
+            var query = from t in dc.Table<TaxonomyEntity>()
+                        join bundle in dc.Table<BundleEntity>() on t.BundleId equals bundle.Id
+                        join tt in dc.Table<TaxonomyTermEntity>() on t.Id equals tt.TaxonomyId
+                        from ttp in dc.Table<TaxonomyTermEntity>().Where(x => tt.ParentId == x.Id).DefaultIfEmpty()
                         where bundle.Id == id
                         select new { Id = t.Id, Name = tt.Name, Status = tt.Status.ToString(), Parent = ttp == null ? null : ttp.Name, ParentId = tt.ParentId };
 
@@ -78,24 +78,6 @@ namespace Core.Taxonomy
                 return BadRequest();
             }
 
-            dc.Entry(taxonomy).State = EntityState.Modified;
-
-            try
-            {
-                await dc.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaxonomyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
@@ -107,9 +89,6 @@ namespace Core.Taxonomy
             {
                 return BadRequest(ModelState);
             }
-
-            dc.Taxonomies.Add(taxonomy);
-            await dc.SaveChangesAsync();
 
             return CreatedAtAction("GetTaxonomy", new { id = taxonomy.Id }, taxonomy);
         }
@@ -123,21 +102,12 @@ namespace Core.Taxonomy
                 return BadRequest(ModelState);
             }
 
-            var taxonomy = await dc.Taxonomies.SingleOrDefaultAsync(m => m.Id == id);
-            if (taxonomy == null)
-            {
-                return NotFound();
-            }
-
-            dc.Taxonomies.Remove(taxonomy);
-            await dc.SaveChangesAsync();
-
-            return Ok(taxonomy);
+            return Ok(null);
         }
 
         private bool TaxonomyExists(string id)
         {
-            return dc.Taxonomies.Any(e => e.Id == id);
+            return dc.Table<TaxonomyEntity>().Any(e => e.Id == id);
         }
     }
 }

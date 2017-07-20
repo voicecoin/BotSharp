@@ -7,10 +7,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Account;
 using Microsoft.Extensions.Configuration;
+using DataFactory;
+using System.Data.SqlClient;
+using Core.Interfaces;
 
-namespace Core.DataContexts
+namespace Core
 {
-    public partial class CoreDbContext : DbContextWithTriggers
+    public class CoreDbContext : EfDbBase
+    {
+        public DmAccount CurrentUser { get; set; }
+        public static IConfigurationRoot Configuration { get; set; }
+        public void InitDb()
+        {
+            EfDbContext4SqlServer.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            BindDbContext<IDbRecord4SqlServer, EfDbContext4SqlServer>(new EfDbBinding
+            {
+                connection4Master = new SqlConnection(EfDbContext4SqlServer.ConnectionString)
+            });
+        }
+
+    }
+
+    /*public partial class CoreDbContext : DbContextWithTriggers
     {
         public DmAccount CurrentUser { get; set; }
         public static IConfigurationRoot Configuration { get; set; }
@@ -33,6 +51,8 @@ namespace Core.DataContexts
             //modelBuilder.Entity<Bundle>().ForSqlServerToTable("Bundles");
             //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
+
+
 
         public int Transaction(Action action)
         {
@@ -61,5 +81,5 @@ namespace Core.DataContexts
                 return affected;
             }
         }
-    }
+    }*/
 }

@@ -4,12 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Core;
-using Core.DbTables;
+using Core.Interfaces;
 
-namespace Core.DbTables
+namespace Core.Menu
 {
-    public class MenuEntity : DbRecordWithName
+    public class MenuEntity : DbRecord, IDbRecord4SqlServer
     {
+        [Required]
+        [MaxLength(50)]
+        public String Name { get; set; }
         [MaxLength(64)]
         public string Description { get; set; }
         [MaxLength(16)]

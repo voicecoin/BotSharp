@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Core.DbTables;
-using Core.DbTables;
 
 namespace Core.Bundle
 {
@@ -16,7 +14,7 @@ namespace Core.Bundle
         [HttpGet]
         public IEnumerable<Object> GetBundles()
         {
-            return dc.Bundles.Where(x => !x.EntityName.Equals("Taxonomy")).Select(x => new { Id = x.Id, Name = x.Name, Status = x.Status.ToString(), EntityName = x.EntityName });
+            return dc.Table<BundleEntity>().Where(x => !x.EntityName.Equals("Taxonomy")).Select(x => new { Id = x.Id, Name = x.Name, Status = x.Status.ToString(), EntityName = x.EntityName });
         }
 
         // GET: api/Bundle/5
@@ -28,7 +26,7 @@ namespace Core.Bundle
                 return BadRequest(ModelState);
             }
 
-            var bundleEntity = await dc.Bundles.Include(x => x.Fields).SingleOrDefaultAsync(m => m.Id == id);
+            var bundleEntity = await dc.Table<BundleEntity>().Include(x => x.Fields).SingleOrDefaultAsync(m => m.Id == id);
 
             if (bundleEntity == null)
             {
@@ -52,24 +50,6 @@ namespace Core.Bundle
                 return BadRequest();
             }
 
-            dc.Entry(bundleEntity).State = EntityState.Modified;
-
-            try
-            {
-                await dc.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BundleEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
@@ -82,8 +62,8 @@ namespace Core.Bundle
             bundleEntity.ModifiedUserId = GetCurrentUser().Id;
             bundleEntity.ModifiedDate = DateTime.UtcNow;
             
-            dc.Bundles.Add(bundleEntity);
-            await dc.SaveChangesAsync();
+            dc.Table<BundleEntity>().Add(bundleEntity);
+            dc.SaveChanges();
 
             return CreatedAtAction("GetBundleEntity", new { id = bundleEntity.Id }, bundleEntity);
         }
@@ -97,21 +77,18 @@ namespace Core.Bundle
                 return BadRequest(ModelState);
             }
 
-            var bundleEntity = await dc.Bundles.SingleOrDefaultAsync(m => m.Id == id);
+            var bundleEntity = await dc.Table<BundleEntity>().SingleOrDefaultAsync(m => m.Id == id);
             if (bundleEntity == null)
             {
                 return NotFound();
             }
-
-            dc.Bundles.Remove(bundleEntity);
-            await dc.SaveChangesAsync();
 
             return Ok(bundleEntity);
         }
 
         private bool BundleEntityExists(string id)
         {
-            return dc.Bundles.Any(e => e.Id == id);
+            return dc.Table<BundleEntity>().Any(e => e.Id == id);
         }
     }
 }

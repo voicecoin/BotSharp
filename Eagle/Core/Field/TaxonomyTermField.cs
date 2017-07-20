@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.DbTables;
 using Models;
+using Core.Taxonomy;
 
 namespace Core.Field
 {

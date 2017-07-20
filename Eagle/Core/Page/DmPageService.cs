@@ -1,5 +1,4 @@
-﻿using Core.DataContexts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,7 @@ namespace Core.Page
     {
         public static void Add(this DmPage pageModel, CoreDbContext dc)
         {
-            if (dc.Pages.Any(x => x.Name.Equals(pageModel.Name))) return;
+            if (dc.Table<PageEntity>().Any(x => x.Name.Equals(pageModel.Name))) return;
 
             var dbRecord = pageModel.Map<PageEntity>();
 
@@ -20,7 +19,7 @@ namespace Core.Page
             dbRecord.ModifiedUserId = dc.CurrentUser.Id;
             dbRecord.ModifiedDate = DateTime.UtcNow;
 
-            dc.Pages.Add(dbRecord);
+            dc.Table<PageEntity>().Add(dbRecord);
         }
     }
 }

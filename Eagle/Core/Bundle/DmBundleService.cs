@@ -1,6 +1,4 @@
-﻿using Core.DataContexts;
-using Core.DbTables;
-using Core.DomainModels;
+﻿using Core.DomainModels;
 using Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -14,7 +12,7 @@ namespace Core.Bundle
     {
         public static void Add(this DmBundle bundleModel, CoreDbContext dc)
         {
-            if (dc.Bundles.Any(x => x.Name == bundleModel.Name && x.EntityName == bundleModel.EntityName)) return;
+            if (dc.Table<BundleEntity>().Any(x => x.Name == bundleModel.Name && x.EntityName == bundleModel.EntityName)) return;
 
             var dbRecord = bundleModel.Map<BundleEntity>();
 
@@ -24,7 +22,7 @@ namespace Core.Bundle
             dbRecord.ModifiedUserId = dc.CurrentUser.Id;
             dbRecord.ModifiedDate = DateTime.UtcNow;
 
-            dc.Bundles.Add(dbRecord);
+            dc.Table<BundleEntity>().Add(dbRecord);
         }
 
         public static void AddField(this DmBundle bundleModel, CoreDbContext dc, DmBundleField bundleFieldModel)

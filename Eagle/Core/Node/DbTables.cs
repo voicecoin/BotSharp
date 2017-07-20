@@ -7,26 +7,38 @@ using Core;
 using Core.Field;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Core.DbTables;
-using Core.DataContexts;
 using Core.Bundle;
+using Core.Interfaces;
 
-namespace Core.DbTables
+namespace Core.Node
 {
-    public class NodeEntity : DbRecordWithName
+    [Table("Nodes")]
+    public class NodeEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
         public string BundleId { get; set; }
+        [MaxLength(64)]
+        public String Name { get; set; }
+        [MaxLength(512)]
         public String Description { get; set; }
     }
 
-    public class NodeTextFieldEntity : TextFieldEntity { }
-    public class NodeRichTextFieldEntity : RichTextFieldEntity { }
-    public class NodeAddressFieldEntity : AddressFieldEntity { }
-    public class NodeEntityReferenceFieldEntity : EntityReferenceFieldEntity { }
-    public class NodeTaxonomyTermFieldEntity : TaxonomyTermFieldEntity { }
-    public class NodeNumberFieldEntity : NumberFieldEntity { }
-    public class NodeCurrencyFieldEntity : CurrencyFieldEntity { }
-    public class NodeDateTimeFieldEntity : DateTimeFieldEntity { }
-    public class NodeImageFieldEntity : ImageFieldEntity { }
+    [Table("NodeTextFields")]
+    public class NodeTextFieldEntity : TextFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeRichTextFields")]
+    public class NodeRichTextFieldEntity : RichTextFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeAddressFields")]
+    public class NodeAddressFieldEntity : AddressFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeEntityReferenceFields")]
+    public class NodeEntityReferenceFieldEntity : EntityReferenceFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeTaxonomyTermFields")]
+    public class NodeTaxonomyTermFieldEntity : TaxonomyTermFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeNumberFields")]
+    public class NodeNumberFieldEntity : NumberFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeCurrencyFields")]
+    public class NodeCurrencyFieldEntity : CurrencyFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeDateTimeFields")]
+    public class NodeDateTimeFieldEntity : DateTimeFieldEntity, IDbRecord4SqlServer { }
+    [Table("NodeImageFields")]
+    public class NodeImageFieldEntity : ImageFieldEntity, IDbRecord4SqlServer { }
 }

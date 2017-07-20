@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Interfaces;
-using Core.DbTables;
-using Core.DataContexts;
 using Core.Enums;
 using Core.DomainModels;
 using Core.Bundle;
@@ -17,7 +15,7 @@ namespace Core.Node
         public int Priority => 1;
         public void Load(IHostingEnvironment env, CoreDbContext dc)
         {
-            if (dc.Bundles.Any(x => x.EntityName == "Node")) return;
+            if (dc.Table<BundleEntity>().Any(x => x.EntityName == "Node")) return;
 
             DmBundle bundle = new DmBundle { Name = "Client", EntityName = "Node" };
             bundle.Add(dc);

@@ -64,6 +64,16 @@ namespace Utility
             return method.Invoke(obj, parameters);
         }
 
+        public static List<Type> GetClassesWithInterface(Type type, string assemblyName)
+        {
+            List<Type> types = Assembly.Load(new AssemblyName(assemblyName))
+                .GetTypes().ToList();
+
+            types = types.Where(x => x.GetInterfaces().Contains(type)).ToList();
+
+            return types;
+        }
+
         public static List<Type> GetClassesWithInterface<T>()
         {
             List<Type> types = Assembly.GetEntryAssembly()

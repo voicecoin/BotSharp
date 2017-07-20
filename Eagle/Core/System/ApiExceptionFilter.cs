@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility;
 
 namespace Core
 {
@@ -24,7 +25,7 @@ namespace Core
 
         public override void OnException(ExceptionContext context)
         {
-            // context.Exception.Message.Log(MyLogLevel.ERROR);
+            context.Exception.Message.Log(MyLogLevel.ERROR);
 
             ApiError apiError = null;
             if (context.Exception is ApiException)

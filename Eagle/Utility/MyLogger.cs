@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
-namespace Eagle
+namespace Utility
 {
     public static class MyLogger
     {
@@ -17,13 +18,18 @@ namespace Eagle
         {
             if (!logger.Logger.Repository.Configured)
             {
-                var logRepository = LogManager.GetRepository("Eagle");
+                var assembly = Assembly.GetEntryAssembly();
+                var logRepository = LogManager.GetRepository(assembly);
                 XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
                 //log4net.Config.XmlConfigurator.Configure();
             }
 
-            string json = JsonConvert.SerializeObject(log);
+            string json = JsonConvert.SerializeObject(log, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
 
             switch (level)
             {
@@ -58,4 +64,5 @@ namespace Eagle
         FATAL = 32,
         OFF = 0
     }
+
 }

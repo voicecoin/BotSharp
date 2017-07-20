@@ -1,5 +1,4 @@
 ﻿using Core.Account;
-using Core.DataContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +23,11 @@ namespace Core
 
         public CoreController()
         {
-            dc = new CoreDbContext(new DbContextOptions<CoreDbContext>() { });
+            //dc = new CoreDbContext(new DbContextOptions<CoreDbContext>() { });
+
+            dc = new CoreDbContext();
+            dc.CurrentUser = GetCurrentUser();
+            dc.InitDb();
         }
 
         protected DmAccount GetCurrentUser()

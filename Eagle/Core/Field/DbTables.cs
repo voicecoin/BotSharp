@@ -1,11 +1,11 @@
-﻿using Core.DbTables;
+﻿using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Core.DbTables
+namespace Core.Field
 {
     public abstract class FieldRepositoryEntity : DbRecord
     {

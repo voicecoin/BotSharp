@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.DbTables;
 using DomainModels;
 using Core.Enums;
+using Core.Account;
 
 namespace Core.View
 {
@@ -32,7 +32,7 @@ namespace Core.View
                 new DmViewHeader { DisplayName = "Status", FieldName = "status", FieldType = FieldTypes.Boolean }
             });
 
-            dmView.Data.AddRange(dc.Users.ToList());
+            dmView.Data.AddRange(dc.Table<UserEntity>().ToList());
 
             dmView.Actions.AddRange(
                 new List<DmViewAction> {
