@@ -26,8 +26,9 @@ namespace Core.Interfaces
 
     public interface IDomainModel<T> where T : IDbRecord
     {
-        Boolean Add();
-        void Remove();
+        Boolean AddEntity();
+        Boolean RemoveEntity();
+        T LoadEntity();
     }
 
     /// <summary>

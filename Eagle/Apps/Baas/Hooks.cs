@@ -26,7 +26,7 @@ namespace Apps.Baas
                 Password = "Yayabot123",
                 Description = "丫丫人工智能聊天机器人"
             });
-            dm.Add();
+            dm.AddEntity();
 
             dm = new BundleDomainModel<UserEntity>(dc, new UserEntity
             {
@@ -37,7 +37,7 @@ namespace Apps.Baas
                 Password = "Yayabot123",
                 Description = "鹰潭东瑞实业有限公司"
             });
-            dm.Add();
+            dm.AddEntity();
         }
     }
 }

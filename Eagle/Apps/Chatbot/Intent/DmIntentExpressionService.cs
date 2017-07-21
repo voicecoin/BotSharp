@@ -1,6 +1,7 @@
 ﻿using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Intent;
 using Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,46 +12,41 @@ namespace Apps.Chatbot
 {
     public static class DmIntentExpressionService
     {
-        public static void Update(this DmIntentExpression intentExpression, CoreDbContext dc)
+        public static void Update(this DomainModel<IntentExpressionEntity> intentExpression)
         {
+            CoreDbContext dc = intentExpression.Dc;
             // Remove Items first
-            intentExpression.Delete(dc);
+            intentExpression.Delete();
             // Add back
-            intentExpression.Add(dc);
+            intentExpression.Add();
         }
 
-        public static void Delete(this DmIntentExpression intentExpression, CoreDbContext dc)
+        public static void Delete(this DomainModel<IntentExpressionEntity> intentExpression)
         {
+            CoreDbContext dc = intentExpression.Dc;
             // Remove Items first
-            if (String.IsNullOrEmpty(intentExpression.Id)) return;
+            if (String.IsNullOrEmpty(intentExpression.Entity.Id)) return;
 
-            dc.Table<IntentExpressionEntity>().Remove(dc.Table<IntentExpressionEntity>().Find(intentExpression.Id));
+            dc.Table<IntentExpressionEntity>().Remove(dc.Table<IntentExpressionEntity>().Find(intentExpression.Entity.Id));
             dc.SaveChanges();
         }
 
-        public static void Add(this DmIntentExpression intentExpression, CoreDbContext dc)
+        public static void Add(this DomainModel<IntentExpressionEntity> intentExpression)
         {
-            if (String.IsNullOrEmpty(intentExpression.Id))
-            {
-                intentExpression.Id = Guid.NewGuid().ToString();
-            }
-
-            var expressionRecord = intentExpression.MapByJsonString<IntentExpressionEntity>();
-            expressionRecord.CreatedDate = DateTime.UtcNow;
-            expressionRecord.CreatedUserId = dc.CurrentUser.Id;
-            expressionRecord.ModifiedDate = DateTime.UtcNow;
-            expressionRecord.ModifiedUserId = dc.CurrentUser.Id;
+            if (!intentExpression.AddEntity()) return;
 
             int pos = 0;
-            intentExpression.Data.ForEach(item => {
-                item.Length = item.Text.Length;
-                item.Position = pos;
-                pos += item.Text.Length;
-            });
-            expressionRecord.Items = intentExpression.Data.ToArray();
 
-            dc.Table<IntentExpressionEntity>().Add(expressionRecord);
-            dc.SaveChanges();
+            if(intentExpression.Entity.Data != null)
+            {
+                intentExpression.Entity.Data.ForEach(item => {
+                    item.Length = item.Text.Length;
+                    item.Position = pos;
+                    pos += item.Text.Length;
+                });
+
+                //intentExpression.Entity.DataJson = JsonConvert.SerializeObject(intentExpression.Entity.Data);
+            }
         }
     }
 }

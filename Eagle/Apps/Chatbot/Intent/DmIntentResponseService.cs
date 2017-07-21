@@ -1,6 +1,7 @@
 ﻿using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Intent;
 using Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,94 +12,75 @@ namespace Apps.Chatbot
 {
     public static class DmIntentResponseService
     {
-        public static void Update(this DmIntentResponse responseModel, CoreDbContext dc)
+        public static void Update(this DomainModel<IntentResponseEntity> responseModel)
         {
-            var response = dc.Table<IntentResponseEntity>().Find(responseModel.Id);
+            CoreDbContext dc = responseModel.Dc;
+
+            var response = dc.Table<IntentResponseEntity>().Find(responseModel.Entity.Id);
             if(response == null)
             {
                 
             }
-            response.Action = responseModel.Action;
-            response.AffectedContexts = responseModel.AffectedContexts.ToArray();
 
-            dc.Table<IntentResponseMessageEntity>().RemoveRange(dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == responseModel.Id));
+            response.Action = responseModel.Entity.Action;
+            response.ContextsJson = JsonConvert.SerializeObject(responseModel.Entity.Contexts);
+
+            dc.Table<IntentResponseMessageEntity>().RemoveRange(dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == responseModel.Entity.Id));
             dc.SaveChanges();
 
-            responseModel.Messages.ForEach(message => {
+            responseModel.Entity.Messages.ForEach(message => {
                 dc.Table<IntentResponseMessageEntity>().Add(message.Map<IntentResponseMessageEntity>());
             });
 
-            dc.Table<IntentResponseParameterEntity>().RemoveRange(dc.Table<IntentResponseParameterEntity>().Where(x => x.IntentResponseId == responseModel.Id));
+            dc.Table<IntentResponseParameterEntity>().RemoveRange(dc.Table<IntentResponseParameterEntity>().Where(x => x.IntentResponseId == responseModel.Entity.Id));
             dc.SaveChanges();
 
-            responseModel.Parameters.ForEach(parameter => {
-                parameter.IntentResponseId = responseModel.Id;
+            responseModel.Entity.Parameters.ForEach(parameter => {
+                parameter.IntentResponseId = responseModel.Entity.Id;
                 dc.Table<IntentResponseParameterEntity>().Add(parameter.Map<IntentResponseParameterEntity>());
             });
         }
 
-        public static void Delete(this DmIntentResponse responseModel, CoreDbContext dc)
+        public static void Delete(this DomainModel<IntentResponseEntity> responseModel, CoreDbContext dc)
         {
             // Remove Items first
-            responseModel.Parameters.ForEach(parameter => {
+            responseModel.Entity.Parameters.ForEach(parameter => {
 
             });
 
-            responseModel.Messages.ForEach(message => {
+            responseModel.Entity.Messages.ForEach(message => {
 
             });
 
-            dc.Table<IntentResponseEntity>().Remove(dc.Table<IntentResponseEntity>().Find(responseModel.Id));
+            dc.Table<IntentResponseEntity>().Remove(dc.Table<IntentResponseEntity>().Find(responseModel.Entity.Id));
 
             dc.SaveChanges();
         }
 
-        public static void Add(this DmIntentResponse responseModel, CoreDbContext dc)
+        public static void Add(this DomainModel<IntentResponseEntity> responseModel)
         {
-            var responseRecord = responseModel.Map<IntentResponseEntity>();
-            responseRecord.Id = Guid.NewGuid().ToString();
-            responseRecord.CreatedDate = DateTime.UtcNow;
-            responseRecord.CreatedUserId = dc.CurrentUser.Id;
-            responseRecord.ModifiedDate = DateTime.UtcNow;
-            responseRecord.ModifiedUserId = dc.CurrentUser.Id;
-            responseRecord.AffectedContexts = responseModel.AffectedContexts.ToArray();
-            dc.Table<IntentResponseEntity>().Add(responseRecord);
+            if (!responseModel.AddEntity()) return;
 
-            responseModel.Messages.ForEach(message =>
+            if(responseModel.Entity.Contexts != null)
             {
-                message.IntentResponseId = responseRecord.Id;
-                message.Add(dc);
+                responseModel.Entity.ContextsJson = JsonConvert.SerializeObject(responseModel.Entity.Contexts);
+            }
+            
+            CoreDbContext dc = responseModel.Dc;
+
+            responseModel.Entity.Messages.ForEach(message =>
+            {
+                message.IntentResponseId = responseModel.Entity.Id;
+                var dm = new DomainModel<IntentResponseMessageEntity>(dc, message);
+                dm.AddEntity();
             });
 
-            responseModel.Parameters.ForEach(parameter =>
+            responseModel.Entity.Parameters.ForEach(parameter =>
             {
-                parameter.IntentResponseId = responseRecord.Id;
-                parameter.Add(dc);
+                parameter.IntentResponseId = responseModel.Entity.Id;
+                var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
+                dm.AddEntity();
             });
-        }
-
-        public static void Add(this DmIntentResponseMessage responseMessageModel, CoreDbContext dc)
-        {
-            var responseMessageRecord = responseMessageModel.Map<IntentResponseMessageEntity>();
-            responseMessageRecord.Id = Guid.NewGuid().ToString();
-            responseMessageRecord.CreatedDate = DateTime.UtcNow;
-            responseMessageRecord.CreatedUserId = dc.CurrentUser.Id;
-            responseMessageRecord.ModifiedDate = DateTime.UtcNow;
-            responseMessageRecord.ModifiedUserId = dc.CurrentUser.Id;
-            dc.Table<IntentResponseMessageEntity>().Add(responseMessageRecord);
-        }
-
-        public static void Add(this DmIntentResponseParameter responseParameterModel, CoreDbContext dc)
-        {
-            var responseParameterRecord = responseParameterModel.Map<IntentResponseParameterEntity>();
-            responseParameterRecord.Id = Guid.NewGuid().ToString();
-            responseParameterRecord.CreatedDate = DateTime.UtcNow;
-            responseParameterRecord.CreatedUserId = dc.CurrentUser.Id;
-            responseParameterRecord.ModifiedDate = DateTime.UtcNow;
-            responseParameterRecord.ModifiedUserId = dc.CurrentUser.Id;
-
-            responseParameterRecord.Prompts = responseParameterModel.Prompts.ToArray();
-            dc.Table<IntentResponseParameterEntity>().Add(responseParameterRecord);
         }
     }
 }

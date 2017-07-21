@@ -21,23 +21,39 @@ namespace Apps.Chatbot.Intent
         [MaxLength(32)]
         public String Name { get; set; }
 
+        [JsonIgnore]
+        [Column("Contexts")]
         [MaxLength(256)]
-        internal String _Contexts { get; set; }
+        public String ContextsJson { get; set; }
         [NotMapped]
-        public String[] Contexts
+        public List<String> Contexts
         {
-            get { return _Contexts == null ? null : JsonConvert.DeserializeObject<String[]>(_Contexts); }
-            set { _Contexts = JsonConvert.SerializeObject(value); }
+            get { return ContextsJson == null ? null : JsonConvert.DeserializeObject<List<String>>(ContextsJson); }
+            set { ContextsJson = JsonConvert.SerializeObject(value); }
         }
 
+        [JsonIgnore]
+        [Column("Events")]
         [MaxLength(128)]
-        internal String _Events { get; set; }
+        public String EventsJson { get; set; }
         [NotMapped]
-        public String[] Contents
+        public List<String> Events
         {
-            get { return _Events == null ? null : JsonConvert.DeserializeObject<String[]>(_Events); }
-            set { _Events = JsonConvert.SerializeObject(value); }
+            get { return EventsJson == null ? null : JsonConvert.DeserializeObject<List<String>>(EventsJson); }
+            set { EventsJson = JsonConvert.SerializeObject(value); }
         }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<IntentEntity>().Any(x => x.AgentId == AgentId && x.Name == Name);
+        }
+
+        [NotMapped]
+        public List<String> Templates { get; set; }
+        [NotMapped]
+        public List<IntentExpressionEntity> UserSays { get; set; }
+        [NotMapped]
+        public List<IntentResponseEntity> Responses { get; set; }
     }
 
     [Table("Chatbot_IntentExpressions")]
@@ -50,13 +66,25 @@ namespace Apps.Chatbot.Intent
         [MaxLength(128)]
         public String Text { get; set; }
 
-        [MaxLength]
-        internal String _Items { get; set; }
         [NotMapped]
-        public DmIntentExpressionItem[] Items
+        public Int32 Count { get; set; }
+        [NotMapped]
+        public double Similarity { get; set; }
+
+        [JsonIgnore]
+        [Column("Data")]
+        [MaxLength]
+        public String DataJson { get; set; }
+        [NotMapped]
+        public List<DmIntentExpressionItem> Data
         {
-            get { return _Items == null ? null : JsonConvert.DeserializeObject<DmIntentExpressionItem[]>(_Items); }
-            set { _Items = JsonConvert.SerializeObject(value); }
+            get { return DataJson == null ? null : JsonConvert.DeserializeObject<List<DmIntentExpressionItem>>(DataJson); }
+            set { DataJson = JsonConvert.SerializeObject(value); }
+        }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<IntentExpressionEntity>().Any(x => x.IntentId == IntentId && x.Text == Text);
         }
     }
 
@@ -70,13 +98,24 @@ namespace Apps.Chatbot.Intent
         [MaxLength(128)]
         public String Action { get; set; }
 
-        [MaxLength(256)]
-        internal String _AffectedContexts { get; set; }
         [NotMapped]
-        public DmIntentResponseContext[] AffectedContexts
+        public List<IntentResponseMessageEntity> Messages { get; set; }
+        [NotMapped]
+        public List<IntentResponseParameterEntity> Parameters { get; set; }
+
+        [JsonIgnore]
+        [Column("Contexts")]
+        public String ContextsJson { get; set; }
+        [NotMapped]
+        public List<DmIntentResponseContext> Contexts
         {
-            get { return _AffectedContexts == null ? null : JsonConvert.DeserializeObject<DmIntentResponseContext[]>(_AffectedContexts); }
-            set { _AffectedContexts = JsonConvert.SerializeObject(value); }
+            get { return ContextsJson == null ? null : JsonConvert.DeserializeObject<List<DmIntentResponseContext>>(ContextsJson); }
+            set { ContextsJson = JsonConvert.SerializeObject(value); }
+        }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<IntentResponseEntity>().Any(x => x.IntentId == IntentId && x.ContextsJson == ContextsJson);
         }
     }
 
@@ -89,12 +128,19 @@ namespace Apps.Chatbot.Intent
         public IntentResponseMessageType Type { get; set; }
         public IntentResponseMessagePlatform Platform { get; set; }
 
-        internal String _Speeches { get; set; }
+        [JsonIgnore]
+        [Column("Speeches")]
+        public String SpeechesJson { get; set; }
         [NotMapped]
-        public String[] Speeches
+        public List<String> Speeches
         {
-            get { return _Speeches == null ? null : JsonConvert.DeserializeObject<String[]>(_Speeches); }
-            set { _Speeches = JsonConvert.SerializeObject(value); }
+            get { return SpeechesJson == null ? null : JsonConvert.DeserializeObject<List<String>>(SpeechesJson); }
+            set { SpeechesJson = JsonConvert.SerializeObject(value); }
+        }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<IntentResponseMessageEntity>().Any(x => x.IntentResponseId == IntentResponseId && x.SpeechesJson == SpeechesJson);
         }
     }
 
@@ -119,12 +165,19 @@ namespace Apps.Chatbot.Intent
         [MaxLength(64)]
         public String DefaultValue { get; set; }
 
-        internal String _Prompts { get; set; }
+        [JsonIgnore]
+        [Column("Speeches")]
+        public String PromptsJson { get; set; }
         [NotMapped]
-        public String[] Prompts
+        public List<String> Prompts
         {
-            get { return _Prompts == null ? null : JsonConvert.DeserializeObject<String[]>(_Prompts); }
-            set { _Prompts = JsonConvert.SerializeObject(value); }
+            get { return PromptsJson == null ? null : JsonConvert.DeserializeObject<List<String>>(PromptsJson); }
+            set { PromptsJson = JsonConvert.SerializeObject(value); }
+        }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<IntentResponseParameterEntity>().Any(x => x.IntentResponseId == IntentResponseId && x.PromptsJson == PromptsJson);
         }
     }
 }

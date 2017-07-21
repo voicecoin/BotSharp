@@ -18,7 +18,7 @@
         {
           "text": "今日",
           "alias": "day",
-          "meta": "@时间",
+          "meta": "@时间词",
           "color": "#83EE1F",
           "value": "今天"
         },
@@ -54,7 +54,7 @@
       "parameters": [
         {
           "name": "time",
-          "dataType": "@时间",
+          "dataType": "@时间词",
           "required": true,
           "Prompts": [ "你想问什么时候的？" ],
           "value": "$time",

@@ -15,11 +15,6 @@ namespace Apps.Chatbot
         public MapperProfile()
         {
             CreateMap<AgentEntity, DmAgent>().ReverseMap();
-            CreateMap<IntentEntity, DmIntent>().ReverseMap();
-            CreateMap<IntentExpressionEntity, DmIntentExpression>().ReverseMap();
-            CreateMap<IntentResponseEntity, DmIntentResponse>().ReverseMap();
-            CreateMap<IntentResponseMessageEntity, DmIntentResponseMessage>().ReverseMap();
-            CreateMap<IntentResponseParameterEntity, DmIntentResponseParameter>().ReverseMap();
             CreateMap<EntityEntity, DmEntity>().ReverseMap();
             CreateMap<EntityEntryEntity, DmEntityEntry>().ReverseMap();
         }

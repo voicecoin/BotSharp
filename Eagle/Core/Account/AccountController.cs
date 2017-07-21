@@ -60,7 +60,7 @@ namespace Core.Account
         {
             dc.Transaction<IDbRecord4SqlServer>(delegate {
                 var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
-                dm.Add();
+                dm.AddEntity();
             });
 
             return CreatedAtAction("CreateUser", new { id = accountModel.Id }, accountModel.Id);

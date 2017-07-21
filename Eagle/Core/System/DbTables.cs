@@ -65,25 +65,35 @@ namespace Core
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public String Id { get; set; }
 
+        [JsonIgnore]
         public EntityStatus Status { get; set; }
 
         /// <summary>
         /// https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/concurrency
         /// </summary>
+        [JsonIgnore]
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
+        [JsonIgnore]
         [Required]
         public DateTime CreatedDate { get; set; }
+
 #if AUTH_REQUIRED
         [Required]
 #endif
+        [JsonIgnore]
         [StringLength(36)]
         public string CreatedUserId { get; set; }
+
+        [JsonIgnore]
         [Required]
         public DateTime ModifiedDate { get; set; }
+
 #if AUTH_REQUIRED
         [Required]
 #endif
+        [JsonIgnore]
         [StringLength(36)]
         public string ModifiedUserId { get; set; }
 

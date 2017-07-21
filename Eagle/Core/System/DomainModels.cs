@@ -10,54 +10,64 @@ namespace Core
 {
     public class DomainModel<T> : IDomainModel<T> where T : DbRecord
     {
-        private CoreDbContext dc;
+        public CoreDbContext Dc { get; set; }
+
         public DomainModel(CoreDbContext db, T dbRecord)
         {
-            dc = db;
-            entity = dbRecord;
+            Dc = db;
+            Entity = dbRecord;
         }
         /// <summary>
         /// Core DbRecord
         /// </summary>
-        private T entity;
+        public T Entity;
 
-        public bool Add()
+        public bool AddEntity()
         {
-            if (entity.IsExist(dc)) return false;
+            if (Entity.IsExist(Dc)) return false;
 
-            if (String.IsNullOrEmpty(entity.Id))
+            if (String.IsNullOrEmpty(Entity.Id))
             {
-                entity.Id = Guid.NewGuid().ToString();
+                Entity.Id = Guid.NewGuid().ToString();
             }
 
-            entity.CreatedUserId = dc.CurrentUser.Id;
-            entity.CreatedDate = DateTime.UtcNow;
-            entity.ModifiedUserId = dc.CurrentUser.Id;
-            entity.ModifiedDate = DateTime.UtcNow;
+            Entity.CreatedUserId = Dc.CurrentUser.Id;
+            Entity.CreatedDate = DateTime.UtcNow;
+            Entity.ModifiedUserId = Dc.CurrentUser.Id;
+            Entity.ModifiedDate = DateTime.UtcNow;
 
-            dc.Table<T>().Add(entity);
+            Dc.Table<T>().Add(Entity);
+
+            Dc.SaveChanges();
 
             return true;
         }
 
-        public void Remove()
+        public bool RemoveEntity()
         {
             throw new NotImplementedException();
+        }
+
+        public T LoadEntity()
+        {
+            Entity = Dc.Table<T>().Find(Entity.Id);
+            return Entity;
         }
     }
 
     public class BundleDomainModel<T> : IDomainModel<T>, IBundlable<T> where T: BundleDbRecord
     {
-        private CoreDbContext dc;
+        public CoreDbContext Dc;
+
         public BundleDomainModel(CoreDbContext db, T dbRecord)
         {
-            dc = db;
-            entity = dbRecord;
+            Dc = db;
+            Entity = dbRecord;
         }
         /// <summary>
         /// Core DbRecord
         /// </summary>
-        private T entity;
+        public T Entity { get; set; }
 
         public String BundleId { get; set; }
         public void LoadFieldRecords()
@@ -65,34 +75,41 @@ namespace Core
             throw new NotImplementedException();
         }
 
-        public bool Add()
+        public bool AddEntity()
         {
-            if (entity.IsExist(dc)) return false;
+            if (Entity.IsExist(Dc)) return false;
 
-            string entityName = entity.GetEntityName();
-            var bundle = dc.Table<BundleEntity>().First(x => x.EntityName == entityName);
+            string entityName = Entity.GetEntityName();
+            var bundle = Dc.Table<BundleEntity>().First(x => x.EntityName == entityName);
 
             if (bundle == null) return false;
 
-            if (String.IsNullOrEmpty(entity.Id))
+            if (String.IsNullOrEmpty(Entity.Id))
             {
-                entity.Id = Guid.NewGuid().ToString();
+                Entity.Id = Guid.NewGuid().ToString();
             }
 
-            entity.BundleId = bundle.Id;
-            entity.CreatedUserId = dc.CurrentUser.Id;
-            entity.CreatedDate = DateTime.UtcNow;
-            entity.ModifiedUserId = dc.CurrentUser.Id;
-            entity.ModifiedDate = DateTime.UtcNow;
+            Entity.BundleId = bundle.Id;
+            Entity.CreatedUserId = Dc.CurrentUser.Id;
+            Entity.CreatedDate = DateTime.UtcNow;
+            Entity.ModifiedUserId = Dc.CurrentUser.Id;
+            Entity.ModifiedDate = DateTime.UtcNow;
 
-            dc.Table<T>().Add(entity);
+            Dc.Table<T>().Add(Entity);
+            Dc.SaveChanges();
 
             return true;
         }
 
-        public void Remove()
+        public bool RemoveEntity()
         {
             throw new NotImplementedException();
+        }
+
+        public T LoadEntity()
+        {
+            Entity = Dc.Table<T>().Find(Entity.Id);
+            return Entity;
         }
     }
 

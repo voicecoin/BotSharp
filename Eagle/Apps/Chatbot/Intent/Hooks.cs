@@ -13,12 +13,13 @@ using Apps.Chatbot.Intent;
 using Apps.Chatbot.Entity;
 using Core.DomainModels;
 using Core.Bundle;
+using Apps.Chatbot.Agent;
 
-namespace Apps.Chatbot.Agent
+namespace Apps.Chatbot.Intent
 {
     public class Hooks : IDbInitializer
     {
-        public int Priority => 100;
+        public int Priority => 120;
 
         public void Load(IHostingEnvironment env, CoreDbContext dc)
         {
@@ -29,18 +30,7 @@ namespace Apps.Chatbot.Agent
                 dc.SaveChanges();
             }
 
-            InitAgent(env, dc);
-        }
-
-        private static void InitAgent(IHostingEnvironment env, CoreDbContext context)
-        {
-            // create a agent
             var agentNames = LoadJson<List<String>>(env, "Agents");
-
-            string id = Guid.NewGuid().ToString();
-            string id2 = Guid.NewGuid().ToString();
-            string token1 = Guid.NewGuid().ToString("N");
-            string token2 = Guid.NewGuid().ToString("N");
 
             List<AgentEntity> agents = new List<AgentEntity>();
 
@@ -48,22 +38,30 @@ namespace Apps.Chatbot.Agent
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
 
-                BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
+                BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(dc, agent);
                 dm.AddEntity();
 
                 agents.Add(agent);
             });
+
+            agents.ForEach(agent =>
+            {
+                InitIntents(env, dc, agent);
+            });
         }
 
-        private static DmEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)
+        private static void InitIntents(IHostingEnvironment env, CoreDbContext context, AgentEntity agent)
         {
-            string json;
-            using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities\\{name}.json"))
-            {
-                json = SourceReader.ReadToEnd();
-            }
+            var intentNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
-            return JsonConvert.DeserializeObject<DmEntity>(json);
+            intentNames.ForEach(intentName =>
+            {
+                // Intent
+                var intentModel = LoadJson<IntentEntity>(env, $"{agent.Name}\\Intents\\{intentName}");
+                intentModel.AgentId = agent.Id;
+                intentModel.Name = intentName;
+                new DomainModel<IntentEntity>(context, intentModel).Add();
+            });
         }
 
         private static T LoadJson<T>(IHostingEnvironment env, string fileName)

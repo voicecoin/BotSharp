@@ -13,12 +13,13 @@ using Apps.Chatbot.Intent;
 using Apps.Chatbot.Entity;
 using Core.DomainModels;
 using Core.Bundle;
+using Apps.Chatbot.Agent;
 
-namespace Apps.Chatbot.Agent
+namespace Apps.Chatbot.Entity
 {
     public class Hooks : IDbInitializer
     {
-        public int Priority => 100;
+        public int Priority => 110;
 
         public void Load(IHostingEnvironment env, CoreDbContext dc)
         {
@@ -29,18 +30,7 @@ namespace Apps.Chatbot.Agent
                 dc.SaveChanges();
             }
 
-            InitAgent(env, dc);
-        }
-
-        private static void InitAgent(IHostingEnvironment env, CoreDbContext context)
-        {
-            // create a agent
             var agentNames = LoadJson<List<String>>(env, "Agents");
-
-            string id = Guid.NewGuid().ToString();
-            string id2 = Guid.NewGuid().ToString();
-            string token1 = Guid.NewGuid().ToString("N");
-            string token2 = Guid.NewGuid().ToString("N");
 
             List<AgentEntity> agents = new List<AgentEntity>();
 
@@ -48,10 +38,32 @@ namespace Apps.Chatbot.Agent
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
 
-                BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
+                BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(dc, agent);
                 dm.AddEntity();
 
                 agents.Add(agent);
+            });
+
+            agents.ForEach(agent =>
+            {
+                InitEntities(env, dc, agent);
+            });
+        }
+
+        private static void InitEntities(IHostingEnvironment env, CoreDbContext context, AgentEntity agent)
+        {
+            var entityNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
+
+            entityNames.ForEach(entityName =>
+            {
+                if (context.Table<EntityEntity>().Count(x => x.Name == entityName) == 0)
+                {
+                    // add entity
+                    DmEntity entity = LoadEntityFromJsonFile(env, agent, entityName);
+                    entity.AgentId = agent.Id;
+                    entity.Name = entityName;
+                    entity.Add(context);
+                }
             });
         }
 

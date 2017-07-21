@@ -1,5 +1,6 @@
 ﻿using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Entity;
+using Apps.Chatbot.Intent;
 using Core;
 using Newtonsoft.Json;
 using RestSharp;
@@ -65,20 +66,15 @@ namespace Apps.Chatbot.DmServices
 
             // 只需要识别实体
             List<String> entityNames = allEntities.Select(x => x.Name).ToList();
-            result.WordSplit.Where(x => entityNames.Contains(x.Entity)).ToList().ForEach(seg => {
-                MatchCollection mc = Regex.Matches(seg.Entity, "\".+\"");
-                foreach (Match m in mc)
-                {
-                    seg.Entity = seg.Entity.Replace(m.Value, String.Empty);
-                }
+            result.WordSplit.Where(x => entityNames.Contains(x.Category)).ToList().ForEach(seg => {
 
                 unitEntityInEntry.Add(new DmIntentExpressionItem
                 {
                     Text = seg.Word,
-                    Meta = "@" + seg.Entity,
-                    Alias = seg.Entity,
+                    Meta = "@" + seg.Category,
+                    Alias = seg.Category,
                     Length = seg.Word.Length,
-                    Color = allEntities.First(x => x.Name == seg.Entity).Color,
+                    Color = allEntities.First(x => x.Name == seg.Category).Color,
                     Value = seg.Word
                 });
             });
@@ -178,10 +174,10 @@ namespace Apps.Chatbot.DmServices
         /// </summary>
         /// <param name="responseModel"></param>
         /// <param name="dc"></param>
-        public static DmIntentResponseMessage PostResponse(this DmIntentResponse responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static IntentResponseMessageEntity PostResponse(this IntentResponseEntity responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
         {
             // 随机选择一个回答。
-            DmIntentResponseMessage messageModel = responseModel.Messages.Random();
+            IntentResponseMessageEntity messageModel = responseModel.Messages.Random();
 
             // Replace system token
             messageModel.ReplaceSystemToken(dc, agentRequestModel);
@@ -190,7 +186,7 @@ namespace Apps.Chatbot.DmServices
             return messageModel;
         }
 
-        public static void ExtractParameter(this DmIntentResponse responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static void ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
         {
             var segments = agentRequestModel.Segment(dc).Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
 
@@ -206,7 +202,7 @@ namespace Apps.Chatbot.DmServices
         /// <param name="messageModel"></param>
         /// <param name="dc"></param>
         /// <param name="agent"></param>
-        public static void ReplaceSystemToken(this DmIntentResponseMessage messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static void ReplaceSystemToken(this IntentResponseMessageEntity messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
         {
             List<String> speechs = new List<string>();
 
@@ -229,7 +225,7 @@ namespace Apps.Chatbot.DmServices
         /// <param name="messageModel"></param>
         /// <param name="dc"></param>
         /// <param name="agent"></param>
-        public static void ReplaceParameterToken(this DmIntentResponseMessage messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel, DmIntentResponse responseModel)
+        public static void ReplaceParameterToken(this IntentResponseMessageEntity messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel, IntentResponseEntity responseModel)
         {
             List<String> speechs = new List<string>();
 

@@ -1,6 +1,7 @@
 ﻿using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Intent;
 using Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,79 +12,70 @@ namespace Apps.Chatbot.DmServices
 {
     public static partial class DmIntentService
     {
-        public static void Load(this DmIntent intentModel, CoreDbContext dc)
+        public static void Load(this DomainModel<IntentEntity> intentModel)
         {
-            var intentExpressions = dc.Table<IntentExpressionEntity>().Where(x => x.IntentId == intentModel.Id).ToList();
-            var intentExpressionItems = (from item in dc.Table<IntentExpressionEntity>()
-                                         where intentExpressions.Select(expression => expression.Id).Contains(item.Id)
-                                         select item).ToList();
+            CoreDbContext dc = intentModel.Dc;
+            intentModel.LoadEntity();
 
-            intentModel.UserSays = intentExpressions.Select(expression => new DmIntentExpression
+            var intentExpressions = dc.Table<IntentExpressionEntity>().Where(x => x.IntentId == intentModel.Entity.Id).ToList();
+
+            intentModel.Entity.UserSays = intentExpressions.Select(expression => new IntentExpressionEntity
             {
                 Id = expression.Id,
                 Text = expression.Text,
                 IntentId = expression.IntentId,
-                Data = expression.Items.ToList()
+                Data = expression.Data.ToList()
             }).ToList();
 
-            intentModel.Templates = intentModel.UserSays.Select(x => x.Data.GetTemplateString()).ToList();
+            intentModel.Entity.Templates = intentModel.Entity.UserSays.Select(x => x.Data.GetTemplateString()).ToList();
 
-            intentModel.Responses = dc.Table<IntentResponseEntity>()
-                .Where(x => x.IntentId == intentModel.Id)
-                .Select(x => x.Map<DmIntentResponse>())
+            intentModel.Entity.Responses = dc.Table<IntentResponseEntity>()
+                .Where(x => x.IntentId == intentModel.Entity.Id)
                 .ToList();
 
-            intentModel.Responses.ForEach(response =>
+            intentModel.Entity.Responses.ForEach(response =>
             {
                 // Load message
                 response.Messages = dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == response.Id)
-                    .Select(x => x.Map<DmIntentResponseMessage>()).ToList();
+                    .Select(x => x.Map<IntentResponseMessageEntity>()).ToList();
 
                 // Load parameters
-                response.Parameters = dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == response.Id)
-                                    .Select(x => x.Map<DmIntentResponseParameter>()).ToList();
+                response.Parameters = dc.Table<IntentResponseParameterEntity>().Where(x => x.IntentResponseId == response.Id)
+                                    .Select(x => x.Map<IntentResponseParameterEntity>()).ToList();
             });
         }
 
 
-        public static void Add(this DmIntent intentModel, CoreDbContext dc)
+        public static void Add(this DomainModel<IntentEntity> intentModel)
         {
-            if (String.IsNullOrEmpty(intentModel.Id))
-            {
-                intentModel.Id = Guid.NewGuid().ToString();
-            }
-            
-            var intentRecord = intentModel.Map<IntentEntity>();
-            intentRecord.CreatedDate = DateTime.UtcNow;
-            intentRecord.CreatedUserId = dc.CurrentUser.Id;
-            intentRecord.ModifiedDate = DateTime.UtcNow;
-            intentRecord.ModifiedUserId = dc.CurrentUser.Id;
-            intentRecord.Contexts = intentModel.Contexts.ToArray();
+            if (!intentModel.AddEntity()) return;
+            intentModel.Entity.ContextsJson = JsonConvert.SerializeObject(intentModel.Entity.Contexts);
 
-            dc.Table<IntentEntity>().Add(intentRecord);
-
-            intentModel.UserSays.ForEach(userSay =>
+            intentModel.Entity.UserSays.ForEach(userSay =>
             {
-                userSay.IntentId = intentRecord.Id;
-                userSay.Add(dc);
+                userSay.IntentId = intentModel.Entity.Id;
+                var dm = new DomainModel<IntentExpressionEntity>(intentModel.Dc, userSay);
+                dm.Add();
             });
 
-            intentModel.Responses.ForEach(response =>
+            intentModel.Entity.Responses.ForEach(response =>
             {
-                response.IntentId = intentRecord.Id;
-                response.Add(dc);
+                response.IntentId = intentModel.Entity.Id;
+                var dm = new DomainModel<IntentResponseEntity>(intentModel.Dc, response);
+                dm.Add();
             });
         }
 
-        public static void Update(this DmIntent intentModel, CoreDbContext dc)
+        public static void Update(this DomainModel<IntentEntity> intentModel)
         {
-            var intentRecord = dc.Table<IntentEntity>().Find(intentModel.Id);
-            intentRecord.Name = intentModel.Name;
+            CoreDbContext dc = intentModel.Dc;
+            var intentRecord = dc.Table<IntentEntity>().Find(intentModel.Entity.Id);
+            intentRecord.Name = intentModel.Entity.Name;
             intentRecord.ModifiedDate = DateTime.UtcNow;
 
             // Remove all related data then create with same IntentId
-            intentModel.UserSays.ForEach(expression => expression.Update(dc));
-            intentModel.Responses.ForEach(response => response.Update(dc));
+            intentModel.Entity.UserSays.ForEach(expression => new DomainModel<IntentExpressionEntity>(dc, expression).Update());
+            intentModel.Entity.Responses.ForEach(response => new DomainModel<IntentResponseEntity>(dc, response).Update());
         }
     }
 }

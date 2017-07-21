@@ -17,7 +17,7 @@ namespace Apps.Chatbot
     {
         // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<DmIntent> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
+        public DmPageResult<IntentEntity> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
         {
             var query = dc.Table<IntentEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -29,8 +29,8 @@ namespace Apps.Chatbot
 
             int size = 20;
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmIntent>()).ToList();
-            return new DmPageResult<DmIntent> { Total = total, Page = page, Size = size, Items = items };
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<IntentEntity>()).ToList();
+            return new DmPageResult<IntentEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Intents/5
@@ -42,22 +42,15 @@ namespace Apps.Chatbot
                 return BadRequest(ModelState);
             }
 
-            var intents = await dc.Table<IntentEntity>().SingleOrDefaultAsync(m => m.Id == id);
+            var dm = new DomainModel<IntentEntity>(dc, new IntentEntity { Id = id });
+            dm.Load();
 
-            if (intents == null)
-            {
-                return NotFound();
-            }
-
-            var intentModel = intents.Map<DmIntent>();
-            intentModel.Load(dc);
-
-            return Ok(intentModel);
+            return Ok(dm.Entity);
         }
 
         // PUT: api/Intents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] DmIntent intentModel)
+        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] IntentEntity intentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +64,7 @@ namespace Apps.Chatbot
 
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
-                intentModel.Update(dc);
+                new DomainModel<IntentEntity>(dc, intentModel).Update();
             });
 
             return Ok(id);
@@ -79,7 +72,7 @@ namespace Apps.Chatbot
 
         // POST: api/Intents
         [HttpPost("{agentId}")]
-        public async Task<IActionResult> PostIntents(string agentId, [FromBody] DmIntent intentModel)
+        public async Task<IActionResult> PostIntents(string agentId, [FromBody] IntentEntity intentModel)
         {
             if (!ModelState.IsValid)
             {
@@ -89,7 +82,7 @@ namespace Apps.Chatbot
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
                 intentModel.AgentId = agentId;
-                intentModel.Add(dc);
+                new DomainModel<IntentEntity>(dc, intentModel).Add();
             });
 
             return CreatedAtAction("GetIntents", new { id = intentModel.Id }, intentModel.Id);

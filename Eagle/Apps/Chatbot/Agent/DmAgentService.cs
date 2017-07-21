@@ -28,13 +28,13 @@ namespace Apps.Chatbot.DmServices
                 List<String> corpus = new List<String>();
                 intents = queryable.ToList();
                 intents.ForEach(exp => {
-                    if (exp.Items == null || exp.Items.Count() == 0)
+                    if (exp.Data == null || exp.Data.Count() == 0)
                     {
                         corpus.Add(exp.Text);
                     }
                     else
                     {
-                        corpus.Add(String.Join("", exp.Items.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta)));
+                        corpus.Add(String.Join("", exp.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta)));
                     }
                 });
 
@@ -42,14 +42,14 @@ namespace Apps.Chatbot.DmServices
                 DmAgentRequest agentRequestModel1 = new DmAgentRequest { Text = agentRequestModel.Text };
                 var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
 
-                List<DmIntentExpression> similarities = new List<DmIntentExpression>();
+                List<IntentExpressionEntity> similarities = new List<IntentExpressionEntity>();
 
                 intents.ForEach(expression =>
                 {
                     DmAgentRequest agentRequestModel2 = new DmAgentRequest { Text = expression.Text };
                     var comparedTextSplitted = agentRequestModel2.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
 
-                    DmIntentExpression model = expression.Map<DmIntentExpression>();
+                    IntentExpressionEntity model = expression.Map<IntentExpressionEntity>();
                     model.Similarity = CompareSimilarity(corpus, requestedTextSplitted, comparedTextSplitted);
                     if (model.Similarity > 0.5)
                     {
@@ -72,13 +72,13 @@ namespace Apps.Chatbot.DmServices
 
             var intentRecord = dc.Table<IntentEntity>().First(m => m.Id == intents.First().IntentId);
 
-            var intentModel = intentRecord.Map<DmIntent>();
-            intentModel.Load(dc);
+            var dm = new DomainModel<IntentEntity>(dc, intentRecord.Map<IntentEntity>());
+            dm.Load();
 
-            DmIntentResponse responseModel = intentModel.Responses.First();
+            IntentResponseEntity responseModel = dm.Entity.Responses.First();
             responseModel.ExtractParameter(dc, agentRequestModel);
 
-            DmIntentResponseMessage messageModel = responseModel.PostResponse(dc, agentRequestModel);
+            IntentResponseMessageEntity messageModel = responseModel.PostResponse(dc, agentRequestModel);
 
             return new DmAgentResponse { Text = messageModel.Speeches.Random() };
         }
