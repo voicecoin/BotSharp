@@ -93,15 +93,6 @@ namespace Core.Menu
 
             structure.Items.Add(views);
 
-            var rules = new VmMenu
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "Rules",
-                Link = "/Structure/Rules"
-            };
-
-            structure.Items.Add(rules);
-
             var config = new VmMenu
             {
                 Id = Guid.NewGuid().ToString(),
@@ -109,6 +100,35 @@ namespace Core.Menu
                 Icon = "setting",
                 Items = new List<VmMenu>()
             };
+
+            var workflow = new VmMenu
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Workflow",
+                Icon = "cloud",
+                Items = new List<VmMenu>()
+            };
+
+            // Level 1 menus
+            menu.Add(workflow);
+
+            var rules = new VmMenu
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Rules",
+                Link = "/Structure/Rules"
+            };
+
+            workflow.Items.Add(rules);
+
+            var Scene = new VmMenu
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Scenes",
+                Link = "/Structure/Scenes"
+            };
+
+            workflow.Items.Add(Scene);
 
             // Level 1 menus
             menu.Add(config);
@@ -144,7 +164,7 @@ namespace Core.Menu
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Document",
-                Icon = "mail"
+                Icon = "book"
             };
 
             // Level 1 menus

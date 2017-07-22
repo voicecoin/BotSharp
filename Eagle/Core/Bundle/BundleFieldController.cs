@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Core.DomainModels;
+using Core.Interfaces;
 
 namespace Core.Bundle
 {
@@ -60,7 +61,7 @@ namespace Core.Bundle
 
         // PUT: api/Bundle/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBundleFieldEntity([FromRoute] string id, [FromBody] DmBundle bundleModel)
+        public async Task<IActionResult> PutBundleFieldEntity([FromRoute] string id, [FromBody] BundleEntity bundleModel)
         {
             if (!ModelState.IsValid)
             {
@@ -72,16 +73,17 @@ namespace Core.Bundle
                 return BadRequest();
             }
 
-            bundleModel.Add(dc);
+            var dm = new DomainModel<BundleEntity>(dc, bundleModel);
+            dm.AddEntity();
 
             return NoContent();
         }
 
         // POST: api/BundleField
         [HttpPost]
-        public async Task<IActionResult> PostBundleFieldEntity([FromBody] DmBundleField bundleFieldModel)
+        public async Task<IActionResult> PostBundleFieldEntity([FromBody] BundleFieldEntity bundleFieldModel)
         {
-            bundleFieldModel.Add(dc);
+            dc.Transaction<IDbRecord4SqlServer>(() => new DomainModel<BundleFieldEntity>(dc, bundleFieldModel).Add(dc));
 
             return CreatedAtAction("PostBundleFieldEntity", new { id = bundleFieldModel.Id }, bundleFieldModel);
         }

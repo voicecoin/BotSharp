@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Core;
 using Apps.Chatbot.DomainModels;
 using Utility;
+using Core.Interfaces;
 
 namespace Apps.Chatbot.Agent
 {
@@ -59,30 +60,17 @@ namespace Apps.Chatbot.Agent
                 return BadRequest("Agent id not match.");
             }
 
-            var agentRecord = dc.Table<AgentEntity>().Find(id);
+            dc.Transaction<IDbRecord4SqlServer>(delegate {
+                var agentRecord = dc.Table<AgentEntity>().Find(id);
 
-            agentRecord.Name = agentModel.Name;
-            agentRecord.Description = agentModel.Description;
-            agentRecord.Language = agentModel.Language;
-            agentRecord.Avatar = agentModel.Avatar;
+                agentRecord.Name = agentModel.Name;
+                agentRecord.Description = agentModel.Description;
+                //agentRecord.Language = agentModel.Language;
+                agentRecord.Avatar = agentModel.Avatar;
+                agentRecord.IsPublic = agentModel.IsPublic;
+            });
 
-            try
-            {
-                dc.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AgentsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok();
         }
 
         // POST: v1/Agents

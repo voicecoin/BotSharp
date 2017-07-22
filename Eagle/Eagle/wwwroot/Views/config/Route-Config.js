@@ -152,6 +152,13 @@ const NewPage = (location,cb) => {
     },'NewPage')
 }
 
+//add a router for Scenes
+const ScenesContainer = (location,cb) => {
+    require.ensure([],require => {
+      cb(null,require('../containers/UnderlyingStructure/WorkFlow/Scenes').default)
+    },'ScenesContainer')
+}
+
 function requireAuth(nextState, replace, callback){
   if(localStorage.getItem('access_token')){
     http.HttpAjax({
@@ -202,6 +209,7 @@ const RootRoter = (
         <Route path="NewRules" getComponent={NewRulesContainer}/>
       </Route>
       <Route path="Views" getComponent={ViewsContainer}/>
+
       <Route path="Pages" getComponent={NewPage}/>
       <Route path='Pages'>
         <Route path="PageLayout" getComponent={PageLayout}/>
@@ -230,6 +238,9 @@ const RootRoter = (
     </Route>
     <Route component={AppContainer} onEnter={requireAuth}>
       <Route path="Dashboard" getComponent={DashBoardContainer}/>
+    </Route>
+    <Route component={EmptyAppContainer} onEnter={requireAuth}>
+      <Route path="Structure/Scenes" getComponent={ScenesContainer}/>
     </Route>
     <Route path="/" component={EmptyAppContainer} onEnter={alreadyLogin}>
       <IndexRoute component={ LandingContainer }/>

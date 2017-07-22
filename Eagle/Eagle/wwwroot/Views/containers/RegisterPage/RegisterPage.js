@@ -5,13 +5,29 @@ const FormItem = Form.Item;
 import Http from '../../components/XmlHttp';
 import {DataURL} from '../../config/DataURL-Config';
 const http = new Http();
-const RegisterLogo = require('../../Sources/images/o.png');
 import Recaptcha from 'react-grecaptcha';
+const logoImg= require('../../Sources/images/logo.png')
+
 export class RegisterContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      data:[]
     }
+  }
+
+  fetchFn = () => {
+          http.HttpAjax({
+              url: DataURL + '/api/Registry/SiteSettings',
+          }).then((data)=>{
+            console.log(data);
+            this.setState({data : data})
+          }).catch((e)=>{
+              console.log(e.message)
+          })
+  }
+  componentDidMount() {
+      this.fetchFn();
   }
 
   handleSubmit = (e) => {
@@ -60,7 +76,6 @@ export class RegisterContainer extends React.Component {
   }
 
   verifyCallback = (response) => {
-    console.log(response);
     this.props.form.setFields({verification:{
       value : 'YES'
     }});
@@ -77,10 +92,8 @@ export class RegisterContainer extends React.Component {
     const { getFieldDecorator } = this.props.form;
 
     const registerStyle = {
-      position: 'relative',
-      width: '30%',
-      marginLeft: '35%',
-      marginTop:'10%'
+      width: '70%',
+      marginTop:'30%'
     };
     const tailFormItemLayout = {
       wrapperCol: {
@@ -95,77 +108,90 @@ export class RegisterContainer extends React.Component {
       },
     };
     return (
-      <div style={registerStyle}>
-        <img src={RegisterLogo} width="50" className="logo" style={{width:'20%', height:'20%'}}/>
-        <Form style={{marginTop:'10%'}} className="login-form">
-          <FormItem
-            label="E-mail"
-            hasFeedback
-          >
-            {getFieldDecorator('email', {
-              rules: [{
-                type: 'email', message: 'The input is not valid E-mail!',
-              }, {
-                required: true, message: 'Please input your E-mail!',
-              }],
-            })(
-              <Input prefix={<Icon type="mail" style={{ fontSize: 13 }} />} placeholder="Input your E-mail" />
-            )}
-          </FormItem>
-          <FormItem
-            label="Password"
-            hasFeedback
-          >
-            {getFieldDecorator('password', {
-              rules: [{
-                required: true, message: 'Please input your password!',
-              }, {
-                validator: this.checkConfirm,
-              }],
-            })(
-              <Input type="password" prefix={<Icon type="lock" style={{ fontSize: 13 }}/>}  placeholder="Input your Password"/>
-            )}
-          </FormItem>
-          <FormItem
-            label="Confirm Password"
-            hasFeedback
-          >
-            {getFieldDecorator('confirm', {
-              rules: [{
-                required: true, message: 'Please confirm your password!',
-              }, {
-                validator: this.checkPassword,
-              }],
-            })(
-              <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" onBlur={this.handleConfirmBlur} placeholder="Re-Input your Password" />
-            )}
-          </FormItem>
-          <FormItem
-            label="verification"
-            hasFeedback
-          >
-            {getFieldDecorator('verification', {
-              rules: [{
-                required: true, message: 'Please confirm your verification!',
-              }],
-            })(
-                <Recaptcha
-                  sitekey="6LczxSgUAAAAAJv9QJvzAVn5AMZdMTSdZjednOFB"
-                  callback={this.verifyCallback}
-                  expiredCallback={this.expiredCallback}
-                  locale="en-US"
-                  className="customClassName"
-                  style={{width:'400'}}
-              />
-            )}
-          </FormItem>
-          <FormItem {...tailFormItemLayout}>
-            <Button type="primary" size="large" onClick={this.handleSubmit} style={{position:'relative', marginLeft:'30%'}}>Register</Button>
-            <Link to='Login' style={{float:'right'}}>Back to Login</Link>
-          </FormItem>
-
-        </Form>
-      </div>
+    <div>
+      <Row type="flex" align='middle' justify="center">
+      <Col span={15} style={{textAlign:'center'}}>
+        <div style={{marginTop:'20%', textAlign:'center'}}>
+          <div style={{textAlign:'center'}}>
+            <img src={logoImg} width="50" className="logo" style={{width:'20%', height:'20%'}}/>
+            <h2>{this.state.data.title}</h2>
+            <h3 style={{position:'relative', top:'10px', fontSize: 25, color:'grey'}}>{this.state.data.slogan}</h3>
+          </div>
+        </div>
+      </Col>
+      <Col span={9}>
+        <div style={registerStyle}>
+          <Form style={{marginTop:'10%'}} className="login-form">
+            <FormItem
+              label="E-mail"
+              hasFeedback
+            >
+              {getFieldDecorator('email', {
+                rules: [{
+                  type: 'email', message: 'The input is not valid E-mail!',
+                }, {
+                  required: true, message: 'Please input your E-mail!',
+                }],
+              })(
+                <Input prefix={<Icon type="mail" style={{ fontSize: 13 }} />} placeholder="Input your E-mail" />
+              )}
+            </FormItem>
+            <FormItem
+              label="Password"
+              hasFeedback
+            >
+              {getFieldDecorator('password', {
+                rules: [{
+                  required: true, message: 'Please input your password!',
+                }, {
+                  validator: this.checkConfirm,
+                }],
+              })(
+                <Input type="password" prefix={<Icon type="lock" style={{ fontSize: 13 }}/>}  placeholder="Input your Password"/>
+              )}
+            </FormItem>
+            <FormItem
+              label="Confirm Password"
+              hasFeedback
+            >
+              {getFieldDecorator('confirm', {
+                rules: [{
+                  required: true, message: 'Please confirm your password!',
+                }, {
+                  validator: this.checkPassword,
+                }],
+              })(
+                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" onBlur={this.handleConfirmBlur} placeholder="Re-Input your Password" />
+              )}
+            </FormItem>
+            <FormItem
+              label="verification"
+              hasFeedback
+            >
+              {getFieldDecorator('verification', {
+                rules: [{
+                  required: true, message: 'Please confirm your verification!',
+                }],
+              })(
+                  <Recaptcha
+                    sitekey="6LczxSgUAAAAAJv9QJvzAVn5AMZdMTSdZjednOFB"
+                    callback={this.verifyCallback}
+                    expiredCallback={this.expiredCallback}
+                    locale="en-US"
+                    className="customClassName"
+                    style={{width:'400'}}
+                />
+              )}
+            </FormItem>
+            <FormItem {...tailFormItemLayout}>
+              <Button type="primary" size="large" onClick={this.handleSubmit} style={{position:'relative', marginLeft:'30%'}}>Register</Button>
+              <Link to='Login' style={{float:'right'}}>Back to Login</Link>
+            </FormItem>
+          </Form>
+          </div>
+        </Col>
+      </Row>
+    </div>
     )
   }
 }

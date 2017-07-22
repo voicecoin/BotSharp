@@ -11,7 +11,9 @@ export default class EmptyAppContainer extends Component {
   render() {
     return (
       <div className='allenbox'>
+        <FreeScrollBar autohide={true} style={{height:'100%'}}>
           {this.props.children}
+        </FreeScrollBar>
       </div>
     )
   }

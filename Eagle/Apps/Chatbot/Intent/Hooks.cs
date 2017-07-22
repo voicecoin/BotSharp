@@ -23,13 +23,6 @@ namespace Apps.Chatbot.Intent
 
         public void Load(IHostingEnvironment env, CoreDbContext dc)
         {
-            if (!dc.Table<BundleEntity>().Any(x => x.EntityName == "Agent"))
-            {
-                DmBundle bundle = new DmBundle { Name = "Chatbot Agent", EntityName = "Agent" };
-                bundle.Add(dc);
-                dc.SaveChanges();
-            }
-
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
             List<AgentEntity> agents = new List<AgentEntity>();
@@ -37,9 +30,6 @@ namespace Apps.Chatbot.Intent
             agentNames.ForEach(agentName =>
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
-
-                BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(dc, agent);
-                dm.AddEntity();
 
                 agents.Add(agent);
             });
@@ -60,6 +50,7 @@ namespace Apps.Chatbot.Intent
                 var intentModel = LoadJson<IntentEntity>(env, $"{agent.Name}\\Intents\\{intentName}");
                 intentModel.AgentId = agent.Id;
                 intentModel.Name = intentName;
+
                 new DomainModel<IntentEntity>(context, intentModel).Add();
             });
         }

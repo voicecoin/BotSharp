@@ -31,7 +31,6 @@ namespace Core
 
             Triggers<DbRecord>.Inserted += entry =>
             {
-
             };
 
             Triggers<DbRecord>.Deleting += entry =>
@@ -65,17 +64,14 @@ namespace Core
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public String Id { get; set; }
 
-        [JsonIgnore]
         public EntityStatus Status { get; set; }
 
         /// <summary>
         /// https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/concurrency
         /// </summary>
-        [JsonIgnore]
         [Timestamp]
-        public byte[] RowVersion { get; set; }
-
         [JsonIgnore]
+        public byte[] RowVersion { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
 
@@ -85,11 +81,8 @@ namespace Core
         [JsonIgnore]
         [StringLength(36)]
         public string CreatedUserId { get; set; }
-
-        [JsonIgnore]
         [Required]
         public DateTime ModifiedDate { get; set; }
-
 #if AUTH_REQUIRED
         [Required]
 #endif
@@ -99,13 +92,7 @@ namespace Core
 
         public virtual bool IsExist(CoreDbContext dc)
         {
-            throw new NotImplementedException();
-        }
-
-        public virtual string GetEntityName()
-        {
-            string className = this.GetType().Name;
-            return className.Substring(0, className.Length - 6);
+            return false;
         }
     }
 
@@ -113,5 +100,10 @@ namespace Core
     {
         [Required]
         public string BundleId { get; set; }
+        public string GetEntityName<T>()
+        {
+            Type type = typeof(T);
+            return type.Name.Substring(0, type.Name.Length - 6);
+        }
     }
 }

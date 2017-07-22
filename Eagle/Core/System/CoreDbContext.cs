@@ -26,6 +26,7 @@ namespace Core
             });
         }
 
+        
     }
 
     /*public partial class CoreDbContext : DbContextWithTriggers

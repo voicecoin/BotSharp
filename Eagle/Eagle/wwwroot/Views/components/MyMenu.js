@@ -80,7 +80,7 @@ class MyMenu extends React.Component {
         );
         return (
                 <div className="leftMenu">
-                    <img src={require('../Sources/images/o.png')} width="50" className="logo"/>
+                    <img src={require('../Sources/images/logo.png')} width="50" className="logo"/>
                     <Menu theme="dark"
                         onClick={this.handleClick}
                         style={{ width: 239 }}

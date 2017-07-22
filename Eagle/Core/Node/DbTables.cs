@@ -16,10 +16,10 @@ namespace Core.Node
     public class NodeEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
-        public string BundleId { get; set; }
-        [MaxLength(64)]
+        [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
-        [MaxLength(512)]
+        [Required]
+        public string BundleId { get; set; }
         public String Description { get; set; }
     }
 

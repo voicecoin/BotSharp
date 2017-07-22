@@ -20,16 +20,20 @@ namespace Core
             dc.CurrentUser = new DmAccount { Id = Constants.SystemUserId };
             dc.EnsureCreated(typeof(UserEntity));
 
+            // Amend table structure
+            var dbTableAmends = TypeHelper.GetInstanceWithInterface<IDbTableAmend>("Core");
+            dbTableAmends.ToList().ForEach(instance => instance.Amend(dc));
+
+            dbTableAmends = TypeHelper.GetInstanceWithInterface<IDbTableAmend>("Apps");
+            dbTableAmends.ToList().ForEach(instance => instance.Amend(dc));
+
             var instances = TypeHelper.GetInstanceWithInterface<IDbInitializer>("Core");
 
             // initial app db order by priority
             instances.OrderBy(x => x.Priority).ToList()
                 .ForEach(instance =>
                 {
-                    dc.Transaction<IDbRecord4SqlServer>(delegate
-                    {
-                        instance.Load(env, dc);
-                    });
+                    dc.Transaction<IDbRecord4SqlServer>(() => instance.Load(env, dc));
                 });
 
             instances = TypeHelper.GetInstanceWithInterface<IDbInitializer>("Apps");
@@ -38,10 +42,7 @@ namespace Core
             instances.OrderBy(x => x.Priority).ToList()
                 .ForEach(instance =>
                 {
-                    dc.Transaction<IDbRecord4SqlServer>(delegate
-                    {
-                        instance.Load(env, dc);
-                    });
+                    dc.Transaction<IDbRecord4SqlServer>(() => instance.Load(env, dc));
                 });
         }
     }

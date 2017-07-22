@@ -22,12 +22,8 @@ namespace Apps.Chatbot.Agent
 
         public void Load(IHostingEnvironment env, CoreDbContext dc)
         {
-            if (!dc.Table<BundleEntity>().Any(x => x.EntityName == "Agent"))
-            {
-                DmBundle bundle = new DmBundle { Name = "Chatbot Agent", EntityName = "Agent" };
-                bundle.Add(dc);
-                dc.SaveChanges();
-            }
+            var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "Chatbot Agent", EntityName = "Agent" });
+            dm.AddEntity();
 
             InitAgent(env, dc);
         }

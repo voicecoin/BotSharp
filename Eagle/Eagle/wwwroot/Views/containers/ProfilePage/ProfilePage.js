@@ -51,7 +51,6 @@ export class ProfileContainer extends React.Component {
   onConfirm = () => {
     this.props.form.validateFields((err, values) => {
       if(err == null){
-        this.downScale(this.state.avatar);
         let profile = {
           id : localStorage.user_id,
           firstName : values.firstName,
@@ -95,13 +94,13 @@ export class ProfileContainer extends React.Component {
       current: key,
     });
   }
-  downScale = (dataUrl) => {
+  downScale = () => {
     var imageType = "image/jpeg";
     var imageArguments = 0.7;
     var newHeight = 128;
     var newWidth = 128;
     var image = new Image();
-    image.src = dataUrl;
+    image.src = this.state.avatar;
     var canvas = document.createElement("canvas");
     canvas.width = newWidth;
     canvas.height = newHeight;
@@ -111,6 +110,7 @@ export class ProfileContainer extends React.Component {
       ctx.drawImage(image, 0, 0, newWidth, newHeight);
       newDataUrl = canvas.toDataURL(imageType, imageArguments);
       this.setState({avatar:newDataUrl});
+      this.onConfirm();
     }
   }
   handleOk = () => {
@@ -218,7 +218,7 @@ export class ProfileContainer extends React.Component {
               </FormItem>
             </Form>
             <div style={{position: 'relative', marginLeft: '50%'}}>
-              <Button type="primary" style={{marginLeft:'2%'}} onClick={this.onConfirm}>Confirm</Button>
+              <Button type="primary" style={{marginLeft:'2%'}} onClick={this.downScale}>Confirm</Button>
             </div>
           </div>
         </div>

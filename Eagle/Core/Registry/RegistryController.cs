@@ -16,7 +16,8 @@ namespace Core.Registry
             {
                 Title = Configuration.GetSection("SiteSetting:Title").Value,
                 Slogan = Configuration.GetSection("SiteSetting:Slogan").Value,
-                EnableUserRegister = Configuration.GetSection("SiteSetting:EnableUserRegister").Value
+                EnableUserRegister = Configuration.GetSection("SiteSetting:EnableUserRegister").Value,
+                GoogleApiKey = Configuration.GetSection("SiteSetting:GoogleApiKey").Value
             });
         }
     }

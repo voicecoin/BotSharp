@@ -6,19 +6,39 @@ import {Tab} from './Tab';
 import {TableView} from './Table';
 import {Grid} from './Grid';
 const FormItem = Form.Item;
+import Http from '../XmlHttp';
+import {DataURL} from '../../config/DataURL-Config';
+const http = new Http();
 
 export class View extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data : this.props.data
+      tData : null
     }
   }
 
+  fetchFn = () => {
+    http.HttpAjax({
+        url: DataURL + this.props.DataUrl,
+        headers: {'authorization':'Bearer ' + localStorage.getItem('access_token')}
+    }).then((data)=>{
+      this.setState({tData : data});
+    }).catch((e)=>{
+        console.log(e.message)
+    })
+  }
+  componentDidMount() {
+      this.fetchFn();
+  }
 
   render() {
+    const temp = this.state.tData && <Tab data={this.state.tData}/>
+
     return (
-      <Tab data={this.props.data}/>
+      <div>
+        {temp}
+      </div>
     )
   }
 }

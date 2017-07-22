@@ -5,7 +5,7 @@ const FormItem = Form.Item;
 import Http from '../../components/XmlHttp';
 import {DataURL} from '../../config/DataURL-Config';
 const http = new Http();
-const logoImg= require('../../Sources/images/o.png')
+const logoImg= require('../../Sources/images/logo.png')
 export class NewPage extends React.Component {
   constructor(props) {
     super(props);
@@ -21,23 +21,18 @@ export class NewPage extends React.Component {
           name : values.name,
           path : values.path
         };
-        // http.HttpAjax({
-        //   url: DataURL + '/token',
-        //   method:'POST',
-        //   data:verification,
-        //   headers: {
-        //     'Content-Type': 'application/x-www-form-urlencoded'
-        //   }
-        // }).then((data) => {
-        //   this.setState({iconLoading:false});
-        //   localStorage.setItem('access_token', data.access_token);
-        //   localStorage.setItem('user_id', data.user_id);
-        //   document.cookie = 'access_token=' + data.access_token;
-        //   document.cookie = 'user_id=' + data.user_id;
-        //   this.context.router.push('Structure/PageLayout');
-        // }).catch((err) => {
-        //   console.log(err);
-        // });
+        http.HttpAjax({
+          url: DataURL + '/api/Page',
+          method:'POST',
+          data:data,
+          headers: {
+            'authorization':'Bearer ' + localStorage.getItem('access_token')
+          }
+        }).then((data) => {
+          this.context.router.push('Structure/PageLayout');
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     })
   }
@@ -47,7 +42,26 @@ export class NewPage extends React.Component {
   }
 
   handleDelete = () => {
-
+    // this.props.form.validateFields((err, values) => {
+    //   if(err == null){
+    //     let data = {
+    //       name : values.name,
+    //       path : values.path
+    //     };
+    //     http.HttpAjax({
+    //       url: DataURL + '/api/Page',
+    //       method:'DELETE',
+    //       data:data,
+    //       headers: {
+    //         'authorization':'Bearer ' + localStorage.getItem('access_token')
+    //       }
+    //     }).then((data) => {
+    //       this.context.router.push('Structure/PageLayout');
+    //     }).catch((err) => {
+    //       console.log(err);
+    //     });
+    //   }
+    // })
   }
 
 

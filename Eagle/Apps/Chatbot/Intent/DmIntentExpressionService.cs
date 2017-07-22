@@ -45,7 +45,7 @@ namespace Apps.Chatbot
                     pos += item.Text.Length;
                 });
 
-                //intentExpression.Entity.DataJson = JsonConvert.SerializeObject(intentExpression.Entity.Data);
+                intentExpression.Entity.DataJson = JsonConvert.SerializeObject(intentExpression.Entity.Data);
             }
         }
     }

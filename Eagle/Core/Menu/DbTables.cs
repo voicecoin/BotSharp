@@ -11,7 +11,7 @@ namespace Core.Menu
     public class MenuEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
         [MaxLength(64)]
         public string Description { get; set; }

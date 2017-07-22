@@ -11,8 +11,6 @@ namespace Core.Bundle
     {
         public MapperProfile()
         {
-            CreateMap<DmBundle, BundleEntity>().ReverseMap();
-            CreateMap<DmBundleField, BundleFieldEntity>().ReverseMap();
         }
     }
 }

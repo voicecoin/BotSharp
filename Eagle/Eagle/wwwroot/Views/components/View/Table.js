@@ -36,6 +36,7 @@ export class TableView extends React.Component {
           key : data.fieldName,
           fieldType : data.fieldType,
           dataIndex : data.fieldName,
+          colSpan : 0.001,
           render : (text, record) => (
             <img src={record.avatar} style={{width:'10%'}}></img>
           )
@@ -56,6 +57,7 @@ export class TableView extends React.Component {
       key : 'action',
       render : (text ,record) => (
           this.state.data[0].actions.map((values) => {
+
             if(values.redirectUrl && values.requestUrl){
               return (
                 <Link to={{pathname:values.redirectUrl, query:record.id}} key={values.name} onClick={() => this.handleAction(values.requestUrl, values.requestMethod)}>{values.name}<span className="ant-divider" /></Link>

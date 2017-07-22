@@ -13,29 +13,42 @@ namespace Core.Bundle
     public class BundleEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
         [Required]
         public string EntityName { get; set; }
         [ForeignKey("BundleId")]
         public List<BundleFieldEntity> Fields { get; set; }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<BundleEntity>().Any(x => x.EntityName == EntityName && x.Name == Name);
+        }
     }
 
     [Table("BundleFields")]
     public class BundleFieldEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
         [Required]
         public string BundleId { get; set; }
         [Required]
         public FieldTypes FieldTypeId { get; set; }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<BundleFieldEntity>().Any(x => x.BundleId == BundleId && x.FieldTypeId == FieldTypeId);
+        }
     }
 
     [Table("BundleFieldSettings")]
     public class BundleFieldSettingEntity : DbRecord, IDbRecord4SqlServer
     {
+        [Required]
+        [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
+        public String Name { get; set; }
         [Required]
         public string BundleFieldId { get; set; }
         [Required]

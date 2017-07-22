@@ -26,22 +26,14 @@ namespace Apps.Chatbot.Intent
         [MaxLength(256)]
         public String ContextsJson { get; set; }
         [NotMapped]
-        public List<String> Contexts
-        {
-            get { return ContextsJson == null ? null : JsonConvert.DeserializeObject<List<String>>(ContextsJson); }
-            set { ContextsJson = JsonConvert.SerializeObject(value); }
-        }
+        public List<String> Contexts { get; set; }
 
         [JsonIgnore]
         [Column("Events")]
         [MaxLength(128)]
         public String EventsJson { get; set; }
         [NotMapped]
-        public List<String> Events
-        {
-            get { return EventsJson == null ? null : JsonConvert.DeserializeObject<List<String>>(EventsJson); }
-            set { EventsJson = JsonConvert.SerializeObject(value); }
-        }
+        public List<String> Events { get; set; }
 
         public override bool IsExist(CoreDbContext dc)
         {
@@ -76,11 +68,7 @@ namespace Apps.Chatbot.Intent
         [MaxLength]
         public String DataJson { get; set; }
         [NotMapped]
-        public List<DmIntentExpressionItem> Data
-        {
-            get { return DataJson == null ? null : JsonConvert.DeserializeObject<List<DmIntentExpressionItem>>(DataJson); }
-            set { DataJson = JsonConvert.SerializeObject(value); }
-        }
+        public List<DmIntentExpressionItem> Data { get; set; }
 
         public override bool IsExist(CoreDbContext dc)
         {
@@ -104,18 +92,14 @@ namespace Apps.Chatbot.Intent
         public List<IntentResponseParameterEntity> Parameters { get; set; }
 
         [JsonIgnore]
-        [Column("Contexts")]
-        public String ContextsJson { get; set; }
+        [Column("AffectedContexts")]
+        public String AffectedContextsJson { get; set; }
         [NotMapped]
-        public List<DmIntentResponseContext> Contexts
-        {
-            get { return ContextsJson == null ? null : JsonConvert.DeserializeObject<List<DmIntentResponseContext>>(ContextsJson); }
-            set { ContextsJson = JsonConvert.SerializeObject(value); }
-        }
+        public List<DmIntentResponseContext> AffectedContexts { get; set; }
 
         public override bool IsExist(CoreDbContext dc)
         {
-            return dc.Table<IntentResponseEntity>().Any(x => x.IntentId == IntentId && x.ContextsJson == ContextsJson);
+            return dc.Table<IntentResponseEntity>().Any(x => x.IntentId == IntentId && x.AffectedContextsJson == AffectedContextsJson);
         }
     }
 
@@ -132,11 +116,7 @@ namespace Apps.Chatbot.Intent
         [Column("Speeches")]
         public String SpeechesJson { get; set; }
         [NotMapped]
-        public List<String> Speeches
-        {
-            get { return SpeechesJson == null ? null : JsonConvert.DeserializeObject<List<String>>(SpeechesJson); }
-            set { SpeechesJson = JsonConvert.SerializeObject(value); }
-        }
+        public List<String> Speeches { get; set; }
 
         public override bool IsExist(CoreDbContext dc)
         {
@@ -166,14 +146,10 @@ namespace Apps.Chatbot.Intent
         public String DefaultValue { get; set; }
 
         [JsonIgnore]
-        [Column("Speeches")]
+        [Column("Prompts")]
         public String PromptsJson { get; set; }
         [NotMapped]
-        public List<String> Prompts
-        {
-            get { return PromptsJson == null ? null : JsonConvert.DeserializeObject<List<String>>(PromptsJson); }
-            set { PromptsJson = JsonConvert.SerializeObject(value); }
-        }
+        public List<String> Prompts { get; set; }
 
         public override bool IsExist(CoreDbContext dc)
         {

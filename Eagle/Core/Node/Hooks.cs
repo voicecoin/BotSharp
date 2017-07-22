@@ -17,12 +17,12 @@ namespace Core.Node
         {
             if (dc.Table<BundleEntity>().Any(x => x.EntityName == "Node")) return;
 
-            DmBundle bundle = new DmBundle { Name = "Client", EntityName = "Node" };
-            bundle.Add(dc);
+            var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "Client", EntityName = "Node" });
+            dm.Add(dc);
 
             // Add fields
-            bundle.AddField(dc, new DmBundleField { BundleId = bundle.Id, FieldTypeId = FieldTypes.Text, Name = "Client Code" });
-            bundle.AddField(dc, new DmBundleField { BundleId = bundle.Id, FieldTypeId = FieldTypes.Boolean, Name = "Enable Service" });
+            dm.AddField(dc, new BundleFieldEntity { BundleId = dm.Entity.Id, FieldTypeId = FieldTypes.Text, Name = "Client Code" });
+            dm.AddField(dc, new BundleFieldEntity { BundleId = dm.Entity.Id, FieldTypeId = FieldTypes.Boolean, Name = "Enable Service" });
 
             dc.SaveChanges();
         }

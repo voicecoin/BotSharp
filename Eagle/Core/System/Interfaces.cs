@@ -12,7 +12,6 @@ namespace Core.Interfaces
     public interface IDbRecord
     {
         bool IsExist(CoreDbContext dc);
-        String GetEntityName();
     }
     public interface IDbRecord4SqlServer { }
 
@@ -41,5 +40,10 @@ namespace Core.Interfaces
         /// </summary>
         int Priority { get; }
         void Load(IHostingEnvironment env, CoreDbContext dc);
+    }
+
+    public interface IDbTableAmend
+    {
+        void Amend(CoreDbContext dc);
     }
 }

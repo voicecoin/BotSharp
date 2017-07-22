@@ -23,7 +23,7 @@ namespace Apps.Chatbot
             }
 
             response.Action = responseModel.Entity.Action;
-            response.ContextsJson = JsonConvert.SerializeObject(responseModel.Entity.Contexts);
+            response.AffectedContextsJson = JsonConvert.SerializeObject(responseModel.Entity.AffectedContexts);
 
             dc.Table<IntentResponseMessageEntity>().RemoveRange(dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == responseModel.Entity.Id));
             dc.SaveChanges();
@@ -61,9 +61,9 @@ namespace Apps.Chatbot
         {
             if (!responseModel.AddEntity()) return;
 
-            if(responseModel.Entity.Contexts != null)
+            if(responseModel.Entity.AffectedContexts != null)
             {
-                responseModel.Entity.ContextsJson = JsonConvert.SerializeObject(responseModel.Entity.Contexts);
+                responseModel.Entity.AffectedContextsJson = JsonConvert.SerializeObject(responseModel.Entity.AffectedContexts);
             }
             
             CoreDbContext dc = responseModel.Dc;
@@ -71,6 +71,11 @@ namespace Apps.Chatbot
             responseModel.Entity.Messages.ForEach(message =>
             {
                 message.IntentResponseId = responseModel.Entity.Id;
+                if(message.Speeches != null)
+                {
+                    message.SpeechesJson = JsonConvert.SerializeObject(message.Speeches);
+                }
+                
                 var dm = new DomainModel<IntentResponseMessageEntity>(dc, message);
                 dm.AddEntity();
             });
@@ -78,6 +83,11 @@ namespace Apps.Chatbot
             responseModel.Entity.Parameters.ForEach(parameter =>
             {
                 parameter.IntentResponseId = responseModel.Entity.Id;
+                if(parameter.Prompts != null)
+                {
+                    parameter.PromptsJson = JsonConvert.SerializeObject(parameter.Prompts);
+                }
+                
                 var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
                 dm.AddEntity();
             });

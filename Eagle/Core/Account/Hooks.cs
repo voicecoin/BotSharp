@@ -17,10 +17,8 @@ namespace Core.Account
         {
             if (dc.Table<BundleEntity>().Any(x => x.EntityName == "User")) return;
 
-            DmBundle bundle = new DmBundle { Name = "User Profile", EntityName = "User" };
-            bundle.Add(dc);
-
-            dc.SaveChanges();
+            var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "User Profile", EntityName = "User" });
+            dm.Add(dc);
         }
     }
 }

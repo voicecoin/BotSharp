@@ -11,7 +11,6 @@ namespace Core.Page
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
-        [MaxLength(512)]
         public String Description { get; set; }
     }
 }

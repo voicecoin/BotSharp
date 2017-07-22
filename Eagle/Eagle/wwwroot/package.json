@@ -1,5 +1,5 @@
 {
-  "name": "SmsOneExpress",
+  "name": "YayaConsole",
   "version": "1.0.0",
   "description": "A project using react es6 webpack antd..",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --config webpack.dev.config.js --devtool eval --progress --colors --hot --inline --content-base Views",
     "pub": " rimraf dist/* && webpack --config webpack.pub.config.js  -p"
   },
-  "author": "Allen",
+  "author": "Haiping Chen",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",

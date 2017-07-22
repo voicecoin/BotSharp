@@ -55,7 +55,7 @@ namespace Core
         }
     }
 
-    public class BundleDomainModel<T> : IDomainModel<T>, IBundlable<T> where T: BundleDbRecord
+    public class BundleDomainModel<T> : IDomainModel<T>, IBundlable<T> where T : BundleDbRecord
     {
         public CoreDbContext Dc;
 
@@ -79,7 +79,7 @@ namespace Core
         {
             if (Entity.IsExist(Dc)) return false;
 
-            string entityName = Entity.GetEntityName();
+            string entityName = Entity.GetEntityName<T>();
             var bundle = Dc.Table<BundleEntity>().First(x => x.EntityName == entityName);
 
             if (bundle == null) return false;
@@ -112,6 +112,7 @@ namespace Core
             return Entity;
         }
     }
+
 
     public class DmQuery<T>
     {

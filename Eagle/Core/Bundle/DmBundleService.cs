@@ -10,24 +10,15 @@ namespace Core.Bundle
 {
     public static class DmBundleService
     {
-        public static void Add(this DmBundle bundleModel, CoreDbContext dc)
+        public static bool Add(this DomainModel<BundleEntity> bundleModel, CoreDbContext dc)
         {
-            if (dc.Table<BundleEntity>().Any(x => x.Name == bundleModel.Name && x.EntityName == bundleModel.EntityName)) return;
-
-            var dbRecord = bundleModel.Map<BundleEntity>();
-
-            dbRecord.Status = EntityStatus.Active;
-            dbRecord.CreatedUserId = dc.CurrentUser.Id;
-            dbRecord.CreatedDate = DateTime.UtcNow;
-            dbRecord.ModifiedUserId = dc.CurrentUser.Id;
-            dbRecord.ModifiedDate = DateTime.UtcNow;
-
-            dc.Table<BundleEntity>().Add(dbRecord);
+            return bundleModel.AddEntity();
         }
 
-        public static void AddField(this DmBundle bundleModel, CoreDbContext dc, DmBundleField bundleFieldModel)
+        public static bool AddField(this DomainModel<BundleEntity> bundleModel, CoreDbContext dc, BundleFieldEntity bundleFieldModel)
         {
-            bundleFieldModel.Add(dc);
+            var dm = new DomainModel<BundleFieldEntity>(dc, bundleFieldModel);
+            return dm.AddEntity();
         }
     }
 }

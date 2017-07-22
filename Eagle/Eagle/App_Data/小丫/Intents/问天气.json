@@ -56,7 +56,7 @@
           "name": "time",
           "dataType": "@时间词",
           "required": true,
-          "Prompts": [ "你想问什么时候的？" ],
+          "prompts": [ "你想问什么时候的？" ],
           "value": "$time",
           "defaultValue": "今天"
         },
@@ -64,7 +64,7 @@
           "name": "place",
           "dataType": "@地名",
           "required": true,
-          "Prompts": [ "你是问什么地方的？" ],
+          "prompts": [ "你是问什么地方的？" ],
           "value": "$place",
           "defaultValue": "北京"
         }
