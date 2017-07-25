@@ -53,7 +53,14 @@ namespace Apps.Chatbot.DmServices
 
             intentModel.Entity.Responses.ForEach(response =>
             {
-                response.AffectedContexts = JsonConvert.DeserializeObject<List<DmIntentResponseContext>>(response.AffectedContextsJson);
+                if (String.IsNullOrEmpty(response.AffectedContextsJson))
+                {
+                    response.AffectedContexts = new List<DmIntentResponseContext>();
+                }
+                else
+                {
+                    response.AffectedContexts = JsonConvert.DeserializeObject<List<DmIntentResponseContext>>(response.AffectedContextsJson);
+                }
 
                 // Load message
                 response.Messages = dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == response.Id)

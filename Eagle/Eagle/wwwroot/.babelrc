@@ -1,8 +1,5 @@
 {
   "presets": [
-    "es2015",
-    "react",
-    "stage-0"
-  ],
-  "plugins": [["import", { "libraryName": "antd", "style": true }]]
+    ["es2015", { "modules": false }]
+  ]
 }

@@ -50,13 +50,8 @@ namespace Apps.Chatbot
 
         // PUT: api/Intents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] IntentEntity intentModel)
+        public async Task<IActionResult> PutIntents([FromRoute] string id, IntentEntity intentModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != intentModel.Id)
             {
                 return BadRequest("Id is not match");
@@ -67,25 +62,20 @@ namespace Apps.Chatbot
                 new DomainModel<IntentEntity>(dc, intentModel).Update();
             });
 
-            return Ok(id);
+            return Ok(new { Id = intentModel.Id });
         }
 
         // POST: api/Intents
         [HttpPost("{agentId}")]
-        public async Task<IActionResult> PostIntents(string agentId, [FromBody] IntentEntity intentModel)
+        public async Task<IActionResult> PostIntents(string agentId, IntentEntity intentModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
                 intentModel.AgentId = agentId;
                 new DomainModel<IntentEntity>(dc, intentModel).Add();
             });
 
-            return CreatedAtAction("GetIntents", new { id = intentModel.Id }, intentModel.Id);
+            return Ok(new { Id = intentModel.Id });
         }
 
         // DELETE: api/Intents/5

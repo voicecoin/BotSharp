@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Account;
 using Microsoft.Extensions.Configuration;
-using DataFactory;
+using EfDbFactory;
 using System.Data.SqlClient;
 using Core.Interfaces;
 

@@ -23,22 +23,35 @@ namespace Apps.Chatbot
             }
 
             response.Action = responseModel.Entity.Action;
-            response.AffectedContextsJson = JsonConvert.SerializeObject(responseModel.Entity.AffectedContexts);
+            if(responseModel.Entity.AffectedContexts != null)
+            {
+                response.AffectedContextsJson = JsonConvert.SerializeObject(responseModel.Entity.AffectedContexts);
+            }
 
             dc.Table<IntentResponseMessageEntity>().RemoveRange(dc.Table<IntentResponseMessageEntity>().Where(x => x.IntentResponseId == responseModel.Entity.Id));
             dc.SaveChanges();
 
-            responseModel.Entity.Messages.ForEach(message => {
-                dc.Table<IntentResponseMessageEntity>().Add(message.Map<IntentResponseMessageEntity>());
-            });
+            if(responseModel.Entity.Messages != null)
+            {
+                responseModel.Entity.Messages.ForEach(message => {
+                    var dm = new DomainModel<IntentResponseMessageEntity>(dc, message);
+                    dm.AddEntity();
+                });
+            }
+
 
             dc.Table<IntentResponseParameterEntity>().RemoveRange(dc.Table<IntentResponseParameterEntity>().Where(x => x.IntentResponseId == responseModel.Entity.Id));
             dc.SaveChanges();
 
-            responseModel.Entity.Parameters.ForEach(parameter => {
-                parameter.IntentResponseId = responseModel.Entity.Id;
-                dc.Table<IntentResponseParameterEntity>().Add(parameter.Map<IntentResponseParameterEntity>());
-            });
+            if(responseModel.Entity.Parameters != null)
+            {
+                responseModel.Entity.Parameters.ForEach(parameter => {
+                    parameter.IntentResponseId = responseModel.Entity.Id;
+                    var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
+                    dm.AddEntity();
+                });
+            }
+
         }
 
         public static void Delete(this DomainModel<IntentResponseEntity> responseModel, CoreDbContext dc)
@@ -61,36 +74,42 @@ namespace Apps.Chatbot
         {
             if (!responseModel.AddEntity()) return;
 
-            if(responseModel.Entity.AffectedContexts != null)
+            if (responseModel.Entity.AffectedContexts != null)
             {
                 responseModel.Entity.AffectedContextsJson = JsonConvert.SerializeObject(responseModel.Entity.AffectedContexts);
             }
-            
+
             CoreDbContext dc = responseModel.Dc;
 
-            responseModel.Entity.Messages.ForEach(message =>
+            if (responseModel.Entity.Messages != null)
             {
-                message.IntentResponseId = responseModel.Entity.Id;
-                if(message.Speeches != null)
+                responseModel.Entity.Messages.ForEach(message =>
                 {
-                    message.SpeechesJson = JsonConvert.SerializeObject(message.Speeches);
-                }
-                
-                var dm = new DomainModel<IntentResponseMessageEntity>(dc, message);
-                dm.AddEntity();
-            });
+                    message.IntentResponseId = responseModel.Entity.Id;
+                    if (message.Speeches != null)
+                    {
+                        message.SpeechesJson = JsonConvert.SerializeObject(message.Speeches);
+                    }
 
-            responseModel.Entity.Parameters.ForEach(parameter =>
+                    var dm = new DomainModel<IntentResponseMessageEntity>(dc, message);
+                    dm.AddEntity();
+                });
+            }
+
+            if (responseModel.Entity.Parameters != null)
             {
-                parameter.IntentResponseId = responseModel.Entity.Id;
-                if(parameter.Prompts != null)
+                responseModel.Entity.Parameters.ForEach(parameter =>
                 {
-                    parameter.PromptsJson = JsonConvert.SerializeObject(parameter.Prompts);
-                }
-                
-                var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
-                dm.AddEntity();
-            });
+                    parameter.IntentResponseId = responseModel.Entity.Id;
+                    if (parameter.Prompts != null)
+                    {
+                        parameter.PromptsJson = JsonConvert.SerializeObject(parameter.Prompts);
+                    }
+
+                    var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
+                    dm.AddEntity();
+                });
+            }
         }
     }
 }

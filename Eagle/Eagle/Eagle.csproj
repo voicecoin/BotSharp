@@ -21,88 +21,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot/index.html" />
     <Content Remove="wwwroot/Views\Sources\images\login.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\.babelrc" />
     <Content Include="wwwroot\package.json" />
-    <Content Include="wwwroot\Views\components\AutoCompompleteInput.js" />
-    <Content Include="wwwroot\Views\components\Avatar.js" />
-    <Content Include="wwwroot\Views\components\Gallery.js" />
-    <Content Include="wwwroot\Views\components\getKey.js" />
-    <Content Include="wwwroot\Views\components\GetUrl.js" />
-    <Content Include="wwwroot\Views\components\GoBack.js" />
-    <Content Include="wwwroot\Views\components\GoogleMap.js" />
-    <Content Include="wwwroot\Views\components\GooglePlacesAutocomplete.js" />
-    <Content Include="wwwroot\Views\components\ImageFilter.js" />
-    <Content Include="wwwroot\Views\components\ImagesUploader.js" />
-    <Content Include="wwwroot\Views\components\ImgTransform.js" />
-    <Content Include="wwwroot\Views\components\MyMenu.js" />
-    <Content Include="wwwroot\Views\components\NoData.js" />
-    <Content Include="wwwroot\Views\components\Popthewindow.js" />
-    <Content Include="wwwroot\Views\components\PopupForm.js" />
-    <Content Include="wwwroot\Views\components\RuleHelper.js" />
-    <Content Include="wwwroot\Views\components\TopNav.js" />
-    <Content Include="wwwroot\Views\components\Utils.js" />
-    <Content Include="wwwroot\Views\components\View\Gallery.js" />
-    <Content Include="wwwroot\Views\components\View\Grid.js" />
-    <Content Include="wwwroot\Views\components\View\HTML.js" />
-    <Content Include="wwwroot\Views\components\View\List.js" />
-    <Content Include="wwwroot\Views\components\View\Tab.js" />
-    <Content Include="wwwroot\Views\components\View\Table.js" />
-    <Content Include="wwwroot\Views\components\View\View.js" />
-    <Content Include="wwwroot\Views\components\XmlHttp.js" />
-    <Content Include="wwwroot\Views\config\DataURL-Config.js" />
-    <Content Include="wwwroot\Views\config\Route-Config.js" />
-    <Content Include="wwwroot\Views\containers\AppContainer.js" />
-    <Content Include="wwwroot\Views\containers\DashBoard\DashBoard.js" />
-    <Content Include="wwwroot\Views\containers\EmptyAppContainer.js" />
-    <Content Include="wwwroot\Views\containers\ForgetPassword\ForgetPassword.js" />
-    <Content Include="wwwroot\Views\containers\LandingPage\LandingPage.js" />
-    <Content Include="wwwroot\Views\containers\LoginPage\LoginPage.js" />
-    <Content Include="wwwroot\Views\containers\PageLayout\NewPage.js" />
-    <Content Include="wwwroot\Views\containers\PageLayout\PageLayout.js" />
-    <Content Include="wwwroot\Views\containers\ProfilePage\ProfilePage.js" />
-    <Content Include="wwwroot\Views\containers\RegisterPage\RegisterPage.js" />
-    <Content Include="wwwroot\Views\containers\Settings\Settings.js" />
-    <Content Include="wwwroot\Views\containers\SharedContainer\SharedContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Bundles\AddRecordContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Bundles\EntitiesContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Bundles\FieldsContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Bundles\HomeContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Bundles\NewBundleContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Bundles\NewFieldsContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Records\RecordContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Rules\NewRulesContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Rules\RulesConditionContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Rules\RulesContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\Views\ViewsContainer.js" />
-    <Content Include="wwwroot\Views\containers\UnderlyingStructure\WorkFlow\Scenes.js" />
-    <Content Include="wwwroot\Views\containers\Vocabulary\Taxonomies\TaxonomyContainer.js" />
-    <Content Include="wwwroot\Views\containers\Vocabulary\Taxonomies\TaxonomyTermContainer.js" />
-    <Content Include="wwwroot\Views\favicon.ico" />
-    <Content Include="wwwroot\Views\index.html" />
-    <Content Include="wwwroot\Views\index.js" />
-    <Content Include="wwwroot\Views\Sources\images\int_01.png" />
-    <Content Include="wwwroot\Views\Sources\images\logo.png" />
-    <Content Include="wwwroot\Views\Sources\images\no-one.png" />
-    <Content Include="wwwroot\Views\Sources\images\pp.png" />
-    <Content Include="wwwroot\Views\Sources\images\Welcome-wang2.png" />
-    <Content Include="wwwroot\Views\Sources\style\App.less" />
-    <Content Include="wwwroot\Views\Sources\style\GridLayout.css" />
-    <Content Include="wwwroot\Views\Sources\style\GridResize.css" />
-    <Content Include="wwwroot\Views\Sources\style\react-bootstrap-table-all.min.css" />
-    <Content Include="wwwroot\Views\Sources\style\ReactCrop.css" />
-    <Content Include="wwwroot\Views\template\template.html" />
-    <Content Include="wwwroot\webpack.dev.config.js" />
-    <Content Include="wwwroot\webpack.pub.config.js" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="App_Data\花灵溪\Entities\" />
-    <Folder Include="wwwroot\Views\components\Form\" />
-    <Folder Include="wwwroot\Views\containers\Vocabulary\TaxonomyTerms\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />

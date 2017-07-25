@@ -56,14 +56,14 @@ namespace Core.Account
         // POST: api/Account
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserEntity accountModel)
+        public async Task<IActionResult> CreateUser(UserEntity accountModel)
         {
             dc.Transaction<IDbRecord4SqlServer>(delegate {
                 var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
                 dm.AddEntity();
             });
 
-            return CreatedAtAction("CreateUser", new { id = accountModel.Id }, accountModel.Id);
+            return Ok(new { UserName = accountModel.UserName });
         }
     }
 }

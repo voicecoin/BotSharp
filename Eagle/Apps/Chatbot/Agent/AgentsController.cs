@@ -14,7 +14,7 @@ namespace Apps.Chatbot.Agent
     {
         // GET: v1/Agents
         [HttpGet("{userId}/Query")]
-        public DmPageResult<DmAgent> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
+        public DmPageResult<AgentEntity> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
             var query = dc.Table<AgentEntity>().Where(x => x.UserId == userId);
             if (!String.IsNullOrEmpty(name))
@@ -26,8 +26,8 @@ namespace Apps.Chatbot.Agent
 
             int size = 20;
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmAgent>()).ToList();
-            return new DmPageResult<DmAgent> { Total = total, Page = page, Size = size, Items = items };
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<AgentEntity>()).ToList();
+            return new DmPageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Agents/5
@@ -46,14 +46,14 @@ namespace Apps.Chatbot.Agent
                 return NotFound();
             }
 
-            var agent = agents.Map<DmAgent>();
+            var agent = agents.Map<AgentEntity>();
 
             return Ok(agent);
         }
 
         // PUT: v1/Agents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] DmAgent agentModel)
+        public async Task<IActionResult> PutAgents([FromRoute] string id, AgentEntity agentModel)
         {
             if (id != agentModel.Id)
             {
@@ -75,18 +75,19 @@ namespace Apps.Chatbot.Agent
 
         // POST: v1/Agents
         [HttpPost]
-        public async Task<IActionResult> PostAgent([FromBody] DmAgent agentModel)
+        public async Task<IActionResult> PostAgent([FromBody] AgentEntity agentModel)
         {
-            AgentEntity agentRecord = agentModel.Map<AgentEntity>();
-            agentRecord.Language = "zh-cn";
-            agentRecord.ClientAccessToken = Guid.NewGuid().ToString("N");
-            agentRecord.DeveloperAccessToken = Guid.NewGuid().ToString("N");
-            agentRecord.CreatedDate = DateTime.UtcNow;
+            agentModel.Language = "zh-cn";
+            agentModel.ClientAccessToken = Guid.NewGuid().ToString("N");
+            agentModel.DeveloperAccessToken = Guid.NewGuid().ToString("N");
 
-            dc.Table<AgentEntity>().Add(agentRecord);
-            dc.SaveChanges();
+            dc.Transaction<IDbRecord4SqlServer>(delegate
+            {
+                var dm = new BundleDomainModel<AgentEntity>(dc, agentModel);
+                dm.AddEntity();
+            });
 
-            return CreatedAtAction("GetAgents", new { id = agentRecord.Id }, new { id = agentRecord.Id });
+            return Ok();
         }
 
         // DELETE: v1/Agents/5
