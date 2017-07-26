@@ -19,6 +19,13 @@ const routers = [
             title: 'Users'
         },
         component: (resolve) => require(['./views/master.vue'], resolve)
+    },
+	{
+        path: '/agents',
+        meta: {
+            title: 'Agents'
+        },
+        component: (resolve) => require(['./views/master.vue'], resolve)
     }
 ];
 export default routers;

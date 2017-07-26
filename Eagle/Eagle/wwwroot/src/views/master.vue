@@ -57,21 +57,21 @@
                     <div class="layout-logo-left"></div>
                     <Menu-item name="1">
                         <Icon type="ios-keypad" :size="iconSize"></Icon>
-                        <span class="layout-text">仪表盘</span>
+                        <span class="layout-text" @click="openMenu('dashboard')">仪表盘</span>
                     </Menu-item>
 					<Submenu name="2">
                         <template slot="title">
-                            <Icon type=""></Icon>
+                            <Icon type="ios-people-outline" :size="iconSize"></Icon>
                             机器人管理
                         </template>
-                        <Menu-item name="2-1">机器人列表</Menu-item>
+                        <Menu-item name="2-1"><span @click="openMenu('agents')">机器人列表</span></Menu-item>
                     </Submenu>
 					<Submenu name="3">
                         <template slot="title">
-                            <Icon type="ios-people"></Icon>
+                            <Icon type="ios-people" :size="iconSize"></Icon>
                             用户管理
                         </template>
-                        <Menu-item name="3-1">注册用户</Menu-item>
+                        <Menu-item name="3-1"><span @click="openMenu('users')">注册用户</span></Menu-item>
                     </Submenu>
                 </Menu>
             </i-col>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="layout-breadcrumb">
                     <Breadcrumb>
-                        <Breadcrumb-item href="#">首页</Breadcrumb-item>
+                        <Breadcrumb-item href="/">首页</Breadcrumb-item>
                         <Breadcrumb-item>系统仪表盘</Breadcrumb-item>
                     </Breadcrumb>
                 </div>
@@ -98,8 +98,10 @@
     </div>
 </template>
 <script>
+	import {HTTP} from '../libs/http-common';
 	import dashboard from './dashboard.vue'
 	import users from './users.vue'
+	import agents from './agents.vue'
 	
     export default {
         data () {
@@ -123,11 +125,17 @@
                     this.spanLeft = 5;
                     this.spanRight = 19;
                 }
-            }
+            },
+			openMenu (component) {
+				//this.$router.push(component);
+				this.content = component;
+				
+			}
         },
 		components: {
 			dashboard: dashboard,
-			users: users
+			users: users,
+			agents: agents
 		}
     }
 </script>

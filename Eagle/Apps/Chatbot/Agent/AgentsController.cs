@@ -13,6 +13,24 @@ namespace Apps.Chatbot.Agent
     public class AgentsController : CoreController
     {
         // GET: v1/Agents
+        [HttpGet("Query")]
+        public DmPageResult<AgentEntity> GetAllAgents(string name, [FromQuery] int page = 1)
+        {
+            var query = dc.Table<AgentEntity>().AsQueryable();
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.Contains(name));
+            }
+
+            var total = query.Count();
+
+            int size = 20;
+
+            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<AgentEntity>()).ToList();
+            return new DmPageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
+        }
+
+        // GET: v1/Agents
         [HttpGet("{userId}/Query")]
         public DmPageResult<AgentEntity> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
@@ -53,7 +71,7 @@ namespace Apps.Chatbot.Agent
 
         // PUT: v1/Agents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAgents([FromRoute] string id, AgentEntity agentModel)
+        public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentEntity agentModel)
         {
             if (id != agentModel.Id)
             {
@@ -66,7 +84,10 @@ namespace Apps.Chatbot.Agent
                 agentRecord.Name = agentModel.Name;
                 agentRecord.Description = agentModel.Description;
                 //agentRecord.Language = agentModel.Language;
-                agentRecord.Avatar = agentModel.Avatar;
+                if (!String.IsNullOrEmpty(agentModel.Avatar))
+                {
+                    agentRecord.Avatar = agentModel.Avatar;
+                }
                 agentRecord.IsPublic = agentModel.IsPublic;
             });
 

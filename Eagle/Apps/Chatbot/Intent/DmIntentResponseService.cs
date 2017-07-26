@@ -34,6 +34,10 @@ namespace Apps.Chatbot
             if(responseModel.Entity.Messages != null)
             {
                 responseModel.Entity.Messages.ForEach(message => {
+                    if(message.Speeches != null)
+                    {
+                        message.SpeechesJson = JsonConvert.SerializeObject(message.Speeches);
+                    }
                     var dm = new DomainModel<IntentResponseMessageEntity>(dc, message);
                     dm.AddEntity();
                 });
@@ -47,6 +51,10 @@ namespace Apps.Chatbot
             {
                 responseModel.Entity.Parameters.ForEach(parameter => {
                     parameter.IntentResponseId = responseModel.Entity.Id;
+                    if(parameter.Prompts != null)
+                    {
+                        parameter.PromptsJson = JsonConvert.SerializeObject(parameter.Prompts);
+                    }
                     var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
                     dm.AddEntity();
                 });

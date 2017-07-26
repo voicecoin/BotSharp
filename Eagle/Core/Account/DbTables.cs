@@ -34,6 +34,7 @@ namespace Core.Account
         public String Avatar { get; set; }
         [MaxLength(256)]
         public String Description { get; set; }
+        public String FullName { get { return $"{FirstName} {LastName}"; } }
 
         public override bool IsExist(CoreDbContext dc)
         {

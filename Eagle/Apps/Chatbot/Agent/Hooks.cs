@@ -38,16 +38,12 @@ namespace Apps.Chatbot.Agent
             string token1 = Guid.NewGuid().ToString("N");
             string token2 = Guid.NewGuid().ToString("N");
 
-            List<AgentEntity> agents = new List<AgentEntity>();
-
             agentNames.ForEach(agentName =>
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
 
                 BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
                 dm.AddEntity();
-
-                agents.Add(agent);
             });
         }
 

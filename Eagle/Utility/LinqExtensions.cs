@@ -28,6 +28,11 @@ namespace Utility
         public static T Random<T>(this IEnumerable<T> source)
         {
             int randomMax = source.Count();
+            if(randomMax == 0)
+            {
+                return default(T);
+            }
+
             int messageIdx = new Random().Next(0, randomMax);
             return source.ElementAt(messageIdx);
         }

@@ -192,7 +192,7 @@ namespace Apps.Chatbot.DmServices
 
             responseModel.Parameters.ForEach(parameter =>
             {
-                parameter.Value = segments.First(x => x.Meta == parameter.DataType).Text;
+                parameter.Value = segments.FirstOrDefault(x => x.Meta == parameter.DataType)?.Text;
             });
         }
 

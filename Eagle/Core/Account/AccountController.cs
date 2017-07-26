@@ -13,6 +13,14 @@ namespace Core.Account
 {
     public class AccountController : CoreController
     {
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = dc.Table<UserEntity>();
+
+            return Ok(users);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
@@ -23,12 +31,12 @@ namespace Core.Account
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("{userName}/Exist")]
-        public async Task<IActionResult> UserExist([FromRoute] String userName)
+        [Route("Exist")]
+        public async Task<IActionResult> UserExist([FromQuery] String userName)
         {
-            var user = dc.Table<UserEntity>().Any(x => x.UserName == userName);
+            var exist = dc.Table<UserEntity>().Any(x => x.UserName == userName);
 
-            return Ok(user);
+            return Ok(exist);
         }
 
         [HttpGet("{id}")]
@@ -59,6 +67,7 @@ namespace Core.Account
         public async Task<IActionResult> CreateUser(UserEntity accountModel)
         {
             dc.Transaction<IDbRecord4SqlServer>(delegate {
+                accountModel.FirstName = accountModel.UserName.Split('@')[0];
                 var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
                 dm.AddEntity();
             });

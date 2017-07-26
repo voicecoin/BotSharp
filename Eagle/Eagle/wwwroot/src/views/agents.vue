@@ -16,17 +16,9 @@
                         }
                     },
 					{
-						title: '用户名',
-						key: 'userName',
+						title: '名字',
+						key: 'name',
 					},
-                    {
-                        title: '姓名',
-                        key: 'fullName'
-                    },
-                    {
-                        title: '邮箱',
-                        key: 'email'
-                    },
                     {
                         title: '注册时间',
                         key: 'createdDate'
@@ -40,9 +32,9 @@
             }
         },
 		created() {
-			HTTP.get(`/v1/account/users`)
+			HTTP.get(`/v1/agents/query`)
 				.then(response => {
-					this.data = response.data;
+					this.data = response.data.items;
 				})
 				.catch(e => {
 				  this.$Message.error(e);

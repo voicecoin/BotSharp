@@ -96,7 +96,7 @@
 				
                 HTTP.post(`/token`, qs.stringify(this.formInline), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
 					.then(response => {
-						localStorage.setItem('access_token', response.data.token);
+						localStorage.setItem('access_token', response.data.access_token);
 						this.$router.push('/dashboard');
 					})
 					.catch(e => {
