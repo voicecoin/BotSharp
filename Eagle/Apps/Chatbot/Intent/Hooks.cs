@@ -6,18 +6,14 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Newtonsoft.Json;
 using Core.Interfaces;
-using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.DmServices;
 using Core;
-using Apps.Chatbot.Intent;
-using Apps.Chatbot.Entity;
-using Core.DomainModels;
 using Core.Bundle;
 using Apps.Chatbot.Agent;
 
 namespace Apps.Chatbot.Intent
 {
-    public class Hooks : IDbInitializer
+    public class Hooks : IHookDbInitializer
     {
         public int Priority => 120;
 

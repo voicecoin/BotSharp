@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.DmServices;
+using Enyim.Caching;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Apps.Chatbot.Analyzer
 {
@@ -16,6 +18,7 @@ namespace Apps.Chatbot.Analyzer
         /// <param name="text"></param>
         /// <returns></returns>
         // GET: v1/Analyzer?text=
+        [AllowAnonymous]
         [HttpGet("Ner")]
         public IEnumerable<Object> Ner([FromQuery] string text)
         {
@@ -31,6 +34,7 @@ namespace Apps.Chatbot.Analyzer
                 });
         }
 
+        [AllowAnonymous]
         [HttpGet("Pos")]
         public IEnumerable<Object> Pos([FromQuery] string text)
         {
@@ -45,6 +49,7 @@ namespace Apps.Chatbot.Analyzer
                 });
         }
 
+        [AllowAnonymous]
         [HttpGet("Markup")]
         public IEnumerable<DmIntentExpressionItem> Markup([FromQuery] string text)
         {

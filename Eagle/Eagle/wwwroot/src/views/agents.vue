@@ -12,7 +12,12 @@
                         title: ' ',
                         key: 'avatar',
 						render: (h, params) => {
-                            return h('img', {});
+                            return h('img', {
+								attrs: {
+									src: params.row.avatar,
+									width: '48px'
+								}
+							});
                         }
                     },
 					{

@@ -10,7 +10,7 @@ using Core.Bundle;
 
 namespace Core.Node
 {
-    public class Hooks : IDbInitializer
+    public class Hooks : IHookDbInitializer
     {
         public int Priority => 1;
         public void Load(IHostingEnvironment env, CoreDbContext dc)

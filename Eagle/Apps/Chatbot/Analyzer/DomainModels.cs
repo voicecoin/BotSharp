@@ -55,12 +55,25 @@ namespace Apps.Chatbot.DomainModels
                 }
                 else if (segs.Count() == 3)
                 {
+                    // 过滤 "代词:疑问代词:谓词性疑问代词"
+                    if (segs[1] == "疑问代词") return segs[1];
+
                     return segs[2];
                 }
 
                 return String.Empty;
             }
 
+        }
+    }
+
+    /// <summary>
+    /// 缺少必填参数时报异常
+    /// </summary>
+    public class MissingParameterException : Exception
+    {
+        public MissingParameterException(string message) : base(message)
+        {
         }
     }
 }

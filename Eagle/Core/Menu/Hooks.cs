@@ -7,7 +7,7 @@ using Core.Interfaces;
 
 namespace Core.Menu
 {
-    public class Hooks : IDbInitializer
+    public class Hooks : IHookDbInitializer
     {
         public int Priority => 1;
 

@@ -5,12 +5,16 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using DomainModels;
+using Core.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Core
 {
-    public static class MapperInitializer
+    public class MapperInitializer : IInitializationLoader
     {
-        public static void Initialize()
+        public int Priority => 10;
+
+        public void Initialize(IHostingEnvironment env)
         {
             // Initialize AutoMapper
             Mapper.Initialize(cfg =>

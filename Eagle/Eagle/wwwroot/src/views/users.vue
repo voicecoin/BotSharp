@@ -1,5 +1,12 @@
 <template>
-    <Table :columns="columns" :data="data"></Table>
+	<div>
+		<Table :data="items" :columns="columns" stripe></Table>
+		<div style="margin: 10px;overflow: hidden">
+			<div style="float: right;">
+				<Page :total="total" :current="page" @on-change="changePage" show-total></Page>
+			</div>
+		</div>
+	</div>
 </template>
 <script>
 	import {HTTP} from '../libs/http-common';
@@ -12,7 +19,12 @@
                         title: ' ',
                         key: 'avatar',
 						render: (h, params) => {
-                            return h('img', {});
+                            return h('img', {
+								attrs: {
+									src: params.row.avatar,
+									width: '48px'
+								}
+							});
                         }
                     },
 					{
@@ -36,13 +48,20 @@
                         key: 'description'
                     }
                 ],
-                data: []
+                items: [],
+				total: 0,
+				page: 1,
+				size: 20,
+				changePage () {
+					this.created();
+				}
             }
         },
 		created() {
-			HTTP.get(`/v1/account/users`)
+                HTTP.get(`/v1/account/users`)
 				.then(response => {
-					this.data = response.data;
+					this.items = response.data.items;
+					this.total = response.data.total;
 				})
 				.catch(e => {
 				  this.$Message.error(e);

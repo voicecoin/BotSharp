@@ -11,9 +11,11 @@ using Core.Account;
 
 namespace Core
 {
-    public class DbInitializer
+    public class DbInitializer : IInitializationLoader
     {
-        public static void Initialize(IHostingEnvironment env)
+        public int Priority => 20;
+
+        public void Initialize(IHostingEnvironment env)
         {
             CoreDbContext dc = new CoreDbContext();
             dc.InitDb();
@@ -27,16 +29,13 @@ namespace Core
             dbTableAmends = TypeHelper.GetInstanceWithInterface<IDbTableAmend>("Apps");
             dbTableAmends.ToList().ForEach(instance => instance.Amend(dc));
 
-            var instances = TypeHelper.GetInstanceWithInterface<IDbInitializer>("Core");
+            var instances = TypeHelper.GetInstanceWithInterface<IHookDbInitializer>("Core");
 
             // initial app db order by priority
             instances.OrderBy(x => x.Priority).ToList()
-                .ForEach(instance =>
-                {
-                    dc.Transaction<IDbRecord4SqlServer>(() => instance.Load(env, dc));
-                });
+                .ForEach(instance => dc.Transaction<IDbRecord4SqlServer>(() => instance.Load(env, dc)));
 
-            instances = TypeHelper.GetInstanceWithInterface<IDbInitializer>("Apps");
+            instances = TypeHelper.GetInstanceWithInterface<IHookDbInitializer>("Apps");
 
             // initial app db order by priority
             instances.OrderBy(x => x.Priority).ToList()

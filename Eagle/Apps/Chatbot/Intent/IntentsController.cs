@@ -10,6 +10,7 @@ using Utility;
 using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Intent;
 using Core.Interfaces;
+using Enyim.Caching;
 
 namespace Apps.Chatbot
 {

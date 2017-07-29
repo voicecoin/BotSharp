@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility;
 
 namespace Core.Menu
 {
@@ -79,10 +81,20 @@ namespace Core.Menu
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Pages",
-                Link = "/Structure/Pages"
+                Link = "/Structure/Pages",
+                Icon = "file"
             };
 
             structure.Items.Add(pages);
+
+            /*var blocks = new VmMenu
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Blocks",
+                Link = "/Structure/Blocks"
+            };
+
+            structure.Items.Add(blocks);
 
             var views = new VmMenu
             {
@@ -91,7 +103,7 @@ namespace Core.Menu
                 Link = "/Structure/Views"
             };
 
-            structure.Items.Add(views);
+            structure.Items.Add(views);*/
 
             var config = new VmMenu
             {
@@ -142,24 +154,6 @@ namespace Core.Menu
 
             config.Items.Add(site);
 
-            var userList = new VmMenu
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "Users",
-                Link = "/Shared/Page/1"
-            };
-
-            config.Items.Add(userList);
-
-            var userProfile = new VmMenu
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "My Profile",
-                Link = "/Configuration/People/Profile"
-            };
-
-            config.Items.Add(userProfile);
-
             var docs = new VmMenu
             {
                 Id = Guid.NewGuid().ToString(),
@@ -169,6 +163,11 @@ namespace Core.Menu
 
             // Level 1 menus
             menu.Add(docs);
+
+            TypeHelper.GetInstanceWithInterface<IHookMenu>("Core").ForEach(m => m.UpdateMenu(menu, dc));
+
+            // Add menus from apps
+            TypeHelper.GetInstanceWithInterface<IHookMenu>("Apps").ForEach(m => m.UpdateMenu(menu, dc));
 
             return Ok(menu);
         }

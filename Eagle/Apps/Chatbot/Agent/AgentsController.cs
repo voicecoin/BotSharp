@@ -7,6 +7,8 @@ using Core;
 using Apps.Chatbot.DomainModels;
 using Utility;
 using Core.Interfaces;
+using Apps.Chatbot.DmServices;
+using Enyim.Caching;
 
 namespace Apps.Chatbot.Agent
 {
@@ -105,7 +107,7 @@ namespace Apps.Chatbot.Agent
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
                 var dm = new BundleDomainModel<AgentEntity>(dc, agentModel);
-                dm.AddEntity();
+                dm.Add();
             });
 
             return Ok();

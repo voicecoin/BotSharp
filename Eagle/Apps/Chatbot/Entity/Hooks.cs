@@ -17,7 +17,7 @@ using Apps.Chatbot.Agent;
 
 namespace Apps.Chatbot.Entity
 {
-    public class Hooks : IDbInitializer
+    public class Hooks : IHookDbInitializer
     {
         public int Priority => 110;
 

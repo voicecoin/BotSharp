@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace EfDbFactory
+namespace DataFactory
 {
     public class EfDbBase
     {
@@ -60,9 +60,9 @@ namespace EfDbFactory
             return binding.DbContextMaster;
         }
 
-        public void EnsureCreated(Type type)
+        public bool EnsureCreated(Type type)
         {
-            GetMaster(type).Database.EnsureCreated();
+            return GetMaster(type).Database.EnsureCreated();
         }
 
         private EfDbContext GetReader(Type entityType)
@@ -79,6 +79,7 @@ namespace EfDbFactory
                 dbContext.EntityTypes = binding.EntityTypeList;
                 binding.DbContextSlavers.Add(dbContext);
             }
+
             return binding.DbContextSlavers.First();
         }
 
@@ -130,6 +131,12 @@ namespace EfDbFactory
             {
                 return GetMaster(entityType).Set<T>();
             }
+        }
+
+        public int ExecuteSqlCommand<T>(string sql, params object[] parameterms)
+        {
+            var db = GetMaster(typeof(T)).Database;
+            return db.ExecuteSqlCommand(sql, parameterms);
         }
 
         public int SaveChanges()

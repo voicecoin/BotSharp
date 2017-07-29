@@ -24,6 +24,8 @@ namespace Eagle
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("authsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"authsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
@@ -41,6 +43,8 @@ namespace Eagle
             services.AddCors();
 
             services.AddAuthentication();
+
+            services.AddEnyimMemcached(options => Configuration.GetSection("enyimMemcached").Bind(options));
 
             // Add framework services.
             services.AddMvc(options =>
@@ -61,6 +65,8 @@ namespace Eagle
 
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
+            app.UseEnyimMemcached();
+
             ConfigureAuth(app);
 
             app.UseMvc(routes =>
@@ -72,7 +78,6 @@ namespace Eagle
 
             // for wwwroot
             app.UseDefaultFiles();
-            app.UseStaticFiles();
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/static-files
             app.UseStaticFiles(new StaticFileOptions()
@@ -85,8 +90,9 @@ namespace Eagle
                 }
             });
 
-            MapperInitializer.Initialize();
-            DbInitializer.Initialize(env);
+            InitializationLoader loader = new InitializationLoader();
+            loader.Env = env;
+            loader.Load();
         }
     }
 }

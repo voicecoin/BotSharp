@@ -24,7 +24,12 @@ namespace Apps.Chatbot.DmServices
         public static List<DmIntentExpressionItem> PosTagger(this DmAgentRequest analyzerModel, CoreDbContext dc)
         {
             string text = analyzerModel.Text;
-            List<DmEntity> allEntities = dc.Table<EntityEntity>()/*.Where(x => x.AgentId == analyzerModel.Agent.Id || x.AgentId == Constants.GenesisAgentId)*/.Select(x => x.Map<DmEntity>()).ToList();
+            // Check from Cache
+            var cache = dc.GetCache<List<DmIntentExpressionItem>>(analyzerModel.Text);
+            if (cache != null) return cache;
+
+
+            List <DmEntity> allEntities = dc.Table<EntityEntity>()/*.Where(x => x.AgentId == analyzerModel.Agent.Id || x.AgentId == Constants.GenesisAgentId)*/.Select(x => x.Map<DmEntity>()).ToList();
 
             // 识别所有单元实体
             // 用Entry识别
@@ -125,7 +130,11 @@ namespace Apps.Chatbot.DmServices
                 }
             }
 
-            return merged.OrderBy(x => x.Position).ToList();
+            var analyzedResult = merged.OrderBy(x => x.Position).ToList();
+
+            var c = dc.SetCache(analyzerModel.Text, analyzedResult);
+
+            return analyzedResult;
         }
 
         public static List<DmIntentExpressionItem> Segment(this DmAgentRequest analyzerModel, CoreDbContext dc)
@@ -193,6 +202,11 @@ namespace Apps.Chatbot.DmServices
             responseModel.Parameters.ForEach(parameter =>
             {
                 parameter.Value = segments.FirstOrDefault(x => x.Meta == parameter.DataType)?.Text;
+                if(parameter.Required && String.IsNullOrEmpty(parameter.Value))
+                {
+                    string prompt = parameter.Prompts.Random();
+                    throw new MissingParameterException(prompt);
+                }
             });
         }
 

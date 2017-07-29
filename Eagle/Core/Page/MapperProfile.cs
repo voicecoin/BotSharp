@@ -11,7 +11,6 @@ namespace Core.Page
     {
         public MapperProfile()
         {
-            CreateMap<DmPage, PageEntity>().ReverseMap();
         }
     }
 }

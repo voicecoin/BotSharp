@@ -35,7 +35,6 @@ namespace Core.Account
         [MaxLength(256)]
         public String Description { get; set; }
         public String FullName { get { return $"{FirstName} {LastName}"; } }
-
         public override bool IsExist(CoreDbContext dc)
         {
             return dc.Table<UserEntity>().Any(x => x.UserName == UserName);

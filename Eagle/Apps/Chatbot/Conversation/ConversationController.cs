@@ -7,8 +7,9 @@ using Apps.Chatbot.DomainModels;
 using Utility;
 using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Agent;
+using Enyim.Caching;
 
-namespace Apps.Chatbot.Analyzer
+namespace Apps.Chatbot.Conversation
 {
     public class ConversationController : CoreController
     {

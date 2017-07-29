@@ -16,7 +16,7 @@ using Core.Bundle;
 
 namespace Apps.Chatbot.Agent
 {
-    public class Hooks : IDbInitializer
+    public class Hooks : IHookDbInitializer
     {
         public int Priority => 100;
 
@@ -41,9 +41,8 @@ namespace Apps.Chatbot.Agent
             agentNames.ForEach(agentName =>
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
-
                 BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
-                dm.AddEntity();
+                dm.Add();
             });
         }
 

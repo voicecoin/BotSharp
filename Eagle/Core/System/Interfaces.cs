@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Core.Menu;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
+    public interface IInitializationLoader
+    {
+        int Priority { get; }
+        void Initialize(IHostingEnvironment env);
+    }
+
     /// <summary>
     /// All table should implement this table inteface
     /// </summary>
@@ -33,7 +40,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Initialize data for modules
     /// </summary>
-    public interface IDbInitializer
+    public interface IHookDbInitializer
     {
         /// <summary>
         /// value smaller is higher priority
@@ -45,5 +52,10 @@ namespace Core.Interfaces
     public interface IDbTableAmend
     {
         void Amend(CoreDbContext dc);
+    }
+
+    public interface IHookMenu
+    {
+        void UpdateMenu(List<VmMenu> menus, CoreDbContext dc);
     }
 }

@@ -7,9 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Account;
 using Microsoft.Extensions.Configuration;
-using EfDbFactory;
+using DataFactory;
 using System.Data.SqlClient;
 using Core.Interfaces;
+using Enyim.Caching;
+using Enyim.Caching.Memcached;
 
 namespace Core
 {
@@ -17,6 +19,8 @@ namespace Core
     {
         public DmAccount CurrentUser { get; set; }
         public static IConfigurationRoot Configuration { get; set; }
+        public IMemcachedClient MemcachedClient { get; set; }
+
         public void InitDb()
         {
             EfDbContext4SqlServer.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -26,7 +30,15 @@ namespace Core
             });
         }
 
-        
+        public T GetCache<T>(string key)
+        {
+            return MemcachedClient.Get<T>(key);
+        }
+
+        public bool SetCache(string key, Object value)
+        {
+            return MemcachedClient.Store(StoreMode.Set, key, value);
+        }
     }
 
     /*public partial class CoreDbContext : DbContextWithTriggers

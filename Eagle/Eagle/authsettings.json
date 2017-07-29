@@ -1,0 +1,10 @@
+﻿{
+  "TokenAuthentication": {
+    "SecretKey": "secretkey_secretkey123!",
+    "Issuer": "DemoIssuer",
+    "Audience": "DemoAudience",
+    "TokenPath": "/token",
+    "CookieName": "access_token",
+    "LoginPath": "/login.html"
+  }
+}

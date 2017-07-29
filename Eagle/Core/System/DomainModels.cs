@@ -123,6 +123,12 @@ namespace Core
 
     public class DmPageResult<T>
     {
+        public DmPageResult()
+        {
+            Page = 1;
+            Size = 20;
+        }
+
         public int Page { get; set; }
         public int Size { get; set; }
         public int Total { get; set; }

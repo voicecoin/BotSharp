@@ -14,11 +14,19 @@ namespace Core.Account
     public class AccountController : CoreController
     {
         [HttpGet("users")]
-        public async Task<IActionResult> GetUsers()
+        public DmPageResult<UserEntity> GetUsers(string name, [FromQuery] int page = 1)
         {
-            var users = dc.Table<UserEntity>();
+            var query = dc.Table<UserEntity>().AsQueryable();
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.UserName.Contains(name));
+            }
 
-            return Ok(users);
+            var total = query.Count();
+            int size = 20;
+            var items = query.Skip((page - 1) * size).Take(size).ToList();
+
+            return new DmPageResult<UserEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         [HttpGet]
@@ -34,9 +42,9 @@ namespace Core.Account
         [Route("Exist")]
         public async Task<IActionResult> UserExist([FromQuery] String userName)
         {
-            var exist = dc.Table<UserEntity>().Any(x => x.UserName == userName);
+            var user = dc.Table<UserEntity>().Any(x => x.UserName == userName);
 
-            return Ok(exist);
+            return Ok(user);
         }
 
         [HttpGet("{id}")]
@@ -64,15 +72,14 @@ namespace Core.Account
         // POST: api/Account
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> CreateUser(UserEntity accountModel)
+        public async Task<IActionResult> CreateUser([FromBody] UserEntity accountModel)
         {
             dc.Transaction<IDbRecord4SqlServer>(delegate {
-                accountModel.FirstName = accountModel.UserName.Split('@')[0];
                 var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
                 dm.AddEntity();
             });
 
-            return Ok(new { UserName = accountModel.UserName });
+            return CreatedAtAction("CreateUser", new { id = accountModel.Id }, accountModel.Id);
         }
     }
 }

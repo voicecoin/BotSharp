@@ -35,6 +35,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.0.5" />
+    <PackageReference Include="EnyimMemcachedCore" Version="1.1.1.12" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />

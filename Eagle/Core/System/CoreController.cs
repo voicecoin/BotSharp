@@ -1,4 +1,5 @@
 ﻿using Core.Account;
+using Enyim.Caching;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,6 @@ namespace Core
     [Authorize]
 #endif
     [Produces("application/json")]
-    [Route("v1/[controller]")]
     [Route("api/[controller]")]
     [ServiceFilter(typeof(ApiExceptionFilter))]
     public class CoreController : ControllerBase

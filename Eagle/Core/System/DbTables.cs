@@ -74,11 +74,9 @@ namespace Core
         public byte[] RowVersion { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
-
 #if AUTH_REQUIRED
         [Required]
 #endif
-        [JsonIgnore]
         [StringLength(36)]
         public string CreatedUserId { get; set; }
         [Required]
@@ -86,7 +84,6 @@ namespace Core
 #if AUTH_REQUIRED
         [Required]
 #endif
-        [JsonIgnore]
         [StringLength(36)]
         public string ModifiedUserId { get; set; }
 

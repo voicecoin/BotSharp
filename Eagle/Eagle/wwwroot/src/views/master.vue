@@ -50,7 +50,7 @@
     }
 </style>
 <template>
-    <div class="layout" :class="{'layout-hide-text': spanLeft < 5}">
+    <div class="layout" :class="{'layout-hide-text': spanLeft < 4}">
         <Row type="flex">
             <i-col :span="spanLeft" class="layout-menu-left">
                 <Menu active-name="1" theme="dark" width="auto">
@@ -72,6 +72,24 @@
                             用户管理
                         </template>
                         <Menu-item name="3-1"><span @click="openMenu('users')">注册用户</span></Menu-item>
+                    </Submenu>
+					<Submenu name="4">
+                        <template slot="title">
+                            <Icon type="cloud" :size="iconSize"></Icon>
+                            YAYA 开放语义平台
+                        </template>
+                        <Menu-item name="4-1"><span @click="openMenu('users')">词库管理</span></Menu-item>
+						<Menu-item name="4-2"><span @click="openMenu('users')">意图管理</span></Menu-item>
+						<Menu-item name="4-3"><span @click="openMenu('users')">场景管理</span></Menu-item>
+						<Menu-item name="4-4"><span @click="openMenu('apis')">API测试</span></Menu-item>
+                    </Submenu>
+					<Submenu name="5">
+                        <template slot="title">
+                            <Icon type="earth" :size="iconSize"></Icon>
+                            知识图谱
+                        </template>
+                        <Menu-item name="5-1"><span @click="openMenu('users')">本体</span></Menu-item>
+						<Menu-item name="5-2"><span @click="openMenu('users')">实例</span></Menu-item>
                     </Submenu>
                 </Menu>
             </i-col>
@@ -106,24 +124,24 @@
     export default {
         data () {
             return {
-                spanLeft: 5,
-                spanRight: 19,
+                spanLeft: 4,
+                spanRight: 20,
 				content: 'dashboard'
             }
         },
         computed: {
             iconSize () {
-                return this.spanLeft === 5 ? 14 : 24;
+                return this.spanLeft === 4 ? 14 : 24;
             }
         },
         methods: {
             toggleClick () {
-                if (this.spanLeft === 5) {
+                if (this.spanLeft === 4) {
                     this.spanLeft = 2;
                     this.spanRight = 22;
                 } else {
-                    this.spanLeft = 5;
-                    this.spanRight = 19;
+                    this.spanLeft = 4;
+                    this.spanRight = 20;
                 }
             },
 			openMenu (component) {
