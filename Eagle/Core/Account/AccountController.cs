@@ -74,6 +74,11 @@ namespace Core.Account
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserEntity accountModel)
         {
+            if(dc.Table<UserEntity>().Any(x => x.UserName == accountModel.UserName))
+            {
+                return BadRequest("用户已经存在");
+            }
+
             dc.Transaction<IDbRecord4SqlServer>(delegate {
                 var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
                 dm.AddEntity();

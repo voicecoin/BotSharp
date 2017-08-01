@@ -10,7 +10,7 @@ using Utility;
 
 namespace Core
 {
-    [Route("api")]
+    [Route("db")]
     public class DbFactoryController : CoreController
     {
         private List<Type> GetTypes()

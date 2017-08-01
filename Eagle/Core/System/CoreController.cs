@@ -15,7 +15,7 @@ namespace Core
     [Authorize]
 #endif
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ServiceFilter(typeof(ApiExceptionFilter))]
     public class CoreController : ControllerBase
     {

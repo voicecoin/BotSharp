@@ -42,6 +42,14 @@ namespace Apps.Chatbot.Agent
         [MaxLength(4096)]
         public String Avatar { get; set; }
 
+        [NotMapped]
+        public String Birthday
+        {
+            get
+            {
+                return CreatedDate.ToString("yyyy年M月dd日");
+            }
+        }
         public override bool IsExist(CoreDbContext dc)
         {
             return dc.Table<AgentEntity>().Any(x => x.Name == Name || x.Id == Id);

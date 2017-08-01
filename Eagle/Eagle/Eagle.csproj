@@ -9,15 +9,19 @@
     <Compile Remove="App_Data\Logs\**" />
     <Compile Remove="wwwroot\dist\**" />
     <Compile Remove="wwwroot\node_modules\**" />
+    <Compile Remove="wwwroot\Views\**" />
     <Content Remove="App_Data\Logs\**" />
     <Content Remove="wwwroot\dist\**" />
     <Content Remove="wwwroot\node_modules\**" />
+    <Content Remove="wwwroot\Views\**" />
     <EmbeddedResource Remove="App_Data\Logs\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <EmbeddedResource Remove="wwwroot\node_modules\**" />
+    <EmbeddedResource Remove="wwwroot\Views\**" />
     <None Remove="App_Data\Logs\**" />
     <None Remove="wwwroot\dist\**" />
     <None Remove="wwwroot\node_modules\**" />
+    <None Remove="wwwroot\Views\**" />
   </ItemGroup>
 
   <ItemGroup>
