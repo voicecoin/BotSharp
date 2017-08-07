@@ -50,11 +50,15 @@ namespace Eagle
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true;
-            }).AddJsonOptions(options =>
-            {
-                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-            });
+                options.FormatterMappings.SetMediaTypeMappingForFormat("xml", new MediaTypeHeaderValue("application/xml"));
+                options.RespectBrowserAcceptHeader = true;
+            }).AddXmlSerializerFormatters()
+              .AddXmlDataContractSeria‌​lizerFormatters()
+              .AddJsonOptions(options =>
+              {
+                  options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                  //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+              });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

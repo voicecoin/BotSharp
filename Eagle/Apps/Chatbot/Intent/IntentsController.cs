@@ -23,7 +23,7 @@ namespace Apps.Chatbot
 
         // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<IntentEntity> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
+        public DmPageResult<IntentEntity> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<IntentEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -32,8 +32,6 @@ namespace Apps.Chatbot
             }
 
             var total = query.Count();
-
-            int size = 20;
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<IntentEntity>()).ToList();
             return new DmPageResult<IntentEntity> { Total = total, Page = page, Size = size, Items = items };

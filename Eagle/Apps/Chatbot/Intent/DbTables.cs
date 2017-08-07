@@ -20,6 +20,8 @@ namespace Apps.Chatbot.Intent
         public String AgentId { get; set; }
         [MaxLength(32)]
         public String Name { get; set; }
+        [MaxLength(256)]
+        public String Description { get; set; }
 
         [JsonIgnore]
         [Column("Contexts")]

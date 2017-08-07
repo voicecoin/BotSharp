@@ -1,6 +1,7 @@
 ﻿using Core.Bundle;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,25 @@ namespace Core
         {
             Dc = db;
             Entity = dbRecord;
+
+            if (String.IsNullOrEmpty(Entity.CreatedUserId))
+            {
+                Entity.CreatedUserId = Dc.CurrentUser.Id;
+                Entity.CreatedDate = DateTime.UtcNow;
+            }
+
+            if (String.IsNullOrEmpty(Entity.ModifiedUserId))
+            {
+                Entity.ModifiedUserId = Dc.CurrentUser.Id;
+                Entity.ModifiedDate = DateTime.UtcNow;
+            }
+
+            if (String.IsNullOrEmpty(Entity.Id))
+            {
+                Entity.Id = Guid.NewGuid().ToString();
+
+                Entity.InitRecord(db);
+            }
         }
         /// <summary>
         /// Core DbRecord
@@ -26,18 +46,7 @@ namespace Core
         {
             if (Entity.IsExist(Dc)) return false;
 
-            if (String.IsNullOrEmpty(Entity.Id))
-            {
-                Entity.Id = Guid.NewGuid().ToString();
-            }
-
-            Entity.CreatedUserId = Dc.CurrentUser.Id;
-            Entity.CreatedDate = DateTime.UtcNow;
-            Entity.ModifiedUserId = Dc.CurrentUser.Id;
-            Entity.ModifiedDate = DateTime.UtcNow;
-
             Dc.Table<T>().Add(Entity);
-
             Dc.SaveChanges();
 
             return true;
@@ -63,7 +72,47 @@ namespace Core
         {
             Dc = db;
             Entity = dbRecord;
+
+            if (String.IsNullOrEmpty(Entity.BundleId))
+            {
+                string entityName = Entity.GetEntityName<T>();
+                var bundle = Dc.Table<BundleEntity>().First(x => x.EntityName == entityName);
+
+                if (bundle == null) throw new Exception("Bundle not found");
+
+                Entity.BundleId = bundle.Id;
+            }
+
+            if (String.IsNullOrEmpty(Entity.CreatedUserId))
+            {
+                Entity.CreatedUserId = Dc.CurrentUser.Id;
+                Entity.CreatedDate = DateTime.UtcNow;
+            }
+
+            if (String.IsNullOrEmpty(Entity.ModifiedUserId))
+            {
+                Entity.ModifiedUserId = Dc.CurrentUser.Id;
+                Entity.ModifiedDate = DateTime.UtcNow;
+            }
+
+            if (String.IsNullOrEmpty(Entity.Id))
+            {
+                Entity.Id = Guid.NewGuid().ToString();
+
+                Entity.InitRecord(db);
+            }
         }
+
+        public void ValideModel(ModelStateDictionary modelState)
+        {
+            modelState.Remove("Id");
+            modelState.Remove("BundleId");
+            modelState.Remove("CreatedUserId");
+            modelState.Remove("CreatedDate");
+            modelState.Remove("ModifiedUserId");
+            modelState.Remove("ModifiedDate");
+        }
+
         /// <summary>
         /// Core DbRecord
         /// </summary>
@@ -78,22 +127,6 @@ namespace Core
         public bool AddEntity()
         {
             if (Entity.IsExist(Dc)) return false;
-
-            string entityName = Entity.GetEntityName<T>();
-            var bundle = Dc.Table<BundleEntity>().First(x => x.EntityName == entityName);
-
-            if (bundle == null) return false;
-
-            if (String.IsNullOrEmpty(Entity.Id))
-            {
-                Entity.Id = Guid.NewGuid().ToString();
-            }
-
-            Entity.BundleId = bundle.Id;
-            Entity.CreatedUserId = Dc.CurrentUser.Id;
-            Entity.CreatedDate = DateTime.UtcNow;
-            Entity.ModifiedUserId = Dc.CurrentUser.Id;
-            Entity.ModifiedDate = DateTime.UtcNow;
 
             Dc.Table<T>().Add(Entity);
             Dc.SaveChanges();

@@ -23,6 +23,8 @@ namespace Apps.Chatbot.Entity
         [Required]
         [MaxLength(32)]
         public String Name { get; set; }
+        [MaxLength(128)]
+        public String Description { get; set; }
         /// <summary>
         /// 枚举，没有同义词
         /// </summary>

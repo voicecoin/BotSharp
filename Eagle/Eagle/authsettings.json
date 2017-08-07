@@ -5,6 +5,6 @@
     "Audience": "DemoAudience",
     "TokenPath": "/token",
     "CookieName": "access_token",
-    "LoginPath": "/login.html"
+    "LoginPath": "/login"
   }
 }

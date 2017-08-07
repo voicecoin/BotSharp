@@ -9,6 +9,7 @@ using Utility;
 using Core.Interfaces;
 using Apps.Chatbot.DmServices;
 using Enyim.Caching;
+using System.Collections.Generic;
 
 namespace Apps.Chatbot.Agent
 {
@@ -32,11 +33,17 @@ namespace Apps.Chatbot.Agent
             return new DmPageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
+        [HttpGet("MyAgents")]
+        public IEnumerable<Object> MyAgents()
+        {
+            return dc.Table<AgentEntity>().Where(x => x.CreatedUserId == GetCurrentUser().Id).OrderBy(x => x.CreatedDate).Select(x => new { x.Name, x.Id });
+        }
+
         // GET: v1/Agents
         [HttpGet("{userId}/Query")]
         public DmPageResult<AgentEntity> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
-            var query = dc.Table<AgentEntity>().Where(x => x.UserId == userId);
+            var query = dc.Table<AgentEntity>().Where(x => x.CreatedUserId == userId);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));
@@ -100,17 +107,20 @@ namespace Apps.Chatbot.Agent
         [HttpPost]
         public async Task<IActionResult> PostAgent([FromBody] AgentEntity agentModel)
         {
-            agentModel.Language = "zh-cn";
-            agentModel.ClientAccessToken = Guid.NewGuid().ToString("N");
-            agentModel.DeveloperAccessToken = Guid.NewGuid().ToString("N");
+            var dm = new BundleDomainModel<AgentEntity>(dc, agentModel);
+            dm.ValideModel(ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
-                var dm = new BundleDomainModel<AgentEntity>(dc, agentModel);
                 dm.Add();
             });
 
-            return Ok();
+            return Ok(dm.Entity);
         }
 
         // DELETE: v1/Agents/5

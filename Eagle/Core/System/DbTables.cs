@@ -91,6 +91,11 @@ namespace Core
         {
             return false;
         }
+
+        public virtual bool InitRecord(CoreDbContext dc)
+        {
+            return true;
+        }
     }
 
     public abstract class BundleDbRecord : DbRecord

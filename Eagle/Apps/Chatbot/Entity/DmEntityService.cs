@@ -62,6 +62,7 @@ namespace Apps.Chatbot.DmServices
         {
             EntityEntity entityRecored = dc.Table<EntityEntity>().Find(entityModel.Id);
             entityRecored.Name = entityModel.Name;
+            entityRecored.Description = entityModel.Description;
             entityRecored.IsEnum = entityModel.IsEnum;
         }
 

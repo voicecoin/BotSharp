@@ -19,7 +19,7 @@ namespace Apps.Chatbot.Entity
     {
         // GET: api/Entities
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1)
+        public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<EntityEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -29,9 +29,12 @@ namespace Apps.Chatbot.Entity
 
             var total = query.Count();
 
-            int size = 20;
-
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntity>()).ToList();
+
+            // 统计词语数量
+            items.ForEach(item => {
+                item.Count = dc.Table<EntityEntryEntity>().Where(x => item.Id == x.EntityId).Count();
+            });
             return new DmPageResult<DmEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
@@ -107,7 +110,7 @@ namespace Apps.Chatbot.Entity
             });
             
 
-            return CreatedAtAction("GetEntities", new { id = entityModel.Id }, new { id = entityModel.Id });
+            return CreatedAtAction("GetEntities", new { id = entityModel.Id }, entityModel);
         }
 
         // DELETE: api/Entities/5
