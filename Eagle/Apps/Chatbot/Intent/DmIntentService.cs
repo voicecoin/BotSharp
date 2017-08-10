@@ -37,6 +37,15 @@ namespace Apps.Chatbot.DmServices
                 intentModel.Entity.Contexts = JsonConvert.DeserializeObject<List<string>>(intentModel.Entity.ContextsJson);
             }
 
+            if (String.IsNullOrEmpty(intentModel.Entity.EventsJson))
+            {
+                intentModel.Entity.Events = new List<string>();
+            }
+            else
+            {
+                intentModel.Entity.Events = JsonConvert.DeserializeObject<List<string>>(intentModel.Entity.EventsJson);
+            }
+
             intentModel.Entity.UserSays = intentExpressions.Select(expression => new IntentExpressionEntity
             {
                 Id = expression.Id,

@@ -78,7 +78,6 @@ namespace Apps.Chatbot.Entity
     public class EntityEntrySynonymEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
-        [JsonIgnore]
         [StringLength(36)]
         public String EntityEntryId { get; set; }
         [Required]

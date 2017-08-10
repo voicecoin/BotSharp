@@ -99,7 +99,7 @@ namespace Apps.Chatbot.DmServices
 
         public static void AddSynonyms(this DmEntityEntry entityEntryModel, CoreDbContext dc, string entityEntryId)
         {
-            if (entityEntryModel.Synonyms == null) return;
+            if (entityEntryModel.Synonyms == null) entityEntryModel.Synonyms = new List<String>();
 
             entityEntryModel.Synonyms.Where(x => !String.IsNullOrEmpty(x)).ToList().ForEach(synonym =>
             {

@@ -11,6 +11,7 @@ using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Intent;
 using Core.Interfaces;
 using Enyim.Caching;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Apps.Chatbot
 {
@@ -54,7 +55,7 @@ namespace Apps.Chatbot
 
         // PUT: api/Intents/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIntents([FromRoute] string id, IntentEntity intentModel)
+        public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] IntentEntity intentModel)
         {
             if (id != intentModel.Id)
             {
@@ -103,21 +104,26 @@ namespace Apps.Chatbot
             return Ok(intents);
         }
 
-        // GET: v1/Intent?text=
+        // GET: v1/Intents/Markup?text=
         [HttpGet("Markup")]
-        public IEnumerable<object> Markup([FromQuery] string text)
+        public IntentExpressionEntity Markup([FromQuery] string text)
         {
             var model = new DmAgentRequest { Text = text };
 
-            return model.PosTagger(dc).Select(x => new
+            var data = model.PosTagger(dc).Select(x => new DmIntentExpressionItem
             {
-                x.Text,
-                x.Alias,
-                DataType = x.Meta,
-                x.Position,
-                x.Length,
-                Color = x.Color
-            }).OrderBy(x => x.Position);
+                Text = x.Text,
+                Alias = x.Alias,
+                Meta = x.Meta,
+                Position = x.Position,
+                Length = x.Length,
+                Color = x.Color,
+                Value = x.Value
+            }).OrderBy(x => x.Position).ToList();
+
+            var userSay = new IntentExpressionEntity() { Text = text, Data = data,  };
+
+            return userSay;
         }
 
         private bool IntentsExists(string id)

@@ -30,10 +30,10 @@ namespace Apps.Baas
             dm = new BundleDomainModel<UserEntity>(dc, new UserEntity
             {
                 Id = "265d804d-0073-4a50-bd07-98a28e10f9fb",
-                UserName = "yrdrylcyp@163.com",
+                UserName = "ytdrylcyp@163.com",
                 FirstName = "灵溪山谷",
-                Email = "yrdrylcyp@163.com",
-                Password = "Yayabot123",
+                Email = "ytdrylcyp@163.com",
+                Password = "yaya123",
                 Description = "鹰潭东瑞实业有限公司"
             });
             dm.AddEntity();

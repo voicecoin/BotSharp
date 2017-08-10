@@ -18,7 +18,7 @@ namespace Apps.Chatbot.Entity
     {
         // GET: v1/EntityEntries
         [HttpGet("{entityId}/Query")]
-        public DmPageResult<DmEntityEntry> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1)
+        public DmPageResult<DmEntityEntry> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<EntityEntryEntity>().Where(x => x.EntityId == entityId);
             if (!String.IsNullOrEmpty(name))
@@ -27,8 +27,6 @@ namespace Apps.Chatbot.Entity
             }
 
             var total = query.Count();
-
-            int size = 20;
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntityEntry>()).ToList();
 
@@ -97,7 +95,7 @@ namespace Apps.Chatbot.Entity
                 entityEntryModel.Add(dc);
             });
 
-            return CreatedAtAction("GetEntityEntries", new { id = entityEntryModel.Id }, entityEntryModel.Id);
+            return CreatedAtAction("GetEntityEntries", new { id = entityEntryModel.Id }, entityEntryModel);
         }
 
         // DELETE: api/EntityEntries/5

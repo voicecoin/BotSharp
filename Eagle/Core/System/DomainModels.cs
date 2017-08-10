@@ -37,6 +37,16 @@ namespace Core
                 Entity.InitRecord(db);
             }
         }
+
+        public void ValideModel(ModelStateDictionary modelState)
+        {
+            modelState.Remove("Id");
+            modelState.Remove("CreatedUserId");
+            modelState.Remove("CreatedDate");
+            modelState.Remove("ModifiedUserId");
+            modelState.Remove("ModifiedDate");
+        }
+
         /// <summary>
         /// Core DbRecord
         /// </summary>

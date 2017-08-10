@@ -72,6 +72,12 @@ namespace Apps.Chatbot.Intent
         [NotMapped]
         public List<DmIntentExpressionItem> Data { get; set; }
 
+        /// <summary>
+        /// for frontend flag
+        /// </summary>
+        [NotMapped]
+        public Boolean Visible { get; set; }
+
         public override bool IsExist(CoreDbContext dc)
         {
             return dc.Table<IntentExpressionEntity>().Any(x => x.IntentId == IntentId && x.Text == Text);
