@@ -13,7 +13,12 @@ namespace Apps.Chatbot.Conversation
 {
     public class ConversationController : CoreController
     {
-        [HttpGet("Text")]
+        public ConversationController(IMemcachedClient memcachedClient)
+        {
+            dc.MemcachedClient = memcachedClient;
+        }
+            
+        [HttpGet]
         public async Task<String> Text(DmAgentRequest analyzerModel)
         {
             analyzerModel.Log(MyLogLevel.DEBUG);
@@ -27,7 +32,7 @@ namespace Apps.Chatbot.Conversation
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {
-                var result = await HttpHelper.Rest<TulingResponse>("http://www.tuling123.com/openapi/api",
+                var result = await RestHelper.Rest<TulingResponse>("http://www.tuling123.com/openapi/api",
                     new
                     {
                         userid = analyzerModel.SessionId,

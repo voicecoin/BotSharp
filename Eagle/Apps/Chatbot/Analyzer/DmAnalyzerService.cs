@@ -2,8 +2,6 @@
 using Apps.Chatbot.Entity;
 using Apps.Chatbot.Intent;
 using Core;
-using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,11 +61,13 @@ namespace Apps.Chatbot.DmServices
 
 
             // 未识别出的词，再用识别一次
-            var client = new RestClient(CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value);
+            /*var client = new RestClient(CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value);
             var request = new RestRequest("nlpir/wordsplit/" + text, Method.GET);
-            var response = client.Rest(request);
+            var response = client.Execute(request);
             string jsongContent = response.Result.Content;
-            var result = JsonConvert.DeserializeObject<NlpirResult>(jsongContent);
+            var result = JsonConvert.DeserializeObject<NlpirResult>(jsongContent);*/
+            string url = CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value + "nlpir/wordsplit/" + text;
+            var result = RestHelper.GetSync<NlpirResult>(url);
 
             // 只需要识别实体
             List<String> entityNames = allEntities.Select(x => x.Name).ToList();

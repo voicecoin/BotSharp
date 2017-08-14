@@ -78,6 +78,19 @@ namespace Apps.Chatbot.Agent
             return Ok(agent);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> InitAgent()
+        {
+            var intent = new AgentEntity()
+            {
+                Name = "未命名机器人",
+                Language = "zh-cn",
+                CreatedUserId = GetCurrentUser().Id
+            };
+
+            return Ok(intent);
+        }
+
         // PUT: v1/Agents/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentEntity agentModel)
@@ -87,6 +100,7 @@ namespace Apps.Chatbot.Agent
                 return BadRequest("Agent id not match.");
             }
 
+            dc.CurrentUser = GetCurrentUser();
             dc.Transaction<IDbRecord4SqlServer>(delegate {
                 var agentRecord = dc.Table<AgentEntity>().Find(id);
 
@@ -107,6 +121,7 @@ namespace Apps.Chatbot.Agent
         [HttpPost]
         public async Task<IActionResult> PostAgent([FromBody] AgentEntity agentModel)
         {
+            dc.CurrentUser = GetCurrentUser();
             var dm = new BundleDomainModel<AgentEntity>(dc, agentModel);
             dm.ValideModel(ModelState);
 
@@ -115,12 +130,21 @@ namespace Apps.Chatbot.Agent
                 return BadRequest(ModelState);
             }
 
+            bool result = false;
+
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
-                dm.Add();
+                result = dm.Add();
             });
 
-            return Ok(dm.Entity);
+            if (result)
+            {
+                return Ok(dm.Entity);
+            }
+            else
+            {
+                return BadRequest("创建失败, 请检查配置。");
+            }
         }
 
         // DELETE: v1/Agents/5

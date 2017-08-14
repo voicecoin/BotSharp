@@ -42,20 +42,10 @@ namespace Apps.Chatbot.DmServices
         {
             EntityEntity entityRecored = dc.Table<EntityEntity>().Find(entityModel.Id);
 
-            // remove entries
-            entityModel.DeleteEntries(dc, entityRecored.Id);
+            dc.Table<EntityEntryEntity>().RemoveRange(dc.Table<EntityEntryEntity>().Where(x => x.EntityId == entityModel.Id));
+            dc.Table<EntityEntrySynonymEntity>().RemoveRange(dc.Table<EntityEntrySynonymEntity>().Where(x => x.EntityEntryId == entityModel.Id));
+
             dc.Table<EntityEntity>().Remove(entityRecored);
-        }
-
-        public static void DeleteEntries(this DmEntity entityModel, CoreDbContext dc, string entityId)
-        {
-            if (entityModel.Entries == null) return;
-
-            // remove entries
-            entityModel.Entries.ToList().ForEach(entry =>
-            {
-                entry.Delete(dc);
-            });
         }
 
         public static void Update(this DmEntity entityModel, CoreDbContext dc)

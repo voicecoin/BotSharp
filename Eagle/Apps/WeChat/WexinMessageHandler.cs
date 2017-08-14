@@ -1,5 +1,4 @@
-﻿using RestSharp;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Utility;
 using System.Xml.Linq;
@@ -32,8 +31,6 @@ namespace Apps.WeChat
         {
             requestMessage.Log(MyLogLevel.DEBUG);
 
-            var client = new RestClient(CoreController.Configuration.GetSection("NlpWebHost:url").Value);
-
             string clientAccessToken = "dcab96ca3f844d029f145b085dabe2c7"; // Default as Yaya
 
             if (requestMessage.ToUserName.Equals("gh_c96a6311ab6d"))
@@ -41,16 +38,12 @@ namespace Apps.WeChat
                 clientAccessToken = "4e0cf80467fa4536be57b358a6d54368"; // Lingxihuagu
             }
 
-            var request = new RestRequest("v1/Conversation/Text", Method.GET);
-            //request.AddUrlSegment("sessionId", requestMessage.FromUserName);
-            request.AddParameter("sessionId", requestMessage.FromUserName);
-            request.AddParameter("text", requestMessage.Content);
-            request.AddParameter("clientAccessToken", clientAccessToken);
-
             var responseMessage = CreateResponseMessage<ResponseMessageText>();
-            
-            var response = client.Execute(request);
-            responseMessage.Content = response.Result.Content;
+
+            string url = CoreController.Configuration.GetSection("NlpWebHost:url").Value + "/v1/Conversation?clientAccessToken=" + clientAccessToken + "&sessionId=" + requestMessage.FromUserName + "&text=" + requestMessage.Content;
+
+            responseMessage.Content = RestHelper.GetSync(url);
+
             /*client.ExecuteAsync(request, (response) => {
                 var result = Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendText("wx12b178fb4ffd4560", WeixinOpenId, response.Content);
             });

@@ -106,9 +106,9 @@ namespace Apps.Chatbot.DmServices
         }
 
 
-        public static void Add(this DomainModel<IntentEntity> intentModel)
+        public static bool Add(this DomainModel<IntentEntity> intentModel)
         {
-            if (!intentModel.AddEntity()) return;
+            if (!intentModel.AddEntity()) return false;
 
             if(intentModel.Entity.Contexts != null)
             {
@@ -133,6 +133,8 @@ namespace Apps.Chatbot.DmServices
                 var dm = new DomainModel<IntentResponseEntity>(intentModel.Dc, response);
                 dm.Add();
             });
+
+            return true;
         }
 
         public static void Update(this DomainModel<IntentEntity> intentModel)
@@ -140,9 +142,20 @@ namespace Apps.Chatbot.DmServices
             CoreDbContext dc = intentModel.Dc;
             var intentRecord = dc.Table<IntentEntity>().Find(intentModel.Entity.Id);
             intentRecord.Name = intentModel.Entity.Name;
+            intentRecord.Description = intentModel.Entity.Description;
             intentRecord.ModifiedDate = DateTime.UtcNow;
 
             // Remove all related data then create with same IntentId
+            if (intentModel.Entity.Contexts != null)
+            {
+                intentRecord.ContextsJson = JsonConvert.SerializeObject(intentModel.Entity.Contexts);
+            }
+
+            if (intentModel.Entity.Events != null)
+            {
+                intentRecord.EventsJson = JsonConvert.SerializeObject(intentModel.Entity.Events);
+            }
+
             intentModel.Entity.UserSays.ForEach(expression => new DomainModel<IntentExpressionEntity>(dc, expression).Update());
             intentModel.Entity.Responses.ForEach(response => new DomainModel<IntentResponseEntity>(dc, response).Update());
         }

@@ -27,7 +27,7 @@ namespace Apps.Chatbot.Analyzer
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {
-                var result = await HttpHelper.Rest<TulingResponse>("http://www.tuling123.com/openapi/api",
+                var result = await RestHelper.Rest<TulingResponse>("http://www.tuling123.com/openapi/api",
                     new
                     {
                         userid = analyzerModel.SessionId,

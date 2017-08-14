@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Utility
 {
-    public static class HttpHelper
+    public static class RestHelper
     {
         public static async Task<T> Rest<T>(string requestUri, object body = null, string method = "POST")
         {
@@ -52,7 +51,38 @@ namespace Utility
             return result;
         }
 
-        public static Task<IRestResponse> Rest(this IRestClient restClient, RestRequest restRequest)
+        public static T GetSync<T>(string requestUri)
+        {
+            T result = default(T);
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(requestUri);
+
+                client.GetAsync(requestUri);
+                HttpResponseMessage response = Task.Run(() => client.GetAsync(requestUri)).Result;
+
+                string content = Task.Run(() => response.Content.ReadAsStringAsync()).Result; 
+                result = JsonConvert.DeserializeObject<T>(content);
+            }
+
+            return result;
+        }
+
+        public static string GetSync(string requestUri)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(requestUri);
+
+                client.GetAsync(requestUri);
+                HttpResponseMessage response = Task.Run(() => client.GetAsync(requestUri)).Result;
+
+                return Task.Run(() => response.Content.ReadAsStringAsync()).Result;
+            }
+        }
+
+        /*public static Task<IRestResponse> Execute(this IRestClient restClient, RestRequest restRequest)
         {
             var tcs = new TaskCompletionSource<IRestResponse>();
             restClient.ExecuteAsync(restRequest, (restResponse, asyncHandle) =>
@@ -63,6 +93,6 @@ namespace Utility
                     tcs.SetResult(restResponse);
             });
             return tcs.Task;
-        }
+        }*/
     }
 }

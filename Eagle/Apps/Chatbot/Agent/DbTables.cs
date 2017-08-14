@@ -33,7 +33,7 @@ namespace Apps.Chatbot.Agent
         public String DeveloperAccessToken { get; set; }
 
         public bool IsPublic { get; set; }
-        [MaxLength(4096)]
+        [MaxLength(102400)]
         public String Avatar { get; set; }
 
         [NotMapped]

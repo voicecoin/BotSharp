@@ -53,6 +53,29 @@ namespace Apps.Chatbot
             return Ok(dm.Entity);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> InitIntent()
+        {
+            var intent = new IntentEntity()
+            {
+                Name = "未命名意图",
+                Contexts = new List<string>(),
+                Events = new List<string>(),
+                UserSays = new List<IntentExpressionEntity>(),
+                Responses = new List<IntentResponseEntity>()
+                {
+                    new IntentResponseEntity
+                    {
+                        AffectedContexts = new List<DmIntentResponseContext>(),
+                        Parameters = new List<IntentResponseParameterEntity>(),
+                        Messages = new List<IntentResponseMessageEntity>()
+                    }
+                }
+            };
+
+            return Ok(intent);
+        }
+
         // PUT: api/Intents/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutIntents([FromRoute] string id, [FromBody] IntentEntity intentModel)
@@ -72,15 +95,24 @@ namespace Apps.Chatbot
 
         // POST: api/Intents
         [HttpPost("{agentId}")]
-        public async Task<IActionResult> PostIntents(string agentId, IntentEntity intentModel)
+        public async Task<IActionResult> PostIntents(string agentId, [FromBody] IntentEntity intentEntity)
         {
+            bool result = false;
+
             dc.Transaction<IDbRecord4SqlServer>(delegate
             {
-                intentModel.AgentId = agentId;
-                new DomainModel<IntentEntity>(dc, intentModel).Add();
+                intentEntity.AgentId = agentId;
+                result = new DomainModel<IntentEntity>(dc, intentEntity).Add();
             });
 
-            return Ok(new { Id = intentModel.Id });
+            if (result)
+            {
+                return Ok(intentEntity);
+            }
+            else
+            {
+                return BadRequest("创建失败, 请检查配置。");
+            }
         }
 
         // DELETE: api/Intents/5

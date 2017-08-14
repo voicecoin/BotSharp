@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -58,19 +57,6 @@ namespace Utility
             };
 
             return new HttpClient(handler);
-        }
-
-        public static Task<IRestResponse> Execute(this IRestClient restClient, RestRequest restRequest)
-        {
-            var tcs = new TaskCompletionSource<IRestResponse>();
-            restClient.ExecuteAsync(restRequest, (restResponse, asyncHandle) =>
-            {
-                if (restResponse.ResponseStatus == ResponseStatus.Error)
-                    tcs.SetException(restResponse.ErrorException);
-                else
-                    tcs.SetResult(restResponse);
-            });
-            return tcs.Task;
         }
     }
 }
