@@ -1,96 +1,107 @@
-﻿using Apps.Chatbot.Agent;
-using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.Intent;
+﻿using Apps.Chatbot_ConversationParameters.Agent;
+using Apps.Chatbot_ConversationParameters.Conversation;
+using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.Intent;
 using Core;
+using Core.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Utility;
 
-namespace Apps.Chatbot.DmServices
+namespace Apps.Chatbot_ConversationParameters.DmServices
 {
     public static class DmAgentService
     {
         public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc, String nerUrl)
         {
-            var queryable = from intent in dc.Table<IntentEntity>()
-                            join exp in dc.Table<IntentExpressionEntity>() on intent.Id equals exp.IntentId
-                            where intent.AgentId == agentRequestModel.Agent.Id //|| intent.AgentId == Constants.GenesisAgentId
+            var queryable = from intent1 in dc.Table<IntentEntity>()
+                            join exp in dc.Table<IntentExpressionEntity>() on intent1.Id equals exp.IntentId
+                            where intent1.AgentId == agentRequestModel.Agent.Id //|| intent.AgentId == Constants.GenesisAgentId
                             select exp;
 
-            // 精确匹配
-            var intents = queryable.Where(x => x.Text == agentRequestModel.Text).ToList();
+            // NLP PIPLINE
+            // 预处理语料库，替换实体。
+            
+            var expressions = queryable.ToList();
+            List<String> corpus = expressions.Select(x => x.Text).ToList();
 
-            // 相似匹配
-            if (intents.Count() == 0)
+            // 加入会话关键词作为输入
+            var keywords = dc.Table<ConversationEntity>().Where(x => x.Id == agentRequestModel.ConversationId && !agentRequestModel.Text.Contains(x.Keyword)).OrderBy(x => x.CreatedDate).Select(x => x.Keyword).ToList();
+            string keywordsForInput = String.Join("", keywords.ToArray());
+
+            // 传入句子先分词
+            DmAgentRequest agentRequestModel1 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = keywordsForInput + agentRequestModel.Text };
+            var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
+
+
+            List<IntentExpressionEntity> similarities = new List<IntentExpressionEntity>();
+
+            expressions.ForEach(expression =>
             {
-                // 预处理语料库，替换实体。
-                List<String> corpus = new List<String>();
-                intents = queryable.ToList();
-                intents.ForEach(exp => {
-                    if (exp.Data == null || exp.Data.Count() == 0)
-                    {
-                        corpus.Add(exp.Text);
-                    }
-                    else
-                    {
-                        corpus.Add(String.Join("", exp.Data.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta)));
-                    }
-                });
+                DmAgentRequest agentRequestModel2 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = expression.Text };
+                var comparedTextSplitted = agentRequestModel2.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
 
-                // 传入句子先分词
-                DmAgentRequest agentRequestModel1 = new DmAgentRequest { Text = agentRequestModel.Text };
-                var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
-
-                List<IntentExpressionEntity> similarities = new List<IntentExpressionEntity>();
-
-                intents.ForEach(expression =>
+                IntentExpressionEntity model = expression.Map<IntentExpressionEntity>();
+                // 计算出相似度
+                model.Similarity = CompareSimilarity(corpus, requestedTextSplitted, comparedTextSplitted);
+                if (model.Similarity > 0.5)
                 {
-                    DmAgentRequest agentRequestModel2 = new DmAgentRequest { Text = expression.Text };
-                    var comparedTextSplitted = agentRequestModel2.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
-
-                    IntentExpressionEntity model = expression.Map<IntentExpressionEntity>();
-                    model.Similarity = CompareSimilarity(corpus, requestedTextSplitted, comparedTextSplitted);
-                    if (model.Similarity > 0.5)
-                    {
-                        similarities.Add(model);
-                    }
-                });
-
-                similarities = similarities.OrderByDescending(x => x.Similarity).ToList();
-
-                if (similarities.Count == 0)
-                {
-                    return null;
+                    similarities.Add(model);
                 }
+            });
 
-                intents = queryable.Where(x => x.Id == similarities.First().Id).ToList();
+            similarities = similarities.OrderByDescending(x => x.Similarity).ToList();
+
+            if (similarities.Count == 0)
+            {
+                return null;
             }
 
+            expressions = expressions.Where(x => x.Id == similarities.First().Id).ToList();
 
-            if (intents.Count() == 0) return null;
+            if (expressions.Count() == 0) return null;
 
-            var intentRecord = dc.Table<IntentEntity>().First(m => m.Id == intents.First().IntentId);
+            var intent = dc.Table<IntentEntity>().First(m => m.Id == expressions.First().IntentId);
 
-            var dm = new DomainModel<IntentEntity>(dc, intentRecord.Map<IntentEntity>());
+            var dm = new DomainModel<IntentEntity>(dc, intent.Map<IntentEntity>());
             dm.Load();
+
+            string keyword = String.Empty;
+            // 抽取本次聊天内容的关键词
+
+            if (!String.IsNullOrEmpty(intent.Keyword))
+            {
+                keyword = intent.Keyword;
+            }
 
             IntentResponseEntity responseModel = dm.Entity.Responses.First();
 
-            try
-            {
-                responseModel.ExtractParameter(dc, agentRequestModel);
-            }
-            catch (MissingParameterException ex)
-            {
-                return new DmAgentResponse { Text = ex.Message };
-            }
-            
+            // 抽取实体信息并返回缺失的实体
+            List<IntentResponseParameterEntity> missingParameters = responseModel.ExtractParameter(dc, agentRequestModel1);
 
-            IntentResponseMessageEntity messageModel = responseModel.PostResponse(dc, agentRequestModel);
+            // 填充参数值
+            IntentResponseMessageEntity messageModel = responseModel.PostResponse(dc, agentRequestModel1);
 
-            return new DmAgentResponse { Text = messageModel.Speeches.Random() };
+            DmAgentResponse response = new DmAgentResponse();
+            if (missingParameters.Count > 0)
+            {
+                // 提示必填信息
+                response.Text = missingParameters.Random().Prompts.Random();
+            } else
+            {
+                response.Text = messageModel.Speeches.Random();
+            }
+
+            // 保存聊天记录
+            dc.Transaction<IDbRecord4SqlServer>(delegate {
+                var conversation = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
+                conversation.Keyword = keyword;
+            });
+
+            return response;
         }
 
         /// <summary>

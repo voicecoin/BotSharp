@@ -1,11 +1,11 @@
-﻿using Apps.Chatbot.Enums;
+﻿using Apps.Chatbot_ConversationParameters.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.DomainModels
+namespace Apps.Chatbot_ConversationParameters.DomainModels
 {
     public class DmIntentExpressionItem
     {

@@ -1,5 +1,5 @@
-﻿using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.Intent;
+﻿using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.Intent;
 using Core;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Utility;
 
-namespace Apps.Chatbot.DmServices
+namespace Apps.Chatbot_ConversationParameters.DmServices
 {
     public static partial class DmIntentService
     {

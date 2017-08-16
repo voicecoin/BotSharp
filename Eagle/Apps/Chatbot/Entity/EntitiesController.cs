@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Core;
-using Apps.Chatbot.DomainModels;
+using Apps.Chatbot_ConversationParameters.DomainModels;
 using Utility;
-using Apps.Chatbot.DmServices;
+using Apps.Chatbot_ConversationParameters.DmServices;
 using Core.Interfaces;
 using Enyim.Caching;
 
-namespace Apps.Chatbot.Entity
+namespace Apps.Chatbot_ConversationParameters.Entity
 {
     public class EntitiesController : CoreController
     {

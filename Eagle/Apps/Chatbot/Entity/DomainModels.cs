@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.DomainModels
+namespace Apps.Chatbot_ConversationParameters.DomainModels
 {
     public class DmEntity
     {

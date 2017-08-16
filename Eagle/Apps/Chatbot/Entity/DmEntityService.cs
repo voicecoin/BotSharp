@@ -1,5 +1,5 @@
-﻿using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.Entity;
+﻿using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.Entity;
 using Core;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Utility;
 
-namespace Apps.Chatbot.DmServices
+namespace Apps.Chatbot_ConversationParameters.DmServices
 {
     public static class DmEntityService
     {

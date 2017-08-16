@@ -1,5 +1,6 @@
 ﻿{
   "id": "696301fe-cf26-4b7f-b788-cf58a8cdaaeb",
+  "keyword": "年龄",
   "userSays": [
     { "text": "多大了" },
     { "text": "几岁" },
@@ -12,7 +13,7 @@
       "action": "",
       "messages": [
         {
-          "speeches": ["{@agent.age}。"],
+          "speeches": [ "{@agent.age}。" ],
           "type": 0
         }
       ],

@@ -9,22 +9,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.Conversation
+namespace Apps.Chatbot_ConversationParameters.Conversation
 {
     [Table("Chatbot_Conversations")]
     public class ConversationEntity : DbRecord, IDbRecord4SqlServer
     {
         [Required]
         [StringLength(36)]
-        public String SessionId { get; set; }
-        [Required]
-        [StringLength(36)]
         public String AgentId { get; set; }
+        /// <summary>
+        /// 关键词, 从本次会话Text里提取的关键词，用于作更准备的意图识别。是不是可以用Context来代替？
+        /// </summary>
+        [MaxLength(32)]
+        public String Keyword { get; set; }
     }
 
     [Table("Chatbot_ConversationMessages")]
     public class ConversationMessageEntity : DbRecord, IDbRecord4SqlServer
     {
+        [Required]
+        [StringLength(36)]
+        public String ConversationId { get; set; }
         [Required]
         [StringLength(36)]
         public String Recipient { get; set; }
@@ -39,12 +44,17 @@ namespace Apps.Chatbot.Conversation
     {
         [Required]
         [StringLength(36)]
+        public String ConversationId { get; set; }
+        [Required]
+        [StringLength(36)]
         public String ResponseParameter { get; set; }
         public String Value { get; set; }
     }
 
     public class DmConverstaionContent
     {
+        [Required]
+        [MaxLength(64)]
         public String Text { get; set; }
         public DmConverstaionContentAttachment Attachement { get; set; }
     }

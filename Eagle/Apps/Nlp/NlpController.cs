@@ -1,4 +1,4 @@
-﻿using Apps.Chatbot.DomainModels;
+﻿using Apps.Chatbot_ConversationParameters.DomainModels;
 using Core;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

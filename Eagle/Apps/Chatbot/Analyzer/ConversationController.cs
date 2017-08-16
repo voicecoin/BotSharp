@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Core;
-using Apps.Chatbot.DomainModels;
+using Apps.Chatbot_ConversationParameters.DomainModels;
 using Utility;
-using Apps.Chatbot.DmServices;
-using Apps.Chatbot.Agent;
+using Apps.Chatbot_ConversationParameters.DmServices;
+using Apps.Chatbot_ConversationParameters.Agent;
 using Enyim.Caching;
 
-namespace Apps.Chatbot.Analyzer
+namespace Apps.Chatbot_ConversationParameters.Analyzer
 {
     public class ConversationController : CoreController
     {
@@ -30,7 +30,7 @@ namespace Apps.Chatbot.Analyzer
                 var result = await RestHelper.Rest<TulingResponse>("http://www.tuling123.com/openapi/api",
                     new
                     {
-                        userid = analyzerModel.SessionId,
+                        userid = analyzerModel.ConversationId,
                         key = "ce36fa6d0ec047248da3354519658734",
                         info = analyzerModel.Text
                     });

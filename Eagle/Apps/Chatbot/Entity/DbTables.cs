@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.Entity
+namespace Apps.Chatbot_ConversationParameters.Entity
 {
     /// <summary>
     /// 实体，用于做大的分类。

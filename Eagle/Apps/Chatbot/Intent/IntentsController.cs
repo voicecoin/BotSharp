@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Core;
-using Apps.Chatbot.DomainModels;
+using Apps.Chatbot_ConversationParameters.DomainModels;
 using Utility;
-using Apps.Chatbot.DmServices;
-using Apps.Chatbot.Intent;
+using Apps.Chatbot_ConversationParameters.DmServices;
+using Apps.Chatbot_ConversationParameters.Intent;
 using Core.Interfaces;
 using Enyim.Caching;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Apps.Chatbot
+namespace Apps.Chatbot_ConversationParameters
 {
     public class IntentsController : CoreController
     {

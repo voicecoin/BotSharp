@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Newtonsoft.Json;
 using Core.Interfaces;
-using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.DmServices;
+using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.DmServices;
 using Core;
-using Apps.Chatbot.Intent;
-using Apps.Chatbot.Entity;
+using Apps.Chatbot_ConversationParameters.Intent;
+using Apps.Chatbot_ConversationParameters.Entity;
 using Core.DomainModels;
 using Core.Bundle;
 
-namespace Apps.Chatbot.Agent
+namespace Apps.Chatbot_ConversationParameters.Agent
 {
     public class Hooks : IHookDbInitializer
     {

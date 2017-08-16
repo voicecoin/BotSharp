@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.Agent
+namespace Apps.Chatbot_ConversationParameters.Agent
 {
     [Table("Chatbot_Agents")]
     public class AgentEntity : BundleDbRecord, IDbRecord4SqlServer

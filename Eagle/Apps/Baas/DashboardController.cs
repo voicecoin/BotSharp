@@ -1,6 +1,6 @@
-﻿using Apps.Chatbot.Agent;
-using Apps.Chatbot.Entity;
-using Apps.Chatbot.Intent;
+﻿using Apps.Chatbot_ConversationParameters.Agent;
+using Apps.Chatbot_ConversationParameters.Entity;
+using Apps.Chatbot_ConversationParameters.Intent;
 using Core;
 using Core.Account;
 using Microsoft.AspNetCore.Mvc;

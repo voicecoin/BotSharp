@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.DomainModels
+namespace Apps.Chatbot_ConversationParameters.DomainModels
 {
     public class DmDeepParsed
     {

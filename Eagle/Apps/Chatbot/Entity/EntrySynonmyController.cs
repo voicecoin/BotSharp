@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.Entity
+namespace Apps.Chatbot_ConversationParameters.Entity
 {
     public class EntrySynonmyController : CoreController
     {

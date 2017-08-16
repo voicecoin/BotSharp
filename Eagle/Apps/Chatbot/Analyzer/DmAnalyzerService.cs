@@ -1,7 +1,9 @@
-﻿using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.Entity;
-using Apps.Chatbot.Intent;
+﻿using Apps.Chatbot_ConversationParameters.Conversation;
+using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.Entity;
+using Apps.Chatbot_ConversationParameters.Intent;
 using Core;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Utility;
 
-namespace Apps.Chatbot.DmServices
+namespace Apps.Chatbot_ConversationParameters.DmServices
 {
     public static class DmAnalyzerService
     {
@@ -195,19 +197,41 @@ namespace Apps.Chatbot.DmServices
             return messageModel;
         }
 
-        public static void ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
         {
             var segments = agentRequestModel.Segment(dc).Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
+            var missingParameters = new List<IntentResponseParameterEntity>();
 
             responseModel.Parameters.ForEach(parameter =>
             {
                 parameter.Value = segments.FirstOrDefault(x => x.Meta == parameter.DataType)?.Text;
+
+                // 把识别出的实体放入数据库
+                if (!String.IsNullOrEmpty(parameter.Value))
+                {
+                    if(!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == agentRequestModel.ConversationId && x.ResponseParameter == parameter.Id))
+                    {
+                        dc.Transaction<IDbRecord4SqlServer>(delegate {
+                            var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity {
+                                ConversationId = agentRequestModel.ConversationId,
+                                ResponseParameter = parameter.Id,
+                                Value = parameter.Value
+                            });
+                            dm.AddEntity();
+                        });
+                    }
+                } 
+
                 if(parameter.Required && String.IsNullOrEmpty(parameter.Value))
                 {
-                    string prompt = parameter.Prompts.Random();
-                    throw new MissingParameterException(prompt);
+                    if (!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == agentRequestModel.ConversationId && x.ResponseParameter == parameter.Id))
+                    {
+                        missingParameters.Add(parameter);
+                    }
                 }
             });
+
+            return missingParameters;
         }
 
         /// <summary>

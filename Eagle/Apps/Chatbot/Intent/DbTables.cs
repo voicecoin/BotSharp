@@ -1,5 +1,5 @@
-﻿using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.Enums;
+﻿using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.Enums;
 using Core;
 using Core.Interfaces;
 using Newtonsoft.Json;
@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot.Intent
+namespace Apps.Chatbot_ConversationParameters.Intent
 {
     [Table("Chatbot_Intents")]
     public class IntentEntity : DbRecord, IDbRecord4SqlServer
@@ -29,6 +29,9 @@ namespace Apps.Chatbot.Intent
         public String ContextsJson { get; set; }
         [NotMapped]
         public List<String> Contexts { get; set; }
+
+        [MaxLength(16)]
+        public String Keyword { get; set; }
 
         [JsonIgnore]
         [Column("Events")]

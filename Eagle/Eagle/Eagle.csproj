@@ -30,11 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\package.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="App_Data\花灵溪\Entities\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
