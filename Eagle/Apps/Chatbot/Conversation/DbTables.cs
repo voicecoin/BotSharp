@@ -45,9 +45,17 @@ namespace Apps.Chatbot_ConversationParameters.Conversation
         [Required]
         [StringLength(36)]
         public String ConversationId { get; set; }
+        /// <summary>
+        /// 可读参数名
+        /// </summary>
         [Required]
-        [StringLength(36)]
-        public String ResponseParameter { get; set; }
+        [MaxLength(32)]
+        public String Name { get; set; }
+        /// <summary>
+        /// 参数抽取值
+        /// </summary>
+        [Required]
+        [MaxLength(32)]
         public String Value { get; set; }
     }
 

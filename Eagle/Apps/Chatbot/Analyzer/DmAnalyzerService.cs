@@ -209,22 +209,29 @@ namespace Apps.Chatbot_ConversationParameters.DmServices
                 // 把识别出的实体放入数据库
                 if (!String.IsNullOrEmpty(parameter.Value))
                 {
-                    if(!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == agentRequestModel.ConversationId && x.ResponseParameter == parameter.Id))
+                    dc.Transaction<IDbRecord4SqlServer>(delegate
                     {
-                        dc.Transaction<IDbRecord4SqlServer>(delegate {
-                            var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity {
+                        var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == agentRequestModel.ConversationId && x.Name == parameter.Name);
+                        if (existedParameter == null)
+                        {
+                            var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
+                            {
                                 ConversationId = agentRequestModel.ConversationId,
-                                ResponseParameter = parameter.Id,
+                                Name = parameter.Name,
                                 Value = parameter.Value
                             });
                             dm.AddEntity();
-                        });
-                    }
-                } 
+                        }
+                        else
+                        {
+                            existedParameter.Value = parameter.Value;
+                        }
+                    });
+                }
 
                 if(parameter.Required && String.IsNullOrEmpty(parameter.Value))
                 {
-                    if (!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == agentRequestModel.ConversationId && x.ResponseParameter == parameter.Id))
+                    if (!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == agentRequestModel.ConversationId && x.Name == parameter.Name))
                     {
                         missingParameters.Add(parameter);
                     }
@@ -266,9 +273,11 @@ namespace Apps.Chatbot_ConversationParameters.DmServices
         public static void ReplaceParameterToken(this IntentResponseMessageEntity messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel, IntentResponseEntity responseModel)
         {
             List<String> speechs = new List<string>();
+            var entities = dc.Table<ConversationParameterEntity>().Where(x => x.ConversationId == agentRequestModel.ConversationId)
+                    .Select(x => new { x.Name, x.Value }).ToList();
 
             messageModel.Speeches.ForEach(speech => {
-                responseModel.Parameters.ForEach(parameter => {
+                entities.ForEach(parameter => {
                     speech = speech.Replace("{$" + parameter.Name + "}", parameter.Value);
                 });
                 speechs.Add(speech);

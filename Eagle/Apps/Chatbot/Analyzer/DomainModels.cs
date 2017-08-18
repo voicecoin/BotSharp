@@ -43,6 +43,10 @@ namespace Apps.Chatbot_ConversationParameters.DomainModels
                 {
                     seg.Entity = seg.Entity.Replace(m.Value, String.Empty);
                 }*/
+                if(Entity == null)
+                {
+                    Entity = String.Empty;
+                }
 
                 var segs = Entity.Split(':');
                 if (segs.Count() == 1)

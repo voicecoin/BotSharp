@@ -59,7 +59,6 @@ namespace Utility
             {
                 client.BaseAddress = new Uri(requestUri);
 
-                client.GetAsync(requestUri);
                 HttpResponseMessage response = Task.Run(() => client.GetAsync(requestUri)).Result;
 
                 string content = Task.Run(() => response.Content.ReadAsStringAsync()).Result; 
@@ -75,10 +74,24 @@ namespace Utility
             {
                 client.BaseAddress = new Uri(requestUri);
 
-                client.GetAsync(requestUri);
                 HttpResponseMessage response = Task.Run(() => client.GetAsync(requestUri)).Result;
 
                 return Task.Run(() => response.Content.ReadAsStringAsync()).Result;
+            }
+        }
+
+        public static T PostSync<T>(string requestUri, object body = null)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(requestUri);
+
+                String json = JsonConvert.SerializeObject(body);
+                HttpResponseMessage response = Task.Run(() => client.PostAsync(requestUri, new StringContent(json, Encoding.UTF8, "application/json"))).Result;
+
+                String result = Task.Run(() => response.Content.ReadAsStringAsync()).Result;
+
+                return JsonConvert.DeserializeObject<T>(result);
             }
         }
 

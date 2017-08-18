@@ -30,12 +30,18 @@ namespace Apps.Chatbot_ConversationParameters.DmServices
 
             // 加入会话关键词作为输入
             var keywords = dc.Table<ConversationEntity>().Where(x => x.Id == agentRequestModel.ConversationId && !agentRequestModel.Text.Contains(x.Keyword)).OrderBy(x => x.CreatedDate).Select(x => x.Keyword).ToList();
-            string keywordsForInput = String.Join("", keywords.ToArray());
+            string keywordsForInput = String.Join(" ", keywords.ToArray());
+
+            // 加入空格，提高NLPIR的实体识别能力
+            if (!String.IsNullOrEmpty(keywordsForInput))
+            {
+                keywordsForInput += " ";
+            }
 
             // 传入句子先分词
             DmAgentRequest agentRequestModel1 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = keywordsForInput + agentRequestModel.Text };
             var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
-
+            requestedTextSplitted = requestedTextSplitted.Where(x => !String.IsNullOrEmpty(x.Trim())).ToList();
 
             List<IntentExpressionEntity> similarities = new List<IntentExpressionEntity>();
 
@@ -161,8 +167,16 @@ namespace Apps.Chatbot_ConversationParameters.DmServices
         public static bool Add(this BundleDomainModel<AgentEntity> dmAgent)
         {
             dmAgent.Entity.Language = "zh-cn";
-            dmAgent.Entity.ClientAccessToken = Guid.NewGuid().ToString("N");
-            dmAgent.Entity.DeveloperAccessToken = Guid.NewGuid().ToString("N");
+
+            if (String.IsNullOrEmpty(dmAgent.Entity.ClientAccessToken))
+            {
+                dmAgent.Entity.ClientAccessToken = Guid.NewGuid().ToString("N");
+            }
+
+            if (String.IsNullOrEmpty(dmAgent.Entity.DeveloperAccessToken))
+            {
+                dmAgent.Entity.DeveloperAccessToken = Guid.NewGuid().ToString("N");
+            }
 
             return dmAgent.AddEntity();
         }

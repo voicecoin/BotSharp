@@ -10,6 +10,7 @@ using Core.Interfaces;
 using Apps.Chatbot_ConversationParameters.DmServices;
 using Enyim.Caching;
 using System.Collections.Generic;
+using Core.Enums;
 
 namespace Apps.Chatbot_ConversationParameters.Agent
 {
@@ -36,14 +37,15 @@ namespace Apps.Chatbot_ConversationParameters.Agent
         [HttpGet("MyAgents")]
         public IEnumerable<Object> MyAgents()
         {
-            return dc.Table<AgentEntity>().Where(x => x.CreatedUserId == GetCurrentUser().Id).OrderBy(x => x.CreatedDate).Select(x => new { x.Name, x.Id });
+            var user = GetCurrentUser();
+            return dc.Table<AgentEntity>().Where(x => x.CreatedUserId == user.Id && x.Status != EntityStatus.Hidden).OrderBy(x => x.CreatedDate).Select(x => new { x.Name, x.Id });
         }
 
         // GET: v1/Agents
         [HttpGet("{userId}/Query")]
         public DmPageResult<AgentEntity> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
-            var query = dc.Table<AgentEntity>().Where(x => x.CreatedUserId == userId);
+            var query = dc.Table<AgentEntity>().Where(x => x.CreatedUserId == userId && x.Status != EntityStatus.Hidden);
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.Contains(name));

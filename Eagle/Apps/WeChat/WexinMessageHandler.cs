@@ -7,11 +7,22 @@ using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.Context;
+using Apps.Chatbot_ConversationParameters.Analyzer;
+using Apps.Chatbot_ConversationParameters.Agent;
+using System.Linq;
+using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot_ConversationParameters.Conversation;
+using Core.Interfaces;
+using Apps.Chatbot_ConversationParameters.DmServices;
+using Microsoft.Extensions.Configuration;
 
 namespace Apps.WeChat
 {
     public class WexinMessageHandler : MessageHandler<CustomMessageContext>
     {
+        public CoreDbContext dc { get; set; }
+        public IConfigurationRoot Configuration { get; set; }
+
         public WexinMessageHandler(XDocument inputStream, PostModel postModel, int maxRecordCount = 0)
             : base(inputStream, postModel, maxRecordCount)
         {
@@ -40,9 +51,57 @@ namespace Apps.WeChat
 
             var responseMessage = CreateResponseMessage<ResponseMessageText>();
 
-            string url = CoreController.Configuration.GetSection("NlpWebHost:url").Value + "/v1/Conversation?clientAccessToken=" + clientAccessToken + "&sessionId=" + requestMessage.FromUserName + "&text=" + requestMessage.Content;
+            /*string url = CoreController.Configuration.GetSection("NlpApi:YayabotUrl").Value + "v1/Conversation?clientAccessToken=" + clientAccessToken + "&conversationId=" + requestMessage.FromUserName + "&text=" + requestMessage.Content;
 
-            responseMessage.Content = RestHelper.GetSync(url);
+            responseMessage.Content = RestHelper.GetSync(url);*/
+
+            String conversationId = String.Empty;
+
+            var agentRecord = dc.Table<AgentEntity>().First(x => x.ClientAccessToken == clientAccessToken);
+
+            var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentRecord.Id && x.CreatedUserId == dc.CurrentUser.Id);
+            if (conversation == null)
+            {
+                dc.Transaction<IDbRecord4SqlServer>(delegate
+                {
+                    var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
+                    {
+                        AgentId = agentRecord.Id
+                    });
+
+                    dm.AddEntity();
+
+                    conversationId = dm.Entity.Id;
+                });
+            }
+            else
+            {
+                conversationId = conversation.Id;
+            }
+
+            DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord, Text = requestMessage.Content, ConversationId = conversationId };
+
+            var response = agentRequestModel.TextRequest(dc, Configuration.GetSection("NlpApi:NlpirUrl").Value);
+
+            if (response == null || String.IsNullOrEmpty(response.Text))
+            {
+                var url = Configuration.GetSection("NlpApi:TulingUrl").Value;
+                var key = Configuration.GetSection("NlpApi:TulingKey").Value;
+
+                var result = RestHelper.PostSync<TulingResponse>(url,
+                    new
+                    {
+                        userid = conversationId,
+                        key = key,
+                        info = requestMessage.Content
+                    });
+
+                responseMessage.Content = result.Text;
+            }
+            else
+            {
+                responseMessage.Content = response.Text;
+            }
 
             /*client.ExecuteAsync(request, (response) => {
                 var result = Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendText("wx12b178fb4ffd4560", WeixinOpenId, response.Content);

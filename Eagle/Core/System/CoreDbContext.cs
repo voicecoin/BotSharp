@@ -32,11 +32,13 @@ namespace Core
 
         public T GetCache<T>(string key)
         {
+            key = key.Replace(" ", String.Empty);
             return MemcachedClient.Get<T>(key);
         }
 
         public bool SetCache(string key, Object value)
         {
+            key = key.Replace(" ", String.Empty);
             return MemcachedClient.Store(StoreMode.Set, key, value);
         }
     }

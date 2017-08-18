@@ -33,10 +33,10 @@ namespace Apps.Chatbot_ConversationParameters.Agent
             // create a agent
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
-            string id = Guid.NewGuid().ToString();
+            /*string id = Guid.NewGuid().ToString();
             string id2 = Guid.NewGuid().ToString();
             string token1 = Guid.NewGuid().ToString("N");
-            string token2 = Guid.NewGuid().ToString("N");
+            string token2 = Guid.NewGuid().ToString("N");*/
 
             agentNames.ForEach(agentName =>
             {
