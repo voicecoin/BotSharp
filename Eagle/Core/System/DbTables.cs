@@ -64,6 +64,9 @@ namespace Core
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public String Id { get; set; }
 
+        /// <summary>
+        /// 系统级实体状态
+        /// </summary>
         public EntityStatus Status { get; set; }
 
         /// <summary>

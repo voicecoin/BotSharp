@@ -28,7 +28,7 @@ namespace Apps.WeChat
         private readonly string Token = "yayaweixin";
         private readonly string EncodingAESKey = "9Rn0jQZ3GgqaVdJKgWTc99U7YSMfb7x95ccBPlHEKA4";
         private readonly string AppId = "wx12b178fb4ffd4560";
-        private readonly string AppSecret = "56b83db6271585b9b48cee68fadb9940";
+        //private readonly string AppSecret = "56b83db6271585b9b48cee68fadb9940";
 
         public WeixinController(IMemcachedClient memcachedClient)
         {
@@ -38,8 +38,8 @@ namespace Apps.WeChat
         // 灵溪花谷 lingxihuagu wxd4ff56849b9bd433 znSwewfQPsSVX4E0CF69ALTYDXlm3HTlMVygzsUpKPY
 
         // GET: api/weixin
-        [HttpGet]
-        [ActionName("Index")]
+        [HttpGet("{appId}")]
+        //[ActionName("Index")]
         public ActionResult Get(string signature, string timestamp, string nonce, string echostr)
         {
             if (CheckSignature.Check(signature, timestamp, nonce, Token))
@@ -53,8 +53,8 @@ namespace Apps.WeChat
         }
 
         // POST: v1/WeChat
-        [HttpPost]
-        [ActionName("Index")]
+        [HttpPost("{appId}")]
+        //[ActionName("Index")]
         [FormatFilter]
         public async Task<ActionResult> Post(PostModel postModel)
         {

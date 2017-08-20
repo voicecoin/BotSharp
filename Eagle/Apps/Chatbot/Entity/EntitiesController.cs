@@ -19,7 +19,7 @@ namespace Apps.Chatbot_ConversationParameters.Entity
     {
         // GET: api/Entities
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
+        public DmPageResult<DmEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 20)
         {
             var query = dc.Table<EntityEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
