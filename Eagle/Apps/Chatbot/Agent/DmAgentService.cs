@@ -1,7 +1,7 @@
-﻿using Apps.Chatbot_ConversationParameters.Agent;
-using Apps.Chatbot_ConversationParameters.Conversation;
-using Apps.Chatbot_ConversationParameters.DomainModels;
-using Apps.Chatbot_ConversationParameters.Intent;
+﻿using Apps.Chatbot.Agent;
+using Apps.Chatbot.Conversation;
+using Apps.Chatbot.DomainModels;
+using Apps.Chatbot.Intent;
 using Core;
 using Core.Interfaces;
 using Newtonsoft.Json;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Utility;
 
-namespace Apps.Chatbot_ConversationParameters.DmServices
+namespace Apps.Chatbot.DmServices
 {
     public static class DmAgentService
     {

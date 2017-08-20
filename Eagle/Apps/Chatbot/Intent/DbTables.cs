@@ -1,5 +1,4 @@
-﻿using Apps.Chatbot_ConversationParameters.DomainModels;
-using Apps.Chatbot_ConversationParameters.Enums;
+﻿using Apps.Chatbot.DomainModels;
 using Core;
 using Core.Interfaces;
 using Newtonsoft.Json;
@@ -10,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot_ConversationParameters.Intent
+namespace Apps.Chatbot.Intent
 {
     [Table("Chatbot_Intents")]
     public class IntentEntity : DbRecord, IDbRecord4SqlServer

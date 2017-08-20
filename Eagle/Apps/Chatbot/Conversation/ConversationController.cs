@@ -3,15 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Core;
-using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot.DomainModels;
 using Utility;
-using Apps.Chatbot_ConversationParameters.DmServices;
-using Apps.Chatbot_ConversationParameters.Agent;
+using Apps.Chatbot.DmServices;
+using Apps.Chatbot.Agent;
 using Enyim.Caching;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Apps.Chatbot_ConversationParameters.Conversation
+namespace Apps.Chatbot.Conversation
 {
     public class ConversationController : CoreController
     {

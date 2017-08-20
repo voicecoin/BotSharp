@@ -7,14 +7,13 @@ using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.Context;
-using Apps.Chatbot_ConversationParameters.Analyzer;
-using Apps.Chatbot_ConversationParameters.Agent;
 using System.Linq;
-using Apps.Chatbot_ConversationParameters.DomainModels;
-using Apps.Chatbot_ConversationParameters.Conversation;
 using Core.Interfaces;
-using Apps.Chatbot_ConversationParameters.DmServices;
 using Microsoft.Extensions.Configuration;
+using Apps.Chatbot.Conversation;
+using Apps.Chatbot.Agent;
+using Apps.Chatbot.DomainModels;
+using Apps.Chatbot.DmServices;
 
 namespace Apps.WeChat
 {

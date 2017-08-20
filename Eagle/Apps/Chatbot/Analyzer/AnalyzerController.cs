@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Core;
-using Apps.Chatbot_ConversationParameters.DomainModels;
-using Apps.Chatbot_ConversationParameters.DmServices;
+using Apps.Chatbot.DomainModels;
+using Apps.Chatbot.DmServices;
 using Enyim.Caching;
 using Microsoft.AspNetCore.Authorization;
+using Apps.Chatbot.Intent;
 
-namespace Apps.Chatbot_ConversationParameters.Analyzer
+namespace Apps.Chatbot.Analyzer
 {
     public class AnalyzerController : CoreController
     {

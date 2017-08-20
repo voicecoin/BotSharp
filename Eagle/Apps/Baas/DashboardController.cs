@@ -1,7 +1,4 @@
-﻿using Apps.Chatbot_ConversationParameters.Agent;
-using Apps.Chatbot_ConversationParameters.Entity;
-using Apps.Chatbot_ConversationParameters.Intent;
-using Core;
+﻿using Core;
 using Core.Account;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Enyim.Caching;
+using Apps.Chatbot.Agent;
+using Apps.Chatbot.Entity;
+using Apps.Chatbot.Intent;
 
 namespace Apps.Baas
 {

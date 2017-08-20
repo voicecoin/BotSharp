@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Newtonsoft.Json;
 using Core.Interfaces;
-using Apps.Chatbot_ConversationParameters.DomainModels;
-using Apps.Chatbot_ConversationParameters.DmServices;
+using Apps.Chatbot.DomainModels;
+using Apps.Chatbot.DmServices;
 using Core;
-using Apps.Chatbot_ConversationParameters.Intent;
-using Apps.Chatbot_ConversationParameters.Entity;
+using Apps.Chatbot.Intent;
+using Apps.Chatbot.Entity;
 using Core.DomainModels;
 using Core.Bundle;
 
-namespace Apps.Chatbot_ConversationParameters.Agent
+namespace Apps.Chatbot.Agent
 {
     public class Hooks : IHookDbInitializer
     {
@@ -26,6 +26,8 @@ namespace Apps.Chatbot_ConversationParameters.Agent
             dm.AddEntity();
 
             InitAgent(env, dc);
+
+            InitAlignements(env, dc);
         }
 
         private static void InitAgent(IHostingEnvironment env, CoreDbContext context)
@@ -44,6 +46,17 @@ namespace Apps.Chatbot_ConversationParameters.Agent
                 BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
                 dm.Add();
             });
+        }
+
+        private static void InitAlignements(IHostingEnvironment env, CoreDbContext context)
+        {
+            var dm = new DomainModel<AgentAlignmentEntity>(context, new AgentAlignmentEntity
+            {
+                AgentId = "6dfd6dc6-2d63-408a-89cf-ee8ccef24c79",
+                AllyId = "1cfb40a9-c26d-4ffd-9a05-186d33ea36e9"
+            });
+
+            dm.AddEntity();
         }
 
         private static DmEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)

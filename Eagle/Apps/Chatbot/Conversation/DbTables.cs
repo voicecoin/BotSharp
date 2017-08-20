@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot_ConversationParameters.Conversation
+namespace Apps.Chatbot.Conversation
 {
     [Table("Chatbot_Conversations")]
     public class ConversationEntity : DbRecord, IDbRecord4SqlServer

@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot_ConversationParameters.Agent
+namespace Apps.Chatbot.Agent
 {
     [Table("Chatbot_Agents")]
     public class AgentEntity : BundleDbRecord, IDbRecord4SqlServer
@@ -48,5 +48,19 @@ namespace Apps.Chatbot_ConversationParameters.Agent
         {
             return dc.Table<AgentEntity>().Any(x => x.Name == Name || x.Id == Id);
         }
+    }
+
+    /// <summary>
+    /// 机器人结盟，赋予一个机器人具有跟其它机器人一样的能力。
+    /// </summary>
+    [Table("Chatbot_AgentAlignments")]
+    public class AgentAlignmentEntity : DbRecord, IDbRecord4SqlServer
+    {
+        [Required]
+        [StringLength(36)]
+        public String AgentId { get; set; }
+        [Required]
+        [StringLength(36)]
+        public String AllyId { get; set; }
     }
 }

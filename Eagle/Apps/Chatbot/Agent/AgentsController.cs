@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Core;
-using Apps.Chatbot_ConversationParameters.DomainModels;
+using Apps.Chatbot.DomainModels;
 using Utility;
 using Core.Interfaces;
-using Apps.Chatbot_ConversationParameters.DmServices;
+using Apps.Chatbot.DmServices;
 using Enyim.Caching;
 using System.Collections.Generic;
 using Core.Enums;
 
-namespace Apps.Chatbot_ConversationParameters.Agent
+namespace Apps.Chatbot.Agent
 {
     public class AgentsController : CoreController
     {

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Apps.Chatbot.Intent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot_ConversationParameters.DomainModels
+namespace Apps.Chatbot.DomainModels
 {
     public class DmDeepParsed
     {

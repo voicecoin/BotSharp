@@ -1,9 +1,8 @@
 ﻿{
-  "id": "05d22cbf-c788-4413-bf83-d16bcbc77d",
+  "id": "bfde378d-fdd1-450a-8346-5c8721d41dc0",
   "keyword": "天气",
   "userSays": [
     {
-      "id": "47fd3985-1b19-45bc-9632-74288016d3cc",
       "text": "天气",
       "data": [
         {
@@ -12,7 +11,6 @@
       ]
     },
     {
-      "id": "fc09bf3c-0e9b-4a32-9d68-922d2a55f8d6",
       "text": "今日首都天气怎么样",
       "data": [
         {
@@ -37,7 +35,6 @@
   ],
   "responses": [
     {
-      "id": "c3a79334-49ed-4206-9b87-a93a0295db9d",
       "action": "query.weather",
       "affectedContexts": [
         {

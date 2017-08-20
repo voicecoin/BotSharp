@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Apps.Chatbot_ConversationParameters.Conversation
+namespace Apps.Chatbot.Conversation
 {
     public enum ContentAttachmentType
     {
