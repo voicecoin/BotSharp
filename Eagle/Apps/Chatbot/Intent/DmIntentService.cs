@@ -125,14 +125,14 @@ namespace Apps.Chatbot.Intent
             {
                 userSay.IntentId = intentModel.Entity.Id;
                 var dm = new DomainModel<IntentExpressionEntity>(intentModel.Dc, userSay);
-                dm.Add();
+                dm.AddEntity();
             });
 
             intentModel.Entity.Responses.ForEach(response =>
             {
                 response.IntentId = intentModel.Entity.Id;
                 var dm = new DomainModel<IntentResponseEntity>(intentModel.Dc, response);
-                dm.Add();
+                dm.AddEntity();
             });
 
             return true;

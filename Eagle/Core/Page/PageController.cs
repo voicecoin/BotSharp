@@ -27,12 +27,11 @@ namespace Core.Page
             return new DmPageResult<PageEntity>() { Page = page }.LoadDataByPage(query);
         }
 
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         [HttpGet("Paths")]
         public IEnumerable<Object> GetPagePaths(string name, [FromQuery] int page = 1, [FromServices] IMemcachedClient memcachedClient = null)
         {
             dc.MemcachedClient = memcachedClient;
-            dc.SetCache("dsafsd", "dfasdf");
 
             var query = dc.Table<PageEntity>().AsQueryable();
             if (!String.IsNullOrEmpty(name))
@@ -41,7 +40,7 @@ namespace Core.Page
             }
 
             return new DmPageResult<PageEntity>() { Page = page }.LoadDataByPage(query).Items.Select(x => new { PageId = x.Id, Path = x.UrlPath });
-        }
+        }*/
 
         // GET: api/Page/1
         [HttpGet("{id}")]
@@ -61,10 +60,10 @@ namespace Core.Page
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate
+            dc.Transaction<IDbRecord4Core>(delegate
             {
                 var dm = new DomainModel<PageEntity>(dc, pageEntity);
-                dm.Add();
+                DmPageService.Add(dm);
             });
             
             return CreatedAtAction("GetPage", new { id = pageEntity.Id }, pageEntity.Id);

@@ -26,11 +26,14 @@ namespace Eagle
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddJsonFile("authsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"authsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("schedulersettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"schedulersettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
             CoreController.Configuration = Configuration;
             CoreDbContext.Configuration = Configuration;
+            CoreDbContext.Env = env;
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -44,7 +47,11 @@ namespace Eagle
 
             services.AddAuthentication();
 
-            services.AddEnyimMemcached(options => Configuration.GetSection("enyimMemcached").Bind(options));
+            bool enableMemcached = bool.Parse(Configuration.GetSection("enyimMemcached:Enable").Value);
+            if (enableMemcached)
+            {
+                services.AddEnyimMemcached(options => Configuration.GetSection("enyimMemcached").Bind(options));
+            }
 
             // Add framework services.
             services.AddMvc(options =>
@@ -69,7 +76,11 @@ namespace Eagle
 
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
-            app.UseEnyimMemcached();
+            bool enableMemcached = bool.Parse(Configuration.GetSection("enyimMemcached:Enable").Value);
+            if (enableMemcached)
+            {
+                app.UseEnyimMemcached();
+            }
 
             ConfigureAuth(app);
 
@@ -96,6 +107,7 @@ namespace Eagle
 
             InitializationLoader loader = new InitializationLoader();
             loader.Env = env;
+            loader.config = Configuration;
             loader.Load();
         }
     }

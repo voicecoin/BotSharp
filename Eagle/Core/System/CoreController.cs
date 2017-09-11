@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utility;
 
 namespace Core
 {
@@ -31,11 +33,16 @@ namespace Core
             dc.InitDb();
         }
 
-        protected DmAccount GetCurrentUser()
+        protected String GetConfig(string path)
+        {
+            return Configuration.GetSection(path).Value;
+        }
+
+        protected UserEntity GetCurrentUser()
         {
             if (this.User != null)
             {
-                return new DmAccount
+                return new UserEntity
                 {
                     Id = this.User.Claims.First(x => x.Type.Equals("UserId")).Value,
                     UserName = this.User.Identity.Name
@@ -43,7 +50,7 @@ namespace Core
             }
             else
             {
-                return new DmAccount
+                return new UserEntity
                 {
                     Id = Guid.Empty.ToString(),
                     UserName = "Anonymous"

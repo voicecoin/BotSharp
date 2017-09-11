@@ -11,8 +11,8 @@ using Apps.Chatbot.DmServices;
 using Core;
 using Apps.Chatbot.Intent;
 using Apps.Chatbot.Entity;
-using Core.DomainModels;
 using Core.Bundle;
+using Microsoft.Extensions.Configuration;
 
 namespace Apps.Chatbot.Agent
 {
@@ -20,7 +20,7 @@ namespace Apps.Chatbot.Agent
     {
         public int Priority => 100;
 
-        public void Load(IHostingEnvironment env, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
         {
             var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "Chatbot Agent", EntityName = "Agent" });
             dm.AddEntity();
@@ -44,22 +44,22 @@ namespace Apps.Chatbot.Agent
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
                 BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
-                dm.Add();
+                dm.AddEntity();
             });
         }
 
         private static void InitAlignements(IHostingEnvironment env, CoreDbContext context)
         {
-            var dm = new DomainModel<AgentAlignmentEntity>(context, new AgentAlignmentEntity
+            var dm = new DomainModel<AgentSkillEntity>(context, new AgentSkillEntity
             {
                 AgentId = "6dfd6dc6-2d63-408a-89cf-ee8ccef24c79",
-                AllyId = "1cfb40a9-c26d-4ffd-9a05-186d33ea36e9"
+                SkillId = "1cfb40a9-c26d-4ffd-9a05-186d33ea36e9"
             });
 
             dm.AddEntity();
         }
 
-        private static DmEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)
+        private static EntityEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)
         {
             string json;
             using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities\\{name}.json"))
@@ -67,7 +67,7 @@ namespace Apps.Chatbot.Agent
                 json = SourceReader.ReadToEnd();
             }
 
-            return JsonConvert.DeserializeObject<DmEntity>(json);
+            return JsonConvert.DeserializeObject<EntityEntity>(json);
         }
 
         private static T LoadJson<T>(IHostingEnvironment env, string fileName)

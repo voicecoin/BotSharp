@@ -11,9 +11,9 @@ using Apps.Chatbot.DmServices;
 using Core;
 using Apps.Chatbot.Intent;
 using Apps.Chatbot.Entity;
-using Core.DomainModels;
 using Core.Bundle;
 using Apps.Chatbot.Agent;
+using Microsoft.Extensions.Configuration;
 
 namespace Apps.Chatbot.Entity
 {
@@ -21,7 +21,7 @@ namespace Apps.Chatbot.Entity
     {
         public int Priority => 110;
 
-        public void Load(IHostingEnvironment env, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
         {
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
@@ -48,7 +48,7 @@ namespace Apps.Chatbot.Entity
                 if (context.Table<EntityEntity>().Count(x => x.Name == entityName) == 0)
                 {
                     // add entity
-                    DmEntity entity = LoadEntityFromJsonFile(env, agent, entityName);
+                    EntityEntity entity = LoadEntityFromJsonFile(env, agent, entityName);
                     entity.AgentId = agent.Id;
                     entity.Name = entityName;
                     entity.Add(context);
@@ -56,7 +56,7 @@ namespace Apps.Chatbot.Entity
             });
         }
 
-        private static DmEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)
+        private static EntityEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)
         {
             string json;
             using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities\\{name}.json"))
@@ -64,7 +64,7 @@ namespace Apps.Chatbot.Entity
                 json = SourceReader.ReadToEnd();
             }
 
-            return JsonConvert.DeserializeObject<DmEntity>(json);
+            return JsonConvert.DeserializeObject<EntityEntity>(json);
         }
 
         private static T LoadJson<T>(IHostingEnvironment env, string fileName)

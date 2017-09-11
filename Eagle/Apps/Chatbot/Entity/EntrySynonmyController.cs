@@ -23,7 +23,7 @@ namespace Apps.Chatbot.Entity
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
                 dm.AddEntity();
             });
 
@@ -44,7 +44,7 @@ namespace Apps.Chatbot.Entity
                 return NotFound();
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
                 dc.Table<EntityEntrySynonymEntity>().Remove(entitySynonym);
             });
 

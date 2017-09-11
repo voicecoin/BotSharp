@@ -7,13 +7,14 @@ using Core.Interfaces;
 using Core.Account;
 using Core;
 using Core.Bundle;
+using Microsoft.Extensions.Configuration;
 
 namespace Apps.Baas
 {
     public class Hooks : IHookDbInitializer
     {
         public int Priority => 999;
-        public void Load(IHostingEnvironment env, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
         {
             var dm = new BundleDomainModel<UserEntity>(dc, new UserEntity
             {
@@ -23,6 +24,18 @@ namespace Apps.Baas
                 LastName = "Bot",
                 Email = "info@yaya.ai",
                 Password = "Yayabot123",
+                Description = "丫丫人工智能聊天机器人"
+            });
+            dm.AddEntity();
+
+            dm = new BundleDomainModel<UserEntity>(dc, new UserEntity
+            {
+                Id = "811b7ab8-759e-4914-8e3b-a8deca878165",
+                UserName = "guest@yaya.ai",
+                FirstName = "Yaya",
+                LastName = "Guest",
+                Email = "guest@yaya.ai",
+                Password = "yaya123",
                 Description = "丫丫人工智能聊天机器人"
             });
             dm.AddEntity();

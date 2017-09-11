@@ -91,7 +91,14 @@ namespace Utility
 
                 String result = Task.Run(() => response.Content.ReadAsStringAsync()).Result;
 
-                return JsonConvert.DeserializeObject<T>(result);
+                if (response.Content.Headers.ContentType.MediaType == "text/html")
+                {
+                    return (T)(result as object);
+                }
+                else
+                {
+                    return JsonConvert.DeserializeObject<T>(result);
+                }
             }
         }
 

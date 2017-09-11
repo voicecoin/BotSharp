@@ -1,10 +1,11 @@
 ﻿{
   "id": "1cfb40a9-c26d-4ffd-9a05-186d33ea36e9",
-  "name": "天气机器人",
-  "description": "回答天气相关问题",
+  "name": "天气查询",
+  "description": "回答天气相关问题的机器人",
   "createdUserId": "8a9fd693-9038-4083-87f7-08e45eff61d2",
   "clientAccessToken": "9388e0bec19e4afe91ba030cf32015a8",
   "developerAccessToken": "3e2447c5911843dc9d0580c6ffcdcdb4",
   "isPublic": "True",
-  "language": "zh-cn"
+  "language": "zh-cn",
+  "allowAlly": "True"
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Intent
 {
     [Table("Chatbot_Intents")]
-    public class IntentEntity : DbRecord, IDbRecord4SqlServer
+    public class IntentEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -53,7 +53,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentExpressions")]
-    public class IntentExpressionEntity : DbRecord, IDbRecord4SqlServer
+    public class IntentExpressionEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -73,6 +73,7 @@ namespace Apps.Chatbot.Intent
         public String DataJson { get; set; }
         [NotMapped]
         public List<DmIntentExpressionItem> Data { get; set; }
+        public Boolean AllowOverrideData { get; set; }
 
         /// <summary>
         /// for frontend flag
@@ -87,7 +88,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentResponses")]
-    public class IntentResponseEntity : DbRecord, IDbRecord4SqlServer
+    public class IntentResponseEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -114,7 +115,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentResponseMessages")]
-    public class IntentResponseMessageEntity : DbRecord, IDbRecord4SqlServer
+    public class IntentResponseMessageEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -135,7 +136,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentResponseParameters")]
-    public class IntentResponseParameterEntity : DbRecord, IDbRecord4SqlServer
+    public class IntentResponseParameterEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]

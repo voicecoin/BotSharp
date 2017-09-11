@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DomainModels;
 
 namespace Core.Node
 {
@@ -11,7 +10,6 @@ namespace Core.Node
     {
         public MapperProfile()
         {
-            CreateMap<DmNode, NodeEntity>().ReverseMap();
         }
     }
 }

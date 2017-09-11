@@ -12,4 +12,11 @@ namespace Core.View
         Html = 3,
         List = 4
     }
+
+    public enum DataContainer
+    {
+        Empty = 0,
+        SeflHost = 1,
+        RestApi = 2
+    }
 }

@@ -10,6 +10,7 @@ using Apps.Chatbot.DmServices;
 using Core;
 using Core.Bundle;
 using Apps.Chatbot.Agent;
+using Microsoft.Extensions.Configuration;
 
 namespace Apps.Chatbot.Intent
 {
@@ -17,7 +18,7 @@ namespace Apps.Chatbot.Intent
     {
         public int Priority => 120;
 
-        public void Load(IHostingEnvironment env, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
         {
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
@@ -43,11 +44,13 @@ namespace Apps.Chatbot.Intent
             intentNames.ForEach(intentName =>
             {
                 // Intent
-                var intentModel = LoadJson<IntentEntity>(env, $"{agent.Name}\\Intents\\{intentName}");
-                intentModel.AgentId = agent.Id;
-                intentModel.Name = intentName;
+                var intentModels = LoadJson<List<IntentEntity>>(env, $"{agent.Name}\\Intents\\{intentName}");
+                intentModels.ForEach(intentModel => {
+                    intentModel.AgentId = agent.Id;
+                    intentModel.Name = intentName;
 
-                new DomainModel<IntentEntity>(context, intentModel).Add();
+                    new DomainModel<IntentEntity>(context, intentModel).Add();
+                });
             });
         }
 

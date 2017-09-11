@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Core;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Apps.Chatbot.Integration
 {
@@ -11,7 +12,7 @@ namespace Apps.Chatbot.Integration
     {
         public int Priority => 101;
 
-        public void Load(IHostingEnvironment env, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
         {
             var dm = new DomainModel<AgentPlatformEntity>(dc,
                 new AgentPlatformEntity

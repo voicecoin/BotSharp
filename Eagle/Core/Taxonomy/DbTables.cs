@@ -10,20 +10,17 @@ using Core.Interfaces;
 namespace Core.Taxonomy
 {
     [Table("Taxonomies")]
-    public class TaxonomyEntity : DbRecord, IDbRecord4SqlServer
+    public class TaxonomyEntity : BundleDbRecord, IBundlable, IDbRecord4Core
     {
-        [Required]
-        public string BundleId { get; set; }
-
         [MaxLength(512, ErrorMessage = "Description cannot be longer than 512 characters.")]
         public String Description { get; set; }
     }
 
     [Table("TaxonomyTerms")]
-    public class TaxonomyTermEntity : DbRecord, IDbRecord4SqlServer
+    public class TaxonomyTermEntity : DbRecord, IDbRecord4Core
     {
         [Required]
-        [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
+        [MaxLength(50, ErrorMessage = "Taxonomy Term Name cannot be longer than 50 characters.")]
         public String Name { get; set; }
         [Required]
         public string TaxonomyId { get; set; }

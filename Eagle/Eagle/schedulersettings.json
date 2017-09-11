@@ -1,0 +1,9 @@
+﻿{
+  "Scheduler": {
+    "Enable": true,
+    "Crons": {
+      "TestJob": "0 0/1 * * * ?",
+      "CorpusPosJob": "0 0/1 * * * ?"
+    }
+  }
+}

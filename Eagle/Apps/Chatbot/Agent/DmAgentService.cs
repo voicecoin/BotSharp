@@ -17,9 +17,17 @@ namespace Apps.Chatbot.DmServices
     {
         public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc, String nerUrl)
         {
+            // Remove Stop word.
+            agentRequestModel.Text = agentRequestModel.Text.Replace("？", "");
+            agentRequestModel.Text = agentRequestModel.Text.Replace("?", "");
+
+            // Get 机器人技能
+            List<String> allyIds = dc.Table<AgentSkillEntity>().Where(x => x.AgentId == agentRequestModel.Agent.Id).Select(x => x.SkillId).ToList();
+            allyIds.Add(agentRequestModel.Agent.Id);
+
             var queryable = from intent1 in dc.Table<IntentEntity>()
                             join exp in dc.Table<IntentExpressionEntity>() on intent1.Id equals exp.IntentId
-                            where intent1.AgentId == agentRequestModel.Agent.Id //|| intent.AgentId == Constants.GenesisAgentId
+                            where allyIds.Contains(intent1.AgentId)
                             select exp;
 
             // NLP PIPLINE
@@ -28,18 +36,8 @@ namespace Apps.Chatbot.DmServices
             var expressions = queryable.ToList();
             List<String> corpus = expressions.Select(x => x.Text).ToList();
 
-            // 加入会话关键词作为输入
-            var keywords = dc.Table<ConversationEntity>().Where(x => x.Id == agentRequestModel.ConversationId && !agentRequestModel.Text.Contains(x.Keyword)).OrderBy(x => x.CreatedDate).Select(x => x.Keyword).ToList();
-            string keywordsForInput = String.Join(" ", keywords.ToArray());
-
-            // 加入空格，提高NLPIR的实体识别能力
-            if (!String.IsNullOrEmpty(keywordsForInput))
-            {
-                keywordsForInput += " ";
-            }
-
             // 传入句子先分词
-            DmAgentRequest agentRequestModel1 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = keywordsForInput + agentRequestModel.Text };
+            DmAgentRequest agentRequestModel1 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = agentRequestModel.Text };
             var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
             requestedTextSplitted = requestedTextSplitted.Where(x => !String.IsNullOrEmpty(x.Trim())).ToList();
 
@@ -53,7 +51,7 @@ namespace Apps.Chatbot.DmServices
                 IntentExpressionEntity model = expression.Map<IntentExpressionEntity>();
                 // 计算出相似度
                 model.Similarity = CompareSimilarity(corpus, requestedTextSplitted, comparedTextSplitted);
-                if (model.Similarity > 0.5)
+                if (model.Similarity > 0.6)
                 {
                     similarities.Add(model);
                 }
@@ -102,9 +100,8 @@ namespace Apps.Chatbot.DmServices
             }
 
             // 保存聊天记录
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
                 var conversation = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
-                conversation.Keyword = keyword;
             });
 
             return response;
@@ -167,6 +164,7 @@ namespace Apps.Chatbot.DmServices
         public static bool Add(this BundleDomainModel<AgentEntity> dmAgent)
         {
             dmAgent.Entity.Language = "zh-cn";
+
 
             if (String.IsNullOrEmpty(dmAgent.Entity.ClientAccessToken))
             {

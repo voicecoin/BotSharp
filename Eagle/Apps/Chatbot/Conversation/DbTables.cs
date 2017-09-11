@@ -12,20 +12,20 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Conversation
 {
     [Table("Chatbot_Conversations")]
-    public class ConversationEntity : DbRecord, IDbRecord4SqlServer
+    public class ConversationEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
         public String AgentId { get; set; }
         /// <summary>
-        /// 关键词, 从本次会话Text里提取的关键词，用于作更准备的意图识别。是不是可以用Context来代替？
+        /// 对话当前的意图
         /// </summary>
-        [MaxLength(32)]
-        public String Keyword { get; set; }
+        [StringLength(36)]
+        public String IntentId { get; set; }
     }
 
     [Table("Chatbot_ConversationMessages")]
-    public class ConversationMessageEntity : DbRecord, IDbRecord4SqlServer
+    public class ConversationMessageEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -40,7 +40,7 @@ namespace Apps.Chatbot.Conversation
     }
 
     [Table("Chatbot_ConversationParameters")]
-    public class ConversationParameterEntity : DbRecord, IDbRecord4SqlServer
+    public class ConversationParameterEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]

@@ -12,8 +12,6 @@ namespace Apps.Chatbot
     {
         public MapperProfile()
         {
-            CreateMap<EntityEntity, DmEntity>().ReverseMap();
-            CreateMap<EntityEntryEntity, DmEntityEntry>().ReverseMap();
         }
     }
 }

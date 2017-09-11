@@ -61,7 +61,7 @@ namespace Apps.WeChat
             var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentRecord.Id && x.CreatedUserId == dc.CurrentUser.Id);
             if (conversation == null)
             {
-                dc.Transaction<IDbRecord4SqlServer>(delegate
+                dc.Transaction<IDbRecord4Core>(delegate
                 {
                     var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
                     {

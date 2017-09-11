@@ -1,0 +1,73 @@
+﻿[
+  {
+    "id": "bfde378d-fdd1-450a-8346-5c8721d41dc0",
+    "keyword": "天气",
+    "userSays": [
+      {
+        "text": "天气",
+        "data": [
+          {
+            "text": "天气"
+          }
+        ]
+      },
+      {
+        "text": "今日首都天气怎么样",
+        "data": [
+          {
+            "text": "今日",
+            "alias": "day",
+            "meta": "@时间词",
+            "color": "#83EE1F",
+            "value": "今天"
+          },
+          {
+            "text": "首都",
+            "alias": "area",
+            "meta": "@地名",
+            "color": "#E3DF00",
+            "value": "北京"
+          },
+          {
+            "text": "天气怎么样"
+          }
+        ]
+      }
+    ],
+    "responses": [
+      {
+        "action": "query.weather",
+        "affectedContexts": [
+          {
+            "name": "Weather",
+            "lifespan": 5
+          }
+        ],
+        "messages": [
+          {
+            "speeches": [ "{$time}{$place}的天气还不错。", "等我问下{$place}气象局，我表哥在那里上班。" ],
+            "type": 0
+          }
+        ],
+        "parameters": [
+          {
+            "name": "time",
+            "dataType": "@时间词",
+            "required": true,
+            "prompts": [ "你想问什么时候的？" ],
+            "value": "$time",
+            "defaultValue": "今天"
+          },
+          {
+            "name": "place",
+            "dataType": "@地名",
+            "required": true,
+            "prompts": [ "你是问什么地方的？" ],
+            "value": "$place",
+            "defaultValue": "北京"
+          }
+        ]
+      }
+    ]
+  }
+]

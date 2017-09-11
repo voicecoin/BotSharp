@@ -10,7 +10,7 @@ using Utility;
 
 namespace Core
 {
-    [Route("db")]
+    [Route("api")]
     public class DbFactoryController : CoreController
     {
         private List<Type> GetTypes()
@@ -78,7 +78,7 @@ namespace Core
                 return BadRequest();
             }
 
-            int ret = dc.Transaction<IDbRecord4SqlServer>(delegate
+            int ret = dc.Transaction<IDbRecord4Core>(delegate
             {
                 var data = dc.Find(tableType, id);
 
@@ -139,7 +139,7 @@ namespace Core
                 return BadRequest();
             }
 
-            int ret = dc.Transaction<IDbRecord4SqlServer>(delegate
+            int ret = dc.Transaction<IDbRecord4Core>(delegate
             {
                 var data = dc.Find(tableType, id);
                 data.SetValue(model.Field, model.Value);

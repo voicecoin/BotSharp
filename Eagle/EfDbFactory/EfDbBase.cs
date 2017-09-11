@@ -43,6 +43,8 @@ namespace DataFactory
             bind.EntityTypeList = GetAllEntityTypes(bind).ToList();
 
             DbContextBinds.Add(bind);
+
+            GetMaster(bind.EntityBaseType).Database.EnsureCreated();
         }
 
         private EfDbContext GetMaster(Type entityType)
@@ -58,11 +60,6 @@ namespace DataFactory
             }
 
             return binding.DbContextMaster;
-        }
-
-        public bool EnsureCreated(Type type)
-        {
-            return GetMaster(type).Database.EnsureCreated();
         }
 
         private EfDbContext GetReader(Type entityType)

@@ -85,7 +85,7 @@ namespace Apps.Chatbot.Intent
                 return BadRequest("Id is not match");
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate
+            dc.Transaction<IDbRecord4Core>(delegate
             {
                 new DomainModel<IntentEntity>(dc, intentModel).Update();
             });
@@ -99,10 +99,10 @@ namespace Apps.Chatbot.Intent
         {
             bool result = false;
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate
+            dc.Transaction<IDbRecord4Core>(delegate
             {
                 intentEntity.AgentId = agentId;
-                result = new DomainModel<IntentEntity>(dc, intentEntity).Add();
+                result = new DomainModel<IntentEntity>(dc, intentEntity).AddEntity();
             });
 
             if (result)
@@ -153,7 +153,7 @@ namespace Apps.Chatbot.Intent
                 Value = x.Value
             }).OrderBy(x => x.Position).ToList();
 
-            var userSay = new IntentExpressionEntity() { Text = text, Data = data,  };
+            var userSay = new IntentExpressionEntity() { Text = text, Data = data};
 
             return userSay;
         }

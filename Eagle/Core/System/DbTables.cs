@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Enums;
 using Core.Interfaces;
+using Core.Node;
+using Core.Bundle;
 
 namespace Core
 {
@@ -64,9 +66,6 @@ namespace Core
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public String Id { get; set; }
 
-        /// <summary>
-        /// 系统级实体状态
-        /// </summary>
         public EntityStatus Status { get; set; }
 
         /// <summary>
@@ -109,6 +108,36 @@ namespace Core
         {
             Type type = typeof(T);
             return type.Name.Substring(0, type.Name.Length - 6);
+        }
+
+        [NotMapped]
+        public List<DmFieldRecord> FieldRecords { get; set; }
+        public IQueryable<NodeTextFieldEntity> LoadTextFields(CoreDbContext dc)
+        {
+            var query = from bundleField in dc.Table<BundleFieldEntity>()
+                        join textField in dc.Table<NodeTextFieldEntity>() on bundleField.Id equals textField.BundleFieldId
+                        where bundleField.BundleId == BundleId
+                            && bundleField.FieldTypeId.Equals(FieldTypes.Text)
+                            && textField.EntityId == Id
+                        select textField;
+
+            string sql = query.ToString();
+
+            return query;
+        }
+
+        public void LoadFieldRecords(CoreDbContext dc)
+        {
+            var FieldRecords = new List<object>();
+            dc.Table<BundleFieldEntity>().Where(x => x.BundleId == BundleId).ToList().ForEach(field =>
+            {
+                switch (field.FieldTypeId)
+                {
+                    case FieldTypes.Text:
+                        FieldRecords.AddRange(dc.Table<NodeTextFieldEntity>().Where(x => x.BundleFieldId == field.Id));
+                        break;
+                }
+            });
         }
     }
 }

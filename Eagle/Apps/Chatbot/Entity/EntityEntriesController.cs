@@ -18,7 +18,7 @@ namespace Apps.Chatbot.Entity
     {
         // GET: v1/EntityEntries
         [HttpGet("{entityId}/Query")]
-        public DmPageResult<DmEntityEntry> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
+        public DmPageResult<EntityEntryEntity> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<EntityEntryEntity>().Where(x => x.EntityId == entityId);
             if (!String.IsNullOrEmpty(name))
@@ -28,7 +28,7 @@ namespace Apps.Chatbot.Entity
 
             var total = query.Count();
 
-            var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<DmEntityEntry>()).ToList();
+            var items = query.Skip((page - 1) * size).Take(size).ToList();
 
             var synonyms = (from synonym in dc.Table<EntityEntrySynonymEntity>()
                          where items.Select(x => x.Id).Contains(synonym.EntityEntryId)
@@ -38,7 +38,7 @@ namespace Apps.Chatbot.Entity
                 item.Synonyms = synonyms.Where(x => x.EntityEntryId == item.Id).Select(x => x.Synonym);
             });
 
-            return new DmPageResult<DmEntityEntry> { Total = total, Page = page, Size = size, Items = items };
+            return new DmPageResult<EntityEntryEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/EntityEntries/5
@@ -62,7 +62,7 @@ namespace Apps.Chatbot.Entity
 
         // PUT: api/EntityEntries/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEntityEntries([FromRoute] string id, [FromBody] DmEntityEntry entityEntryModel)
+        public async Task<IActionResult> PutEntityEntries([FromRoute] string id, [FromBody] EntityEntryEntity entityEntryModel)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace Apps.Chatbot.Entity
                 return BadRequest();
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
                 entityEntryModel.Update(dc);
             });
 
@@ -83,14 +83,14 @@ namespace Apps.Chatbot.Entity
 
         // POST: api/EntityEntries
         [HttpPost("{entityId}")]
-        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] DmEntityEntry entityEntryModel)
+        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] EntityEntryEntity entityEntryModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
                 entityEntryModel.EntityId = entityId;
                 entityEntryModel.Add(dc);
             });
@@ -113,8 +113,8 @@ namespace Apps.Chatbot.Entity
                 return NotFound();
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
-                entityEntries.Map<DmEntityEntry>().Delete(dc);
+            dc.Transaction<IDbRecord4Core>(delegate {
+                entityEntries.Map<EntityEntryEntity>().Delete(dc);
             });
 
             return Ok(entityEntries.Id);

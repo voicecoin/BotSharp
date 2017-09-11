@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Core.Account
 {
     [Table("Users")]
-    public class UserEntity : BundleDbRecord, IDbRecord4SqlServer
+    public class UserEntity : BundleDbRecord, IBundlable, IDbRecord4Core
     {
         [Required]
         [StringLength(32)]
@@ -39,5 +39,13 @@ namespace Core.Account
         {
             return dc.Table<UserEntity>().Any(x => x.UserName == UserName);
         }
+    }
+
+    [Table("Roles")]
+    public class RoleEntity : DbRecord, IDbRecord4Core
+    {
+        [Required]
+        [StringLength(32)]
+        public String Name { get; set; }
     }
 }

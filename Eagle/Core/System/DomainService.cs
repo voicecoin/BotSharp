@@ -12,10 +12,10 @@ namespace Core
             int page = dmPage.Page;
             int size = dmPage.Size;
 
-            var total = query.Count();
-            var items = query.Skip((page - 1) * size).Take(size).ToList();
+            dmPage.Total = query.Count();
+            dmPage.Items = query.Skip((page - 1) * size).Take(size).ToList();
 
-            return new DmPageResult<T> { Total = total, Page = page, Size = size, Items = items };
+            return dmPage;
         }
 
     }

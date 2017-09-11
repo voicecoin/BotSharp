@@ -30,8 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="App_Data\天气机器人\Entities\" />
-    <Folder Include="App_Data\花灵溪\Entities\" />
+    <Folder Include="App_Data\天气查询\Entities\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

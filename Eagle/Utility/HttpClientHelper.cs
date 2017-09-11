@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Utility
 {
-    public static class HttpClientHelper
+    public class HttpClientHelper
     {
         public static CookieContainer CookieContainer = new CookieContainer();
         public static async Task<T> PostAsJsonAsync<T>(string host, string path, Object data)
@@ -25,6 +25,10 @@ namespace Utility
                     var stream = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<T>(stream);
                 }
+                else
+                {
+                    throw new Exception(response.StatusCode.ToString());
+                }
             }
 
             return default(T);
@@ -40,6 +44,10 @@ namespace Utility
                 {
                     var stream = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<T>(stream);
+                }
+                else
+                {
+                    throw new Exception(response.StatusCode.ToString());
                 }
             }
 

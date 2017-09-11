@@ -8,19 +8,17 @@ using Utility;
 using Core.Field;
 using Core.Interfaces;
 using Core.Account;
+using Microsoft.Extensions.Configuration;
 
 namespace Core
 {
     public class DbInitializer : IInitializationLoader
     {
-        public int Priority => 20;
-
-        public void Initialize(IHostingEnvironment env)
+        public void Initialize(IConfigurationRoot config, IHostingEnvironment env)
         {
             CoreDbContext dc = new CoreDbContext();
             dc.InitDb();
-            dc.CurrentUser = new DmAccount { Id = Constants.SystemUserId };
-            dc.EnsureCreated(typeof(UserEntity));
+            dc.CurrentUser = new UserEntity { Id = Constants.SystemUserId };
 
             // Amend table structure
             var dbTableAmends = TypeHelper.GetInstanceWithInterface<IDbTableAmend>("Core");
@@ -33,7 +31,7 @@ namespace Core
 
             // initial app db order by priority
             instances.OrderBy(x => x.Priority).ToList()
-                .ForEach(instance => dc.Transaction<IDbRecord4SqlServer>(() => instance.Load(env, dc)));
+                .ForEach(instance => dc.Transaction<IDbRecord4Core>(() => instance.Load(env, config, dc)));
 
             instances = TypeHelper.GetInstanceWithInterface<IHookDbInitializer>("Apps");
 
@@ -41,7 +39,7 @@ namespace Core
             instances.OrderBy(x => x.Priority).ToList()
                 .ForEach(instance =>
                 {
-                    dc.Transaction<IDbRecord4SqlServer>(() => instance.Load(env, dc));
+                    dc.Transaction<IDbRecord4Core>(() => instance.Load(env, config, dc));
                 });
         }
     }

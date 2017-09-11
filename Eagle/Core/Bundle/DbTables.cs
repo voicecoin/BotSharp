@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Core.Bundle
 {
     [Table("Bundles")]
-    public class BundleEntity : DbRecord, IDbRecord4SqlServer
+    public class BundleEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -27,7 +27,7 @@ namespace Core.Bundle
     }
 
     [Table("BundleFields")]
-    public class BundleFieldEntity : DbRecord, IDbRecord4SqlServer
+    public class BundleFieldEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -36,6 +36,8 @@ namespace Core.Bundle
         public string BundleId { get; set; }
         [Required]
         public FieldTypes FieldTypeId { get; set; }
+        public Boolean Required { get; set; }
+        public Boolean Hidden { get; set; }
 
         public override bool IsExist(CoreDbContext dc)
         {
@@ -44,7 +46,7 @@ namespace Core.Bundle
     }
 
     [Table("BundleFieldSettings")]
-    public class BundleFieldSettingEntity : DbRecord, IDbRecord4SqlServer
+    public class BundleFieldSettingEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

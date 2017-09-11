@@ -15,18 +15,12 @@ namespace Apps.Chatbot.Conversation
 {
     public class ConversationController : CoreController
     {
-        public ConversationController(IMemcachedClient memcachedClient)
-        {
-            dc.MemcachedClient = memcachedClient;
-        }
-
         [HttpGet("{conversationId}/Reset")]
         public void Reset(string conversationId)
         {
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
 
                 var conversation = dc.Table<ConversationEntity>().Find(conversationId);
-                conversation.Keyword = String.Empty;
 
                 dc.Table<ConversationParameterEntity>()
                     .RemoveRange(dc.Table<ConversationParameterEntity>()
@@ -50,7 +44,7 @@ namespace Apps.Chatbot.Conversation
             var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentId && x.CreatedUserId == dc.CurrentUser.Id);
             if (conversation == null)
             {
-                dc.Transaction<IDbRecord4SqlServer>(delegate
+                dc.Transaction<IDbRecord4Core>(delegate
                 {
                     var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
                     {

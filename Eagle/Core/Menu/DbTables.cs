@@ -8,7 +8,7 @@ using Core.Interfaces;
 
 namespace Core.Menu
 {
-    public class MenuEntity : DbRecord, IDbRecord4SqlServer
+    public class MenuEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

@@ -1,5 +1,6 @@
 ﻿using Core.Menu;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,7 @@ namespace Core.Interfaces
 {
     public interface IInitializationLoader
     {
-        int Priority { get; }
-        void Initialize(IHostingEnvironment env);
+        void Initialize(IConfigurationRoot config, IHostingEnvironment env);
     }
 
     /// <summary>
@@ -20,7 +20,8 @@ namespace Core.Interfaces
     {
         bool IsExist(CoreDbContext dc);
     }
-    public interface IDbRecord4SqlServer { }
+    public interface IDbRecord4Core { }
+    public interface IDbRecord4MySql { }
 
     /// <summary>
     /// Domain model, based on Domain-Driven Design concept.
@@ -46,7 +47,7 @@ namespace Core.Interfaces
         /// value smaller is higher priority
         /// </summary>
         int Priority { get; }
-        void Load(IHostingEnvironment env, CoreDbContext dc);
+        void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc);
     }
 
     public interface IDbTableAmend
@@ -57,5 +58,10 @@ namespace Core.Interfaces
     public interface IHookMenu
     {
         void UpdateMenu(List<VmMenu> menus, CoreDbContext dc);
+    }
+
+    public interface IEntityPermission
+    {
+
     }
 }

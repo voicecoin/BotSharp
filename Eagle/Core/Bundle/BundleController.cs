@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Core.Interfaces;
 
 namespace Core.Bundle
 {
@@ -55,15 +56,14 @@ namespace Core.Bundle
 
         // POST: api/Bundle
         [HttpPost]
-        public async Task<IActionResult> PostBundleEntity([FromBody] BundleEntity bundleEntity)
+        public IActionResult PostBundleEntity([FromBody] BundleEntity bundleEntity)
         {
-            bundleEntity.CreatedUserId = GetCurrentUser().Id;
-            bundleEntity.CreatedDate = DateTime.UtcNow;
-            bundleEntity.ModifiedUserId = GetCurrentUser().Id;
-            bundleEntity.ModifiedDate = DateTime.UtcNow;
-            
-            dc.Table<BundleEntity>().Add(bundleEntity);
-            dc.SaveChanges();
+            dc.CurrentUser = GetCurrentUser();
+            var dm = new DomainModel<BundleEntity>(dc, bundleEntity);
+
+            dc.Transaction<IDbRecord4Core>(delegate {
+                dm.Add(dc);
+            });
 
             return CreatedAtAction("GetBundleEntity", new { id = bundleEntity.Id }, bundleEntity);
         }

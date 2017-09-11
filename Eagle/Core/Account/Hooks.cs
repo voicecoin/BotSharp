@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Interfaces;
-using Core.DomainModels;
 using Core.Bundle;
 using Core.Menu;
 using Core.Page;
@@ -12,6 +11,7 @@ using Core.Block;
 using Core.View;
 using Newtonsoft.Json;
 using Core.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace Core.Account
 {
@@ -19,8 +19,10 @@ namespace Core.Account
     {
         public int Priority => 1000;
 
-        public void Load(IHostingEnvironment env, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
         {
+            InitRoles(dc);
+
             if (dc.Table<BundleEntity>().Any(x => x.EntityName == "User")) return;
 
             var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "User Profile", EntityName = "User" });
@@ -32,7 +34,8 @@ namespace Core.Account
                 Name = "Users",
                 RepresentType = RepresentType.Table,
                 Columns = new List<ViewColumEntity>(),
-                Actions = new List<ViewActionEntity>()
+                Actions = new List<ViewActionEntity>(),
+                DataContainer = DataContainer.SeflHost
             });
 
             dmView.Entity.Columns.AddRange(new List<ViewColumEntity> {
@@ -47,11 +50,12 @@ namespace Core.Account
 
             dmView.Entity.Actions.AddRange(
                 new List<ViewActionEntity> {
-                    new ViewActionEntity { Name = "Edit", RedirectUrl = "/Configuration/People/Profile" },
-                    new ViewActionEntity { Name = "Delete", RequestUrl = "/api/Account", RequestMethod = "DELETE" }
+                    new ViewActionEntity { Name = "Edit", RedirectUrl = "/Configuration/People/Profile/{id}" },
+                    new ViewActionEntity { Name = "Delete", RestApiPath = "/api/Account/{id}", RequestMethod = "DELETE" },
+                    new ViewActionEntity { Name = "Export", RedirectUrl = "/api/Account", IsViewLevel = true }
                 });
 
-            dmView.Add();
+            DmViewService.Add(dmView);
 
             var dmBlock = new DomainModel<BlockEntity>(dc, new BlockEntity
             {
@@ -72,7 +76,21 @@ namespace Core.Account
                 UrlPath = "Users",
                 Blocks = new List<BlockEntity> { dmBlock.Entity }
             });
-            dmPage.Add();
+            DmPageService.Add(dmPage);
+        }
+
+        private void InitRoles(CoreDbContext dc)
+        {
+            if (dc.Table<RoleEntity>().Count() > 0) return;
+
+            var dm = new DomainModel<RoleEntity>(dc, new RoleEntity { Name = "Anonymous" });
+            dm.AddEntity();
+
+            dm = new DomainModel<RoleEntity>(dc, new RoleEntity { Name = "Authenticated" });
+            dm.AddEntity();
+
+            dm = new DomainModel<RoleEntity>(dc, new RoleEntity { Name = "Administrator" });
+            dm.AddEntity();
         }
 
         public void UpdateMenu(List<VmMenu> menus, CoreDbContext dc)
@@ -83,19 +101,11 @@ namespace Core.Account
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Users",
-                Link = "/Shared/Page/" + dc.Table<PageEntity>().First(x => x.Name == "Users").Id
+                Link = "/Shared/Page/" + dc.Table<PageEntity>().First(x => x.Name == "Users").Id,
+                Icon = "person-stalker"
             };
 
             menu.Items.Add(userList);
-
-            var userProfile = new VmMenu
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "My Profile",
-                Link = "/Configuration/People/Profile"
-            };
-
-            menu.Items.Add(userProfile);
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Text;
 namespace Apps.Chatbot.Integration
 {
     [Table("Chatbot_AgentPlatforms")]
-    public class AgentPlatformEntity : DbRecord, IDbRecord4SqlServer
+    public class AgentPlatformEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -24,7 +24,7 @@ namespace Apps.Chatbot.Integration
 
         public override bool IsExist(CoreDbContext dc)
         {
-            return dc.Table<AgentPlatformEntity>().Any(x => x.Platform == Platform);
+            return dc.Table<AgentPlatformEntity>().Any(x =>　x.AgentId == AgentId && x.Platform == Platform);
         }
     }
 }

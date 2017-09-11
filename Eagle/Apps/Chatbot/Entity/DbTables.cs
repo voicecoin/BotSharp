@@ -15,7 +15,7 @@ namespace Apps.Chatbot.Entity
     /// 比如地名，时间，计量单位，机构名，品牌，职位，产品名
     /// </summary>
     [Table("Chatbot_Entities")]
-    public class EntityEntity : DbRecord, IDbRecord4SqlServer
+    public class EntityEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -40,6 +40,14 @@ namespace Apps.Chatbot.Entity
         {
             return dc.Table<EntityEntity>().Any(x => x.Name == Name);
         }
+
+        /// <summary>
+        /// 词条数量
+        /// </summary>
+        [NotMapped]
+        public int Count { get; set; }
+        [NotMapped]
+        public IEnumerable<EntityEntryEntity> Entries { get; set; }
     }
 
     /// <summary>
@@ -47,7 +55,7 @@ namespace Apps.Chatbot.Entity
     /// 比如“北京”，“上海”，这些属于地点。
     /// </summary>
     [Table("Chatbot_EntityEntries")]
-    public class EntityEntryEntity : DbRecord, IDbRecord4SqlServer
+    public class EntityEntryEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
@@ -56,6 +64,9 @@ namespace Apps.Chatbot.Entity
         [Required]
         [MaxLength(64)]
         public String Value { get; set; }
+
+        [NotMapped]
+        public IEnumerable<String> Synonyms { get; set; }
     }
 
     /// <summary>
@@ -75,7 +86,7 @@ namespace Apps.Chatbot.Entity
     /// 实体条目同义词
     /// </summary>
     [Table("Chatbot_EntityEntrySynonyms")]
-    public class EntityEntrySynonymEntity : DbRecord, IDbRecord4SqlServer
+    public class EntityEntrySynonymEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]

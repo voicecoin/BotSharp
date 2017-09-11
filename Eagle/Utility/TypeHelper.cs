@@ -69,7 +69,7 @@ namespace Utility
             List<Type> types = Assembly.Load(new AssemblyName(assemblyName))
                 .GetTypes().ToList();
 
-            types = types.Where(x => x.GetInterfaces().Contains(type)).ToList();
+            types = types.Where(x => !x.GetTypeInfo().IsAbstract && x.GetInterfaces().Contains(type)).ToList();
 
             return types;
         }

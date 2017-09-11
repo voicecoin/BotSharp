@@ -10,7 +10,10 @@ namespace Core.Account
 {
     public static class DmAccountService
     {
-
+        public static bool Add(this BundleDomainModel<UserEntity> userModel, CoreDbContext dc)
+        {
+            return userModel.AddEntity();
+        }
 
     }
 }

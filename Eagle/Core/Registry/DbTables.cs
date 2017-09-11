@@ -12,7 +12,7 @@ namespace Core.Registry
     /// System dictionary
     /// </summary>
     [Table("Registries")]
-    public class RegistryEntity : DbRecord, IDbRecord4SqlServer
+    public class RegistryEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -22,7 +22,7 @@ namespace Core.Registry
     }
 
     [Table("RegistryEntries")]
-    public class RegistryEntryEntity : DbRecord, IDbRecord4SqlServer
+    public class RegistryEntryEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

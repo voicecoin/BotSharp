@@ -1,26 +1,28 @@
-﻿{
-  "id": "ac6a43a9-22b1-4e55-b620-01e5abcc0acf",
-  "keyword": "名字",
-  "userSays": [
-    { "text": "你是谁" },
-    { "text": "你叫什么" },
-    { "text": "你叫啥" },
-    { "text": "你叫什么名字" },
-    { "text": "贵姓" },
-    { "text": "尊姓大名" },
-    { "text": "何许人也" }
-  ],
-  "responses": [
-    {
-      "action": "",
-      "messages": [
-        {
-          "speeches": [ "叫我{@agent.name}就可以了。", "我叫{@agent.name}。{@agent.description}。" ],
-          "type": 0
-        }
-      ],
-      "parameters": [
-      ]
-    }
-  ]
-}
+﻿[
+  {
+    "id": "ac6a43a9-22b1-4e55-b620-01e5abcc0acf",
+    "keyword": "名字",
+    "userSays": [
+      { "text": "你是谁" },
+      { "text": "你叫什么" },
+      { "text": "你叫啥" },
+      { "text": "你叫什么名字" },
+      { "text": "贵姓" },
+      { "text": "尊姓大名" },
+      { "text": "何许人也" }
+    ],
+    "responses": [
+      {
+        "action": "",
+        "messages": [
+          {
+            "speeches": [ "叫我{@agent.name}就可以了。", "我叫{@agent.name}。{@agent.description}。" ],
+            "type": 0
+          }
+        ],
+        "parameters": [
+        ]
+      }
+    ]
+  }
+]

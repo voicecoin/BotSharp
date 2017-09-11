@@ -29,7 +29,7 @@ namespace Apps.Chatbot.DmServices
             if (cache != null) return cache;
 
 
-            List <DmEntity> allEntities = dc.Table<EntityEntity>()/*.Where(x => x.AgentId == analyzerModel.Agent.Id || x.AgentId == Constants.GenesisAgentId)*/.Select(x => x.Map<DmEntity>()).ToList();
+            List <EntityEntity> allEntities = dc.Table<EntityEntity>()/*.Where(x => x.AgentId == analyzerModel.Agent.Id || x.AgentId == Constants.GenesisAgentId)*/.ToList();
 
             // 识别所有单元实体
             // 用Entry识别
@@ -146,28 +146,35 @@ namespace Apps.Chatbot.DmServices
             List<DmIntentExpressionItem> segments = new List<DmIntentExpressionItem>();
 
             // 把识别出的实体标准化
-            taggers.Where(x => !String.IsNullOrEmpty(x.Meta))
+            /*taggers.Where(x => !String.IsNullOrEmpty(x.Meta))
                 .ToList()
                 .ForEach(x => {
                     //x.Text = x.Alias;
                     segments.Add(x);
-                });
+                });*/
             
 
             // 分隔未识别的词，每个词分成字符。
-            taggers.Where(x => String.IsNullOrEmpty(x.Meta))
+            taggers
                 .ToList()
                 .ForEach(tag =>
                 {
-                    var chars = tag.Text.ToCharArray();
-                    for (int idx = 0; idx < chars.Length; idx++)
+                    if (String.IsNullOrEmpty(tag.Meta))
                     {
-                        segments.Add(new DmIntentExpressionItem
+                        var chars = tag.Text.ToCharArray();
+                        for (int idx = 0; idx < chars.Length; idx++)
                         {
-                            Position = tag.Position + idx,
-                            Length = 1,
-                            Text = chars[idx].ToString()
-                        });
+                            segments.Add(new DmIntentExpressionItem
+                            {
+                                Position = tag.Position + idx,
+                                Length = 1,
+                                Text = chars[idx].ToString()
+                            });
+                        }
+                    }
+                    else
+                    {
+                        segments.Add(tag);
                     }
                 });
 
@@ -209,7 +216,7 @@ namespace Apps.Chatbot.DmServices
                 // 把识别出的实体放入数据库
                 if (!String.IsNullOrEmpty(parameter.Value))
                 {
-                    dc.Transaction<IDbRecord4SqlServer>(delegate
+                    dc.Transaction<IDbRecord4Core>(delegate
                     {
                         var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == agentRequestModel.ConversationId && x.Name == parameter.Name);
                         if (existedParameter == null)

@@ -1,7 +1,10 @@
 ﻿using Core.Bundle;
+using Core.Enums;
 using Core.Interfaces;
+using Core.Node;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +40,10 @@ namespace Core
                 Entity.InitRecord(db);
             }
         }
+        /// <summary>
+        /// Core DbRecord
+        /// </summary>
+        public T Entity;
 
         public void ValideModel(ModelStateDictionary modelState)
         {
@@ -46,11 +53,6 @@ namespace Core
             modelState.Remove("ModifiedUserId");
             modelState.Remove("ModifiedDate");
         }
-
-        /// <summary>
-        /// Core DbRecord
-        /// </summary>
-        public T Entity;
 
         public bool AddEntity()
         {
@@ -113,6 +115,55 @@ namespace Core
             }
         }
 
+        /// <summary>
+        /// Core DbRecord
+        /// </summary>
+        public T Entity { get; set; }
+
+        public String BundleId { get; set; }
+
+        public void LoadFieldRecords()
+        {
+            var dc = Dc;
+
+            var FieldRecords = new List<DmFieldRecord>();
+            dc.Table<BundleFieldEntity>().Where(x => x.BundleId == BundleId).ToList().ForEach(field =>
+            {
+                switch (field.FieldTypeId)
+                {
+                    case FieldTypes.Text:
+                        var textFields = dc.Table<NodeTextFieldEntity>().Where(x => x.EntityId == Entity.Id && x.BundleFieldId == field.Id).ToList();
+                        FieldRecords.Add(new DmFieldRecord
+                        {
+                             BundleFieldId = BundleId,
+                             FieldTypeId = FieldTypes.Text,
+                             Data = textFields.Select(x => JObject.FromObject(x)).ToList()
+                        });
+                        break;
+                    case FieldTypes.Boolean:
+                        var boolFields = dc.Table<NodeBooleanFieldEntity>().Where(x => x.EntityId == Entity.Id && x.BundleFieldId == field.Id).ToList();
+                        FieldRecords.Add(new DmFieldRecord
+                        {
+                            BundleFieldId = BundleId,
+                            FieldTypeId = FieldTypes.Boolean,
+                            Data = boolFields.Select(x => JObject.FromObject(x)).ToList()
+                        });
+                        break;
+                    case FieldTypes.Address:
+                        var addressFields = dc.Table<NodeAddressFieldEntity>().Where(x => x.EntityId == Entity.Id && x.BundleFieldId == field.Id).ToList();
+                        FieldRecords.Add(new DmFieldRecord
+                        {
+                            BundleFieldId = BundleId,
+                            FieldTypeId = FieldTypes.Address,
+                            Data = addressFields.Select(x => JObject.FromObject(x)).ToList()
+                        });
+                        break;
+                }
+            });
+
+            Entity.FieldRecords = FieldRecords;
+        }
+
         public void ValideModel(ModelStateDictionary modelState)
         {
             modelState.Remove("Id");
@@ -121,17 +172,6 @@ namespace Core
             modelState.Remove("CreatedDate");
             modelState.Remove("ModifiedUserId");
             modelState.Remove("ModifiedDate");
-        }
-
-        /// <summary>
-        /// Core DbRecord
-        /// </summary>
-        public T Entity { get; set; }
-
-        public String BundleId { get; set; }
-        public void LoadFieldRecords()
-        {
-            throw new NotImplementedException();
         }
 
         public bool AddEntity()
@@ -152,6 +192,10 @@ namespace Core
         public T LoadEntity()
         {
             Entity = Dc.Table<T>().Find(Entity.Id);
+            BundleId = Entity.BundleId;
+
+            LoadFieldRecords();
+
             return Entity;
         }
     }

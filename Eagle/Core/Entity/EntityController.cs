@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Core.Bundle;
+using Utility;
 
 namespace Core.Entity
 {
@@ -15,9 +16,13 @@ namespace Core.Entity
         {
             List<String> bundlableEntities = new List<string>();
 
-            Type[] types = Assembly.GetEntryAssembly().GetTypes();
-            List<Type> fields = types.Where(t => t.GetInterfaces().Contains(typeof(IBundlable))).ToList();
-            fields.ForEach(type => {
+            List<Type> core = TypeHelper.GetClassesWithInterface(typeof(IBundlable), "Core");
+            core.ForEach(type => {
+                bundlableEntities.Add(type.Name.Replace("Entity", ""));
+            });
+
+            List<Type> app = TypeHelper.GetClassesWithInterface(typeof(IBundlable), "Apps");
+            app.ForEach(type => {
                 bundlableEntities.Add(type.Name.Replace("Entity", ""));
             });
 

@@ -1,5 +1,4 @@
 ﻿using Core.Bundle;
-using Core.DomainModels;
 using Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -11,9 +10,9 @@ namespace Core.Taxonomy
 {
     public static class DmTaxonomyService
     {
-        public static void Add(this DmTaxonomy taxonomyModel, CoreDbContext dc)
+        public static void Add(this TaxonomyEntity taxonomyModel, CoreDbContext dc)
         {
-            if (dc.Table<BundleEntity>().Any(x => x.Name == taxonomyModel.Name && x.EntityName == "Taxonomy")) return;
+            if (dc.Table<BundleEntity>().Any(x => x.Name == taxonomyModel.Description && x.EntityName == "Taxonomy")) return;
 
             var dbRecord = taxonomyModel.Map<BundleEntity>();
 

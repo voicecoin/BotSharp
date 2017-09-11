@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Agent
 {
     [Table("Chatbot_Agents")]
-    public class AgentEntity : BundleDbRecord, IDbRecord4SqlServer
+    public class AgentEntity : BundleDbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -36,6 +36,8 @@ namespace Apps.Chatbot.Agent
         [MaxLength(102400)]
         public String Avatar { get; set; }
 
+        public Boolean IsSkillset { get; set; }
+
         [NotMapped]
         public String Birthday
         {
@@ -53,14 +55,19 @@ namespace Apps.Chatbot.Agent
     /// <summary>
     /// 机器人结盟，赋予一个机器人具有跟其它机器人一样的能力。
     /// </summary>
-    [Table("Chatbot_AgentAlignments")]
-    public class AgentAlignmentEntity : DbRecord, IDbRecord4SqlServer
+    [Table("Chatbot_AgentSkills")]
+    public class AgentSkillEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]
         public String AgentId { get; set; }
         [Required]
         [StringLength(36)]
-        public String AllyId { get; set; }
+        public String SkillId { get; set; }
+
+        public override bool IsExist(CoreDbContext dc)
+        {
+            return dc.Table<AgentSkillEntity>().Any(x => x.AgentId == AgentId || x.SkillId == SkillId);
+        }
     }
 }

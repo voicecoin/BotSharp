@@ -11,7 +11,7 @@ namespace Apps.Chatbot.DmServices
 {
     public static class DmEntityService
     {
-        public static void Add(this DmEntity entityModel, CoreDbContext dc)
+        public static void Add(this EntityEntity entityModel, CoreDbContext dc)
         {
             if (String.IsNullOrEmpty(entityModel.Id))
             {
@@ -19,26 +19,25 @@ namespace Apps.Chatbot.DmServices
             }
             
             entityModel.Color = LinqExtensions.GetRandomColor();
-            var entityRecord = entityModel.Map<EntityEntity>();
-            entityRecord.CreatedDate = DateTime.UtcNow;
-            entityRecord.CreatedUserId = dc.CurrentUser.Id;
-            entityRecord.ModifiedDate = DateTime.UtcNow;
-            entityRecord.ModifiedUserId = dc.CurrentUser.Id;
+            entityModel.CreatedDate = DateTime.UtcNow;
+            entityModel.CreatedUserId = dc.CurrentUser.Id;
+            entityModel.ModifiedDate = DateTime.UtcNow;
+            entityModel.ModifiedUserId = dc.CurrentUser.Id;
 
-            dc.Table<EntityEntity>().Add(entityRecord);
+            dc.Table<EntityEntity>().Add(entityModel);
 
             // add entries
             if (entityModel.Entries != null)
             {
                 entityModel.Entries.Where(x => !String.IsNullOrEmpty(x.Value)).ToList().ForEach(entry =>
                 {
-                    entry.EntityId = entityRecord.Id;
+                    entry.EntityId = entityModel.Id;
                     entry.Add(dc);
                 });
             }
         }
 
-        public static void Delete(this DmEntity entityModel, CoreDbContext dc)
+        public static void Delete(this EntityEntity entityModel, CoreDbContext dc)
         {
             EntityEntity entityRecored = dc.Table<EntityEntity>().Find(entityModel.Id);
 
@@ -48,7 +47,7 @@ namespace Apps.Chatbot.DmServices
             dc.Table<EntityEntity>().Remove(entityRecored);
         }
 
-        public static void Update(this DmEntity entityModel, CoreDbContext dc)
+        public static void Update(this EntityEntity entityModel, CoreDbContext dc)
         {
             EntityEntity entityRecored = dc.Table<EntityEntity>().Find(entityModel.Id);
             entityRecored.Name = entityModel.Name;
@@ -56,21 +55,20 @@ namespace Apps.Chatbot.DmServices
             entityRecored.IsEnum = entityModel.IsEnum;
         }
 
-        public static void Add(this DmEntityEntry entityEntryModel, CoreDbContext dc)
+        public static void Add(this EntityEntryEntity entityEntryModel, CoreDbContext dc)
         {
             entityEntryModel.Id = Guid.NewGuid().ToString();
-            var entryRecord = entityEntryModel.Map<EntityEntryEntity>();
-            entryRecord.CreatedDate = DateTime.UtcNow;
-            entryRecord.CreatedUserId = dc.CurrentUser.Id;
-            entryRecord.ModifiedDate = DateTime.UtcNow;
-            entryRecord.ModifiedUserId = dc.CurrentUser.Id;
+            entityEntryModel.CreatedDate = DateTime.UtcNow;
+            entityEntryModel.CreatedUserId = dc.CurrentUser.Id;
+            entityEntryModel.ModifiedDate = DateTime.UtcNow;
+            entityEntryModel.ModifiedUserId = dc.CurrentUser.Id;
 
-            dc.Table<EntityEntryEntity>().Add(entryRecord);
+            dc.Table<EntityEntryEntity>().Add(entityEntryModel);
             // add synonyms
-            entityEntryModel.AddSynonyms(dc, entryRecord.Id);
+            entityEntryModel.AddSynonyms(dc, entityEntryModel.Id);
         }
 
-        public static void Delete(this DmEntityEntry entityEntryModel, CoreDbContext dc)
+        public static void Delete(this EntityEntryEntity entityEntryModel, CoreDbContext dc)
         {
             EntityEntryEntity entityEntryRecored = dc.Table<EntityEntryEntity>().Find(entityEntryModel.Id);
 
@@ -78,7 +76,7 @@ namespace Apps.Chatbot.DmServices
             dc.Table<EntityEntryEntity>().Remove(entityEntryRecored);
         }
 
-        public static void Update(this DmEntityEntry entityEntryModel, CoreDbContext dc)
+        public static void Update(this EntityEntryEntity entityEntryModel, CoreDbContext dc)
         {
             EntityEntryEntity entityEntryRecored = dc.Table<EntityEntryEntity>().Find(entityEntryModel.Id);
             entityEntryRecored.Value = entityEntryModel.Value;
@@ -87,7 +85,7 @@ namespace Apps.Chatbot.DmServices
             entityEntryModel.AddSynonyms(dc, entityEntryModel.Id);
         }
 
-        public static void AddSynonyms(this DmEntityEntry entityEntryModel, CoreDbContext dc, string entityEntryId)
+        public static void AddSynonyms(this EntityEntryEntity entityEntryModel, CoreDbContext dc, string entityEntryId)
         {
             if (entityEntryModel.Synonyms == null) entityEntryModel.Synonyms = new List<String>();
 
@@ -106,7 +104,7 @@ namespace Apps.Chatbot.DmServices
             });
         }
 
-        public static void DeleteSynonyms(this DmEntityEntry entityEntryModel, CoreDbContext dc, string entityEntryId)
+        public static void DeleteSynonyms(this EntityEntryEntity entityEntryModel, CoreDbContext dc, string entityEntryId)
         {
             if (entityEntryModel.Synonyms == null) return;
 

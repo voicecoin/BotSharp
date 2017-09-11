@@ -19,7 +19,7 @@ namespace Core.Menu
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Dashboard",
-                Icon = "appstore",
+                Icon = "ios-keypad-outline",
                 Link = "/Dashboard",
                 Items = new List<VmMenu>()
             };
@@ -52,7 +52,7 @@ namespace Core.Menu
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Structure",
-                Icon = "mail",
+                Icon = "hammer",
                 Items = new List<VmMenu>()
             };
 
@@ -109,7 +109,7 @@ namespace Core.Menu
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "Configuration",
-                Icon = "setting",
+                Icon = "settings",
                 Items = new List<VmMenu>()
             };
 

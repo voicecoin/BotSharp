@@ -10,7 +10,7 @@ using System.Text;
 namespace Core.Page
 {
     [Table("Pages")]
-    public class PageEntity : DbRecord, IDbRecord4SqlServer
+    public class PageEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -30,7 +30,7 @@ namespace Core.Page
     }
 
     [Table("PageBlocks")]
-    public class PageBlockEntity : DbRecord, IDbRecord4SqlServer
+    public class PageBlockEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [StringLength(36)]

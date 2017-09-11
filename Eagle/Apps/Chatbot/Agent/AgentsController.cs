@@ -103,7 +103,7 @@ namespace Apps.Chatbot.Agent
             }
 
             dc.CurrentUser = GetCurrentUser();
-            dc.Transaction<IDbRecord4SqlServer>(delegate {
+            dc.Transaction<IDbRecord4Core>(delegate {
                 var agentRecord = dc.Table<AgentEntity>().Find(id);
 
                 agentRecord.Name = agentModel.Name;
@@ -134,9 +134,9 @@ namespace Apps.Chatbot.Agent
 
             bool result = false;
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate
+            dc.Transaction<IDbRecord4Core>(delegate
             {
-                result = dm.Add();
+                result = dm.AddEntity();
             });
 
             if (result)

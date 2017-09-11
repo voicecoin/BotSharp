@@ -1,0 +1,99 @@
+﻿[
+  {
+    "userSays": [
+      {
+        "text": "有小卖部吗",
+        "data": [
+          {
+            "text": "有"
+          },
+          {
+            "text": "小卖部",
+            "alias": "facility",
+            "meta": "@便利设施",
+            "color": "#E3DFF0",
+            "value": "商店"
+          },
+          {
+            "text": "吗"
+          }
+        ]
+      },
+      {
+        "text": "这里有小卖部吗",
+        "data": [
+          {
+            "text": "这里有"
+          },
+          {
+            "text": "小卖部",
+            "alias": "facility",
+            "meta": "@便利设施",
+            "color": "#E3DFF0",
+            "value": "商店"
+          },
+          {
+            "text": "吗"
+          }
+        ]
+      },
+      {
+        "text": "哪里有小卖部",
+        "data": [
+          {
+            "text": "哪里有"
+          },
+          {
+            "text": "小卖部",
+            "alias": "facility",
+            "meta": "@便利设施",
+            "color": "#E3DFF0",
+            "value": "商店"
+          }
+        ]
+      },
+      {
+        "text": "有没有小卖部",
+        "data": [
+          {
+            "text": "有没有"
+          },
+          {
+            "text": "小卖部",
+            "alias": "facility",
+            "meta": "@便利设施",
+            "color": "#E3DFF0",
+            "value": "商店"
+          }
+        ]
+      },
+      {
+        "text": "有卖东西的吗"
+      },
+      {
+        "text": "有卖饮料的吗"
+      },
+      {
+        "text": "有卖吃的吗"
+      }
+    ],
+    "responses": [
+      {
+        "messages": [
+          {
+            "speeches": [ "每个点都有小卖部的" ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "facility",
+            "dataType": "@便利设施",
+            "prompts": [ "你想问什么" ],
+            "value": "$facility",
+            "defaultValue": "商店"
+          }
+        ]
+      }
+    ]
+  }
+]

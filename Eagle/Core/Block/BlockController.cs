@@ -34,7 +34,7 @@ namespace Core.Block
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate
+            dc.Transaction<IDbRecord4Core>(delegate
             {
                 var dm = new DomainModel<BlockEntity>(dc, blockEntity);
                 dm.AddEntity();

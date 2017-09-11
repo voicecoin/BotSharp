@@ -7,9 +7,14 @@ using System.Text;
 
 namespace DataFactory
 {
-    public class EfDbContext4MySql1 : EfDbContext
+    public class EfDbContext4MySql : EfDbContext
     {
-        public EfDbContext4MySql1(DbContextOptions options) : base(options) { }
+        public EfDbContext4MySql(DbContextOptions options) : base(options) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //optionsBuilder.UseMySql(ConnectionString);
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 
     public class EfDbContext4SqlServer : EfDbContext
@@ -19,6 +24,17 @@ namespace DataFactory
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(ConnectionString);
+            base.OnConfiguring(optionsBuilder);
+        }
+    }
+
+    public class EfDbContext4Sqlite : EfDbContext
+    {
+        public EfDbContext4Sqlite(DbContextOptions options) : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //optionsBuilder.UseSqlite(ConnectionString);
             base.OnConfiguring(optionsBuilder);
         }
     }

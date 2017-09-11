@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Microsoft.EntityFrameworkCore;
-using DomainModels;
 using Utility;
 using Core.Interfaces;
 using Core.Bundle;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Core.Node
 {
     public class NodeController : CoreController
     {
         // GET: api/Nodes
-        [HttpGet("{bundleId}")]
+        [HttpGet("bundles/{bundleId}")]
         public IEnumerable<Object> GetNodes([FromRoute] string bundleId)
         {
             var query = from node in dc.Table<NodeEntity>()
@@ -35,6 +35,7 @@ namespace Core.Node
             return query.ToList();
         }
 
+        [AllowAnonymous]
         // GET: api/Node/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetNode([FromRoute] string id)
@@ -51,19 +52,23 @@ namespace Core.Node
                 return NotFound();
             }
 
+            var dm = new BundleDomainModel<NodeEntity>(dc, node);
+            dm.LoadEntity();
+            dm.LoadFieldRecords();
+
             return Ok(node);
         }
 
         // POST: api/Node
         [HttpPost]
-        public async Task<IActionResult> PostNode([FromBody] DmNode node)
+        public async Task<IActionResult> PostNode([FromBody] NodeEntity node)
         {
             node.CreatedUserId = GetCurrentUser().Id;
-            node.CreatedTime = DateTime.UtcNow;
+            node.CreatedDate = DateTime.UtcNow;
             node.ModifiedUserId = GetCurrentUser().Id;
-            node.ModifiedTime = DateTime.UtcNow;
+            node.ModifiedDate = DateTime.UtcNow;
 
-            dc.Transaction<IDbRecord4SqlServer>(delegate
+            dc.Transaction<IDbRecord4Core>(delegate
             {
                 NodeEntity nodeRecord = node.Map<NodeEntity>();
                 dc.Table<NodeEntity>().Add(nodeRecord);
@@ -79,7 +84,28 @@ namespace Core.Node
                             var record = data.ToObject<NodeTextFieldEntity>();
                             record.EntityId = nodeRecord.Id;
                             record.BundleFieldId = fieldRecord.BundleFieldId;
+                            record.CreatedDate = DateTime.UtcNow;
+                            record.CreatedUserId = GetCurrentUser().Id;
+                            record.ModifiedDate = DateTime.UtcNow;
+                            record.ModifiedUserId = GetCurrentUser().Id;
                             dc.Table<NodeTextFieldEntity>().Add(record);
+                        });
+                    });
+
+                node.FieldRecords
+                    .Where(x => x.FieldTypeId == Enums.FieldTypes.Boolean)
+                    .ToList()
+                    .ForEach(fieldRecord =>
+                    {
+                        fieldRecord.Data.ForEach(data => {
+                            var record = data.ToObject<NodeBooleanFieldEntity>();
+                            record.EntityId = nodeRecord.Id;
+                            record.BundleFieldId = fieldRecord.BundleFieldId;
+                            record.CreatedDate = DateTime.UtcNow;
+                            record.CreatedUserId = GetCurrentUser().Id;
+                            record.ModifiedDate = DateTime.UtcNow;
+                            record.ModifiedUserId = GetCurrentUser().Id;
+                            dc.Table<NodeBooleanFieldEntity>().Add(record);
                         });
                     });
 
@@ -92,6 +118,10 @@ namespace Core.Node
                             var record = data.ToObject<NodeAddressFieldEntity>();
                             record.EntityId = nodeRecord.Id;
                             record.BundleFieldId = fieldRecord.BundleFieldId;
+                            record.CreatedDate = DateTime.UtcNow;
+                            record.CreatedUserId = GetCurrentUser().Id;
+                            record.ModifiedDate = DateTime.UtcNow;
+                            record.ModifiedUserId = GetCurrentUser().Id;
                             dc.Table<NodeAddressFieldEntity>().Add(record);
                         });
                     });

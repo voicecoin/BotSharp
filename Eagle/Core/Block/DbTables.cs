@@ -11,7 +11,7 @@ using System.Text;
 namespace Core.Block
 {
     [Table("Blocks")]
-    public class BlockEntity : DbRecord, IDbRecord4SqlServer
+    public class BlockEntity : DbRecord, IDbRecord4Core
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

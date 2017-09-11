@@ -18,7 +18,7 @@ namespace Apps.Chatbot.Intent
             // Remove Items first
             intentExpression.Delete();
             // Add back
-            intentExpression.Add();
+            intentExpression.AddEntity();
         }
 
         public static void Delete(this DomainModel<IntentExpressionEntity> intentExpression)
@@ -36,6 +36,11 @@ namespace Apps.Chatbot.Intent
             if (!intentExpression.AddEntity()) return;
 
             int pos = 0;
+            if(intentExpression.Entity.Data == null || intentExpression.Entity.Data.Count == 0)
+            {
+                intentExpression.Entity.Data = new List<DmIntentExpressionItem>();
+                intentExpression.Entity.Data.Add(new DmIntentExpressionItem { Text = intentExpression.Entity.Text });
+            }
 
             if(intentExpression.Entity.Data != null)
             {

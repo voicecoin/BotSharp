@@ -12,89 +12,58 @@ using System.Data.SqlClient;
 using Core.Interfaces;
 using Enyim.Caching;
 using Enyim.Caching.Memcached;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Core
 {
     public class CoreDbContext : EfDbBase
     {
-        public DmAccount CurrentUser { get; set; }
+        public UserEntity CurrentUser { get; set; }
         public static IConfigurationRoot Configuration { get; set; }
+        public static IHostingEnvironment Env { get; set; }
         public IMemcachedClient MemcachedClient { get; set; }
 
         public void InitDb()
         {
-            EfDbContext4SqlServer.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            BindDbContext<IDbRecord4SqlServer, EfDbContext4SqlServer>(new EfDbBinding
+            string db = Configuration.GetSection("Database:Default").Value;
+            if (db.Equals("SqlServer"))
             {
-                connection4Master = new SqlConnection(EfDbContext4SqlServer.ConnectionString)
-            });
+                EfDbContext4SqlServer.ConnectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
+                BindDbContext<IDbRecord4Core, EfDbContext4SqlServer>(new EfDbBinding
+                {
+                    connection4Master = new SqlConnection(EfDbContext4SqlServer.ConnectionString)
+                });
+            }
+            else if (db.Equals("Sqlite"))
+            {
+                EfDbContext4Sqlite.ConnectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
+                EfDbContext4Sqlite.ConnectionString = EfDbContext4Sqlite.ConnectionString.Replace("|DataDirectory|\\", Env.ContentRootPath + "\\App_Data\\");
+                BindDbContext<IDbRecord4Core, EfDbContext4Sqlite>(new EfDbBinding
+                {
+                    connection4Master = new SqlConnection(EfDbContext4SqlServer.ConnectionString)
+                });
+            }
+            /*else if (db.Equals("MySql"))
+            {
+                EfDbContext4MySql.ConnectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
+                BindDbContext<IDbRecord4MySql, EfDbContext4MySql>(new EfDbBinding
+                {
+                    connection4Master = new MySqlConnection(EfDbContext4MySql.ConnectionString)
+                });
+            }*/
         }
 
         public T GetCache<T>(string key)
         {
             key = key.Replace(" ", String.Empty);
-            return MemcachedClient.Get<T>(key);
+            return MemcachedClient == null ? default(T) : MemcachedClient.Get<T>(key);
         }
 
         public bool SetCache(string key, Object value)
         {
             key = key.Replace(" ", String.Empty);
-            return MemcachedClient.Store(StoreMode.Set, key, value);
+            return MemcachedClient == null ? false : MemcachedClient.Store(StoreMode.Set, key, value);
         }
+
     }
-
-    /*public partial class CoreDbContext : DbContextWithTriggers
-    {
-        public DmAccount CurrentUser { get; set; }
-        public static IConfigurationRoot Configuration { get; set; }
-        public CoreDbContext(DbContextOptions<CoreDbContext> options)
-            : base(options)
-        {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            base.OnConfiguring(optionsBuilder);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // http://www.learnentityframeworkcore.com/
-            // modelBuilder.Entity<TaxonomyTermEntity>().HasIndex(x => x.Name);
-            // don't need this code.
-            //modelBuilder.Entity<Bundle>().ForSqlServerToTable("Bundles");
-            //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-        }
-
-
-
-        public int Transaction(Action action)
-        {
-            using (IDbContextTransaction transaction = Database.BeginTransaction())
-            {
-                int affected = 0;
-                try
-                {
-                    action();
-                    affected = SaveChanges();
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    if (ex.Message.Contains("See the inner exception for details"))
-                    {
-                        throw ex.InnerException;
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
-                }
-
-                return affected;
-            }
-        }
-    }*/
 }
