@@ -34,7 +34,7 @@ namespace DataFactory
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlite(ConnectionString);
+            optionsBuilder.UseSqlite(ConnectionString);
             base.OnConfiguring(optionsBuilder);
         }
     }

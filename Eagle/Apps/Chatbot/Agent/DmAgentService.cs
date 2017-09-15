@@ -4,6 +4,8 @@ using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Intent;
 using Core;
 using Core.Interfaces;
+using Microsoft.Extensions.Configuration;
+using MWL.DocumentResolver;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace Apps.Chatbot.DmServices
 {
     public static class DmAgentService
     {
-        public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc, String nerUrl)
+        public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc)
         {
             // Remove Stop word.
             agentRequestModel.Text = agentRequestModel.Text.Replace("？", "");
@@ -32,59 +34,43 @@ namespace Apps.Chatbot.DmServices
 
             // NLP PIPLINE
             // 预处理语料库，替换实体。
-            
             var expressions = queryable.ToList();
-            List<String> corpus = expressions.Select(x => x.Text).ToList();
 
             // 传入句子先分词
             DmAgentRequest agentRequestModel1 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = agentRequestModel.Text };
-            var requestedTextSplitted = agentRequestModel1.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
+            var segs = agentRequestModel1.Segment(dc);
+            var requestedTextSplitted = segs.Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta.Substring(1)).ToList();
             requestedTextSplitted = requestedTextSplitted.Where(x => !String.IsNullOrEmpty(x.Trim())).ToList();
 
-            List<IntentExpressionEntity> similarities = new List<IntentExpressionEntity>();
-
+            Dictionary<String, String> corpus = new Dictionary<string, string>();
             expressions.ForEach(expression =>
             {
-                DmAgentRequest agentRequestModel2 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = expression.Text };
-                var comparedTextSplitted = agentRequestModel2.Segment(dc).Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta).ToList();
-
-                IntentExpressionEntity model = expression.Map<IntentExpressionEntity>();
-                // 计算出相似度
-                model.Similarity = CompareSimilarity(corpus, requestedTextSplitted, comparedTextSplitted);
-                if (model.Similarity > 0.6)
+                if (!String.IsNullOrEmpty(expression.DataJson))
                 {
-                    similarities.Add(model);
+                    expression.Data = JsonConvert.DeserializeObject<List<DmIntentExpressionItem>>(expression.DataJson);
+                    string data = String.Join(" ", expression.Data.SplitToChar().Select(x => String.IsNullOrEmpty(x.Meta) ? x.Text : x.Meta.Substring(1)));
+                    corpus.Add(expression.Id, data);
                 }
             });
 
-            similarities = similarities.OrderByDescending(x => x.Similarity).ToList();
+            // 
+            TFIDFResolverEngine tfidfResolver = new TFIDFResolverEngine();
+            tfidfResolver.Dictionary = corpus;
+            List<ResolutionResult> resolutionResults = tfidfResolver.Resolve(String.Join(" ", requestedTextSplitted), false);
 
-            if (similarities.Count == 0)
-            {
-                return null;
-            }
+            string intentId = expressions.FirstOrDefault(x => x.Id == resolutionResults.First().Key)?.IntentId;
 
-            expressions = expressions.Where(x => x.Id == similarities.First().Id).ToList();
+            if (String.IsNullOrEmpty(intentId)) return null;
 
-            if (expressions.Count() == 0) return null;
-
-            var intent = dc.Table<IntentEntity>().First(m => m.Id == expressions.First().IntentId);
+            var intent = dc.Table<IntentEntity>().First(m => m.Id == intentId);
 
             var dm = new DomainModel<IntentEntity>(dc, intent.Map<IntentEntity>());
             dm.Load();
 
-            string keyword = String.Empty;
-            // 抽取本次聊天内容的关键词
-
-            if (!String.IsNullOrEmpty(intent.Keyword))
-            {
-                keyword = intent.Keyword;
-            }
-
             IntentResponseEntity responseModel = dm.Entity.Responses.First();
 
             // 抽取实体信息并返回缺失的实体
-            List<IntentResponseParameterEntity> missingParameters = responseModel.ExtractParameter(dc, agentRequestModel1);
+            List<IntentResponseParameterEntity> missingParameters = responseModel.ExtractParameter(dc, segs, agentRequestModel.ConversationId);
 
             // 填充参数值
             IntentResponseMessageEntity messageModel = responseModel.PostResponse(dc, agentRequestModel1);
@@ -94,14 +80,16 @@ namespace Apps.Chatbot.DmServices
             {
                 // 提示必填信息
                 response.Text = missingParameters.Random().Prompts.Random();
-            } else
+            }
+            else
             {
                 response.Text = messageModel.Speeches.Random();
             }
 
-            // 保存聊天记录
+            // 保存聊天意图状态
             dc.Transaction<IDbRecord4Core>(delegate {
                 var conversation = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
+                conversation.IntentId = intent.Id;
             });
 
             return response;
@@ -153,7 +141,7 @@ namespace Apps.Chatbot.DmServices
                 int count2 = sentence2.Count(x => x == item);
 
                 double tf = (count1 + 0.0) / (sentence1.Count + sentence2.Count);
-                double idf = Math.Log((corpus.Count + 0.0) / (corpus.Count(x => x.Contains(item)) + 1));
+                double idf = Math.Log((corpus.Count + 0.0) / (corpus.Count(x => x.Split(' ').Contains(item)) + 1));
 
                 tfidf.Add(item, tf * idf);
             });

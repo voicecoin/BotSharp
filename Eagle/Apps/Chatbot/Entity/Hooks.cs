@@ -41,7 +41,10 @@ namespace Apps.Chatbot.Entity
 
         private static void InitEntities(IHostingEnvironment env, CoreDbContext context, AgentEntity agent)
         {
-            var entityNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
+            string dir = $"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities";
+            if (!Directory.Exists(dir)) return;
+
+            var entityNames = Directory.GetFiles(dir).Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
             entityNames.ForEach(entityName =>
             {

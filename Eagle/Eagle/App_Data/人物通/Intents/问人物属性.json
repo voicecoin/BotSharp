@@ -1,0 +1,62 @@
+﻿[
+  {
+    "id": "004ba257-c3ab-416c-8d1f-5bac60c54a98",
+    "userSays": [
+      {
+        "text": "张学友身高",
+        "data": [
+          {
+            "text": "张学友",
+            "alias": "name",
+            "meta": "@人名",
+            "color": "#83EE1F",
+            "value": "张学友"
+          },
+          {
+            "text": "身高",
+            "alias": "height",
+            "meta": "@属性",
+            "color": "#E3DF00",
+            "value": "身高"
+          }
+        ]
+      }
+    ],
+    "responses": [
+      {
+        "affectedContexts": [
+          {
+            "name": "name",
+            "lifespan": 5
+          },
+          {
+            "name": "property",
+            "lifespan": 5
+          }
+        ],
+        "messages": [
+          {
+            "speeches": [ "@name.@property" ],
+            "type": 0
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "dataType": "@人名",
+            "required": true,
+            "prompts": [ "你想问谁？" ],
+            "value": "$name"
+          },
+          {
+            "name": "property",
+            "dataType": "@属性",
+            "required": true,
+            "prompts": [ "你是问什么？" ],
+            "value": "$property"
+          }
+        ]
+      }
+    ]
+  }
+]

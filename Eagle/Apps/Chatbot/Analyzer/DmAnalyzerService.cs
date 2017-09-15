@@ -188,6 +188,42 @@ namespace Apps.Chatbot.DmServices
         }
 
         /// <summary>
+        /// 分隔未识别的词，每个词分成字符。
+        /// </summary>
+        /// <param name="taggers"></param>
+        /// <returns></returns>
+        public static List<DmIntentExpressionItem> SplitToChar(this IEnumerable<DmIntentExpressionItem> taggers)
+        {
+            List<DmIntentExpressionItem> segments = new List<DmIntentExpressionItem>();
+
+            taggers
+                .ToList()
+                .ForEach(tag =>
+                {
+                    if (String.IsNullOrEmpty(tag.Meta))
+                    {
+                        var chars = tag.Text.ToCharArray();
+                        for (int idx = 0; idx < chars.Length; idx++)
+                        {
+                            segments.Add(new DmIntentExpressionItem
+                            {
+                                Position = tag.Position + idx,
+                                Length = 1,
+                                Text = chars[idx].ToString()
+                            });
+                        }
+                    }
+                    else
+                    {
+                        segments.Add(tag);
+                    }
+                });
+
+
+            return segments;
+        }
+
+        /// <summary>
         /// 机器人回复进一步处理，替换变量，填充参数
         /// </summary>
         /// <param name="responseModel"></param>
@@ -204,9 +240,9 @@ namespace Apps.Chatbot.DmServices
             return messageModel;
         }
 
-        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, List<DmIntentExpressionItem> segs, string conversationId)
         {
-            var segments = agentRequestModel.Segment(dc).Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
+            var segments = segs.Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
             var missingParameters = new List<IntentResponseParameterEntity>();
 
             responseModel.Parameters.ForEach(parameter =>
@@ -218,12 +254,12 @@ namespace Apps.Chatbot.DmServices
                 {
                     dc.Transaction<IDbRecord4Core>(delegate
                     {
-                        var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == agentRequestModel.ConversationId && x.Name == parameter.Name);
+                        var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
                         if (existedParameter == null)
                         {
                             var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
                             {
-                                ConversationId = agentRequestModel.ConversationId,
+                                ConversationId = conversationId,
                                 Name = parameter.Name,
                                 Value = parameter.Value
                             });
@@ -238,7 +274,7 @@ namespace Apps.Chatbot.DmServices
 
                 if(parameter.Required && String.IsNullOrEmpty(parameter.Value))
                 {
-                    if (!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == agentRequestModel.ConversationId && x.Name == parameter.Name))
+                    if (!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == conversationId && x.Name == parameter.Name))
                     {
                         missingParameters.Add(parameter);
                     }

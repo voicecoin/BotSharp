@@ -17,11 +17,6 @@ namespace Apps.Chatbot.Intent
 {
     public class IntentsController : CoreController
     {
-        public IntentsController(IMemcachedClient memcachedClient)
-        {
-            dc.MemcachedClient = memcachedClient;
-        }
-
         // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
         public DmPageResult<IntentEntity> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)

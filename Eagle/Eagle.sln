@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eagle", "Eagle\Eagle.csproj", "{C72E534C-83B0-430C-A345-AB41D5F7DBD8}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "Utility\Utility.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apps", "Apps\Apps.csproj", "{D1420092-C8B0-46F0-A5BB-DE27BB78457A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfDbFactory", "EfDbFactory\EfDbFactory.csproj", "{076AA64D-C833-408A-9EA6-4065971B9C8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfDbFactory", "EfDbFactory\EfDbFactory.csproj", "{076AA64D-C833-408A-9EA6-4065971B9C8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentResolver", "DocumentResolver\DocumentResolver.csproj", "{14905614-626E-4F5D-96B2-2D504932A195}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,8 +41,15 @@ Global
 		{076AA64D-C833-408A-9EA6-4065971B9C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{076AA64D-C833-408A-9EA6-4065971B9C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{076AA64D-C833-408A-9EA6-4065971B9C8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14905614-626E-4F5D-96B2-2D504932A195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14905614-626E-4F5D-96B2-2D504932A195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14905614-626E-4F5D-96B2-2D504932A195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14905614-626E-4F5D-96B2-2D504932A195}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA32F3D3-2E68-4091-8DEB-37801E6ADB6D}
 	EndGlobalSection
 EndGlobal

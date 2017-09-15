@@ -1,7 +1,6 @@
 ﻿[
   {
     "id": "bfde378d-fdd1-450a-8346-5c8721d41dc0",
-    "keyword": "天气",
     "userSays": [
       {
         "text": "天气",
@@ -39,13 +38,13 @@
         "action": "query.weather",
         "affectedContexts": [
           {
-            "name": "Weather",
+            "name": "天气",
             "lifespan": 5
           }
         ],
         "messages": [
           {
-            "speeches": [ "{$time}{$place}的天气还不错。", "等我问下{$place}气象局，我表哥在那里上班。" ],
+            "speeches": [ "{$time}{$place}的天气还不错。", "等我问下{$place}气象局再告诉你。", "{$place}{$time}的天气还挺舒服的！" ],
             "type": 0
           }
         ],

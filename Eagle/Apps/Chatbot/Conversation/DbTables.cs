@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using Apps.Chatbot.Intent;
+using Core;
 using Core.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -22,6 +23,12 @@ namespace Apps.Chatbot.Conversation
         /// </summary>
         [StringLength(36)]
         public String IntentId { get; set; }
+
+        [JsonIgnore]
+        [Column("Contexts")]
+        public String ContextsJson { get; set; }
+        [NotMapped]
+        public List<DmIntentResponseContext> Contexts { get; set; }
     }
 
     [Table("Chatbot_ConversationMessages")]

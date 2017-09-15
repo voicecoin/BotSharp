@@ -62,6 +62,7 @@ namespace Apps.Chatbot.DomainModels
                 {
                     // 过滤 "代词:疑问代词:谓词性疑问代词"
                     if (segs[1] == "疑问代词") return segs[1];
+                    if (segs[1] == "人名") return segs[1];
 
                     return segs[2];
                 }

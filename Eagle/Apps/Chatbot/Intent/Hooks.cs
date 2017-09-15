@@ -39,7 +39,10 @@ namespace Apps.Chatbot.Intent
 
         private static void InitIntents(IHostingEnvironment env, CoreDbContext context, AgentEntity agent)
         {
-            var intentNames = Directory.GetFiles($"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents").Select(x => x.Split('\\').Last().Split('.').First()).ToList();
+            string dir = $"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents";
+            if (!Directory.Exists(dir)) return;
+
+            var intentNames = Directory.GetFiles(dir).Select(x => x.Split('\\').Last().Split('.').First()).ToList();
 
             intentNames.ForEach(intentName =>
             {

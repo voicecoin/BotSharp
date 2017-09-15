@@ -80,7 +80,7 @@ namespace Apps.WeChat
 
             DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord, Text = requestMessage.Content, ConversationId = conversationId };
 
-            var response = agentRequestModel.TextRequest(dc, Configuration.GetSection("NlpApi:NlpirUrl").Value);
+            var response = agentRequestModel.TextRequest(dc);
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {

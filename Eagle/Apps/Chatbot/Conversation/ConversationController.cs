@@ -10,6 +10,8 @@ using Apps.Chatbot.Agent;
 using Enyim.Caching;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Apps.Chatbot.Conversation
 {
@@ -63,7 +65,38 @@ namespace Apps.Chatbot.Conversation
 
             return conversationId;
         }
-        
+
+        [AllowAnonymous]
+        [HttpGet("Test")]
+        public async Task<String> Test()
+        {
+            var agentRecord = dc.Table<AgentEntity>().First(x => x.ClientAccessToken == "8084658aed844e3a985bca7b6c8cf0d3");
+            DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord, ConversationId = Guid.NewGuid().ToString() };
+            StringBuilder contents = new StringBuilder();
+
+            List<String> questions = new List<string>() {
+                "张学友身高"
+            };
+            List<String> answers = new List<string>();
+
+            foreach (String question in questions)
+            {
+                agentRequestModel.Text = question;
+                DmAgentResponse response = agentRequestModel.TextRequest(dc);
+                answers.Add(response.Text);
+            }
+
+            // return text
+            for (int i = 0; i < questions.Count; i++)
+            {
+                contents.AppendLine($"User: {questions[i]}");
+                contents.AppendLine($" Bot: {answers[i]}");
+                //contents.AppendLine();
+            }
+
+            return contents.ToString();
+        }
+
         public async Task<String> Text(DmAgentRequest analyzerModel)
         {
             // analyzerModel.Log(MyLogLevel.DEBUG);
@@ -74,8 +107,25 @@ namespace Apps.Chatbot.Conversation
 
             var agentRecord = dc.Table<AgentEntity>().First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
             DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord, Text = analyzerModel.Text, ConversationId = analyzerModel.ConversationId };
+            DmAgentResponse response;
+            // 人物通，特殊处理
+            if (agentRequestModel.Agent.Id == "b8d4d157-611a-40cb-ad5a-142987a73b8a")
+            {
+                /*response = await HttpClientHelper.PostAsJsonAsync<DmAgentResponse>(Configuration.GetSection("NlpApi:PeopleHost").Value, Configuration.GetSection("NlpApi:PeoplePath").Value,
+                    new
+                    {
+                        Text = analyzerModel.Text,
+                        ConversationId = analyzerModel.ConversationId,
+                        AgentId = "f3123461-cdeb-4f0f-bdea-8b2c984115e8",
+                        AccessToken = "ea60f7d6e6ee45209370248f15eb91a1"
+                    });*/
+            }
+            else
+            {
+                // response = agentRequestModel.TextRequest(dc, Configuration);
+            }
 
-            var response = agentRequestModel.TextRequest(dc, Configuration.GetSection("NlpApi:NlpirUrl").Value);
+            response = agentRequestModel.TextRequest(dc);
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {

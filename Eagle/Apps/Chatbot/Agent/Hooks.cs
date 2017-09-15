@@ -35,6 +35,8 @@ namespace Apps.Chatbot.Agent
             // create a agent
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
+            if (agentNames == null) return;
+
             /*string id = Guid.NewGuid().ToString();
             string id2 = Guid.NewGuid().ToString();
             string token1 = Guid.NewGuid().ToString("N");
@@ -72,8 +74,12 @@ namespace Apps.Chatbot.Agent
 
         private static T LoadJson<T>(IHostingEnvironment env, string fileName)
         {
+            string filePath = $"{env.ContentRootPath}\\App_Data\\" + fileName + ".json";
+
+            if (!File.Exists(filePath)) return default(T);
+
             string json;
-            using (StreamReader SourceReader = File.OpenText($"{env.ContentRootPath}\\App_Data\\" + fileName + ".json"))
+            using (StreamReader SourceReader = File.OpenText(filePath))
             {
                 json = SourceReader.ReadToEnd();
                 if (String.IsNullOrEmpty(json))
