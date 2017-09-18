@@ -36,12 +36,6 @@ namespace Apps.Chatbot.Intent
             if (!intentExpression.AddEntity()) return;
 
             int pos = 0;
-            if(intentExpression.Entity.Data == null || intentExpression.Entity.Data.Count == 0)
-            {
-                intentExpression.Entity.Data = new List<DmIntentExpressionItem>();
-                intentExpression.Entity.Data.Add(new DmIntentExpressionItem { Text = intentExpression.Entity.Text });
-            }
-
             if(intentExpression.Entity.Data != null)
             {
                 intentExpression.Entity.Data.ForEach(item => {
@@ -50,7 +44,7 @@ namespace Apps.Chatbot.Intent
                     pos += item.Text.Length;
                 });
 
-                intentExpression.Entity.DataJson = JsonConvert.SerializeObject(intentExpression.Entity.Data);
+                intentExpression.Entity.DataJson = JsonConvert.SerializeObject(intentExpression.Entity.Data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             }
         }
     }

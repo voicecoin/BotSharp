@@ -20,7 +20,7 @@ namespace Apps.Chatbot.Analyzer
         {
             var sentences = from intent in Dc.Table<IntentEntity>()
                             join expression in Dc.Table<IntentExpressionEntity>() on intent.Id equals expression.IntentId
-                            where String.IsNullOrEmpty(expression.DataJson) || expression.AllowOverrideData
+                            where String.IsNullOrEmpty(expression.DataJson)
                             orderby expression.ModifiedDate
                             select new { ExpressionId = expression.Id, AgentId = intent.AgentId, Text = expression.Text };
 

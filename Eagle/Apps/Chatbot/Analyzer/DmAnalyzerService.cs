@@ -240,48 +240,55 @@ namespace Apps.Chatbot.DmServices
             return messageModel;
         }
 
-        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, List<DmIntentExpressionItem> segs, string conversationId)
+        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, List<DmIntentResponseContext> contexts, List<DmIntentExpressionItem> segs, string conversationId)
         {
             var segments = segs.Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
-            var missingParameters = new List<IntentResponseParameterEntity>();
+            var parameters = new List<IntentResponseParameterEntity>();
 
             responseModel.Parameters.ForEach(parameter =>
             {
                 parameter.Value = segments.FirstOrDefault(x => x.Meta == parameter.DataType)?.Text;
 
-                // 把识别出的实体放入数据库
-                if (!String.IsNullOrEmpty(parameter.Value))
+                // try to get value from context
+                if (String.IsNullOrEmpty(parameter.Value))
                 {
-                    dc.Transaction<IDbRecord4Core>(delegate
-                    {
-                        var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
-                        if (existedParameter == null)
-                        {
-                            var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
-                            {
-                                ConversationId = conversationId,
-                                Name = parameter.Name,
-                                Value = parameter.Value
-                            });
-                            dm.AddEntity();
-                        }
-                        else
-                        {
-                            existedParameter.Value = parameter.Value;
-                        }
-                    });
+                    string contextName = contexts.First(x => x.Name == parameter.Name)?.Name;
+                    parameter.Value = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == contextName).Value;
                 }
 
-                if(parameter.Required && String.IsNullOrEmpty(parameter.Value))
+                if (String.IsNullOrEmpty(parameter.Value))
                 {
-                    if (!dc.Table<ConversationParameterEntity>().Any(x => x.ConversationId == conversationId && x.Name == parameter.Name))
-                    {
-                        missingParameters.Add(parameter);
-                    }
+                    parameter.Value = parameter.DefaultValue;
                 }
+
+                // 把识别出的实体放入数据库
+                dc.Transaction<IDbRecord4Core>(delegate
+                {
+                    var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
+                    if (existedParameter == null)
+                    {
+                        var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
+                        {
+                            ConversationId = conversationId,
+                            Name = parameter.Name,
+                            Value = parameter.Value
+                        });
+                        dm.AddEntity();
+                    }
+                    else
+                    {
+                        existedParameter.Value = parameter.Value;
+                    }
+                });
+
+                parameters.Add(parameter);
             });
 
-            return missingParameters;
+            return dc.Table<ConversationParameterEntity>().Where(x => x.ConversationId == conversationId).Select(x => new IntentResponseParameterEntity
+            {
+                Name = x.Name,
+                Value = x.Value
+            }).ToList();
         }
 
         /// <summary>

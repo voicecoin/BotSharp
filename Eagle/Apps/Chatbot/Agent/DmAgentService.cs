@@ -53,10 +53,16 @@ namespace Apps.Chatbot.DmServices
                 }
             });
 
-            // 
-            TFIDFResolverEngine tfidfResolver = new TFIDFResolverEngine();
-            tfidfResolver.Dictionary = corpus;
-            List<ResolutionResult> resolutionResults = tfidfResolver.Resolve(String.Join(" ", requestedTextSplitted), false);
+            // 计算相似度
+            string document = String.Join(" ", requestedTextSplitted);
+
+            BayesResolverEngine bayesResolver = new BayesResolverEngine();
+            bayesResolver.Dictionary = corpus;
+            var resolutionResults = bayesResolver.Resolve(document, false);
+
+            LevenshteinResolverEngine levenshteinResolver = new LevenshteinResolverEngine();
+            levenshteinResolver.Dictionary = corpus;
+            resolutionResults = levenshteinResolver.Resolve(document, false);
 
             string intentId = expressions.FirstOrDefault(x => x.Id == resolutionResults.First().Key)?.IntentId;
 
@@ -69,28 +75,61 @@ namespace Apps.Chatbot.DmServices
 
             IntentResponseEntity responseModel = dm.Entity.Responses.First();
 
+            // 上文Context
+            var context = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
+            if (!String.IsNullOrEmpty(context.ContextsJson))
+            {
+                context.Contexts = JsonConvert.DeserializeObject<List<DmIntentResponseContext>>(context.ContextsJson);
+            }
+            else
+            {
+                context.Contexts = new List<DmIntentResponseContext>();
+            }
+
             // 抽取实体信息并返回缺失的实体
-            List<IntentResponseParameterEntity> missingParameters = responseModel.ExtractParameter(dc, segs, agentRequestModel.ConversationId);
+            List<IntentResponseParameterEntity> parameters = responseModel.ExtractParameter(dc, context.Contexts, segs, agentRequestModel.ConversationId);
 
             // 填充参数值
             IntentResponseMessageEntity messageModel = responseModel.PostResponse(dc, agentRequestModel1);
 
             DmAgentResponse response = new DmAgentResponse();
-            if (missingParameters.Count > 0)
+            if (parameters.Count(x => String.IsNullOrEmpty(x.Value))> 0)
             {
                 // 提示必填信息
-                response.Text = missingParameters.Random().Prompts.Random();
+                response.Text = parameters.Where(x => String.IsNullOrEmpty(x.Value)).Random().Prompts.Random();
             }
             else
             {
                 response.Text = messageModel.Speeches.Random();
             }
 
-            // 保存聊天意图状态
+            // 保存意图上下文
             dc.Transaction<IDbRecord4Core>(delegate {
                 var conversation = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
                 conversation.IntentId = intent.Id;
+                if (!String.IsNullOrEmpty(conversation.ContextsJson))
+                {
+                    conversation.Contexts = JsonConvert.DeserializeObject<List<DmIntentResponseContext>>(conversation.ContextsJson);
+                }
+                else
+                {
+                    conversation.Contexts = new List<DmIntentResponseContext>();
+                }
+
+                if(responseModel.AffectedContexts.Count > 0)
+                {
+                    conversation.Contexts.AddRange(responseModel.AffectedContexts);
+                }
+
+                conversation.ContextsJson = JsonConvert.SerializeObject(conversation.Contexts);
             });
+
+            // 对人物机器人的回复做转换
+            if(agentRequestModel.Agent.Id == "b8d4d157-611a-40cb-ad5a-142987a73b8a")
+            {
+                PeopleResponseParser peopleResponseParser = new PeopleResponseParser();
+                response.Text = peopleResponseParser.FillReplyTemplate(dc, parameters.Where(x => !String.IsNullOrEmpty(x.Value)).ToList(), response.Text);
+            }
 
             return response;
         }

@@ -84,11 +84,9 @@ namespace MWL.DocumentResolver
 			return uniques;
 		}
 
-		private static object AddElement(IDictionary collection, string key, string newValue)
+		private static void AddElement(IDictionary collection, string key, string newValue)
 		{
-			object element=collection[key];
-			collection[key]=newValue;
-			return element;
+			
 		}
 
 		private int GetTermIndex(string term)
@@ -108,7 +106,7 @@ namespace MWL.DocumentResolver
 				_termWeight.Add(new List<double>());
                 _termFreq.Add(new Dictionary<int, int>());
 
-				AddElement(_wordsIndex, _terms[i], i.ToString());			
+                _wordsIndex[_terms[i]] = i.ToString();
 			}
 			
 			GenerateTermFrequency ();

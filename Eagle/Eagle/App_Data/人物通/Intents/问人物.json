@@ -1,18 +1,18 @@
 ﻿[
   {
-    "id": "004ba257-c3ab-416c-8d1f-5bac60c54a98",
+    "id": "bf93af89-3b9c-49fc-a2db-cf2dda1ea770",
     "userSays": [
       {
-        "text": "张学友身高"
+        "text": "张学友"
       },
       {
-        "text": "知道张学友的身高吗？"
+        "text": "张学友是谁?"
       },
       {
-        "text": "张学友的生日是什么时候？"
+        "text": "知道张学友吗?"
       },
       {
-        "text": "张学友的妻子叫什么？"
+        "text": "认识张学友吗?"
       }
     ],
     "responses": [
@@ -21,16 +21,6 @@
           {
             "name": "name",
             "lifespan": 5
-          },
-          {
-            "name": "property",
-            "lifespan": 5
-          }
-        ],
-        "messages": [
-          {
-            "speeches": [ "@name.@property" ],
-            "type": 0
           }
         ],
         "parameters": [
@@ -44,9 +34,15 @@
           {
             "name": "property",
             "dataType": "@属性",
-            "required": true,
             "prompts": [ "你是问什么？" ],
-            "value": "$property"
+            "value": "$property",
+            "defaultValue": "DESC"
+          }
+        ],
+        "messages": [
+          {
+            "speeches": [ "@name.@property" ],
+            "type": 0
           }
         ]
       }
