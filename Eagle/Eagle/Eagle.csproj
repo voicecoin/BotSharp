@@ -62,6 +62,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Apps\Apps.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\DocumentResolver\DocumentResolver.csproj" />
     <ProjectReference Include="..\Utility\Utility.csproj" />
   </ItemGroup>
 

@@ -76,7 +76,6 @@ namespace Apps.Chatbot.Agent
             }
 
             // 优先提取间接属性
-
             MatchCollection mc1 = Regex.Matches(template, "(@[A-Za-z0-9.]+)+");
             foreach (Match m in mc1)
             {
@@ -121,7 +120,7 @@ namespace Apps.Chatbot.Agent
             List<String> synonoms = (from entity in Dc.Table<EntityEntity>()
                                      join entry in Dc.Table<EntityEntryEntity>() on entity.Id equals entry.EntityId
                                      join synonym in Dc.Table<EntityEntrySynonymEntity>() on entry.Id equals synonym.EntityEntryId
-                                     where entity.Id == "3286b09e-f542-42ec-a404-55b5d93e57bc" && entry.Value == predictValue
+                                     where entity.Id == "3286b09e-f542-42ec-a404-55b5d93e57bc" && (entry.Value == predictValue || synonym.Synonym == predictValue)
                                      select synonym.Synonym).ToList();
 
             foreach (String synonym in synonoms)

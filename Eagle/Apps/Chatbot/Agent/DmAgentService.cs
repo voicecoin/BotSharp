@@ -1,6 +1,7 @@
 ﻿using Apps.Chatbot.Agent;
 using Apps.Chatbot.Conversation;
 using Apps.Chatbot.DomainModels;
+using Apps.Chatbot.Faq;
 using Apps.Chatbot.Intent;
 using Core;
 using Core.Interfaces;
@@ -19,6 +20,8 @@ namespace Apps.Chatbot.DmServices
     {
         public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc)
         {
+            DmAgentResponse response = new DmAgentResponse();
+
             // Remove Stop word.
             agentRequestModel.Text = agentRequestModel.Text.Replace("？", "");
             agentRequestModel.Text = agentRequestModel.Text.Replace("?", "");
@@ -35,6 +38,18 @@ namespace Apps.Chatbot.DmServices
             // NLP PIPLINE
             // 预处理语料库，替换实体。
             var expressions = queryable.ToList();
+
+            // 加入快速问答语料
+            var faqs = dc.Table<FaqEntity>().Where(x => x.AgentId == agentRequestModel.Agent.Id)
+                .Select(x => new IntentExpressionEntity
+                {
+                    Id = x.Id,
+                    IsFaq = true,
+                    Text = x.Question,
+                    FaqAnswer = x.Answer,
+                    DataJson = x.DataJson
+                }).ToList();
+            expressions.AddRange(faqs);
 
             // 传入句子先分词
             DmAgentRequest agentRequestModel1 = new DmAgentRequest { Agent = agentRequestModel.Agent, ConversationId = agentRequestModel.ConversationId, Text = agentRequestModel.Text };
@@ -60,11 +75,25 @@ namespace Apps.Chatbot.DmServices
             bayesResolver.Dictionary = corpus;
             var resolutionResults = bayesResolver.Resolve(document, false);
 
-            LevenshteinResolverEngine levenshteinResolver = new LevenshteinResolverEngine();
-            levenshteinResolver.Dictionary = corpus;
-            resolutionResults = levenshteinResolver.Resolve(document, false);
+            // 处理少主题无法匹配的情况
+            if(resolutionResults.Count == 0)
+            {
+                LevenshteinResolverEngine levenshteinResolver = new LevenshteinResolverEngine();
+                levenshteinResolver.Dictionary = corpus;
+                resolutionResults = levenshteinResolver.Resolve(document, false);
+            }
 
-            string intentId = expressions.FirstOrDefault(x => x.Id == resolutionResults.First().Key)?.IntentId;
+            string expressionId = resolutionResults.First().Key;
+
+            // 优先匹配快速问答并返回
+            var faq = faqs.FirstOrDefault(x => x.Id == expressionId);
+            if(faq != null)
+            {
+                response.Text = faq.FaqAnswer;
+                return response;
+            }
+
+            string intentId = expressions.FirstOrDefault(x => x.Id == expressionId)?.IntentId;
 
             if (String.IsNullOrEmpty(intentId)) return null;
 
@@ -92,7 +121,7 @@ namespace Apps.Chatbot.DmServices
             // 填充参数值
             IntentResponseMessageEntity messageModel = responseModel.PostResponse(dc, agentRequestModel1);
 
-            DmAgentResponse response = new DmAgentResponse();
+            
             if (parameters.Count(x => String.IsNullOrEmpty(x.Value))> 0)
             {
                 // 提示必填信息

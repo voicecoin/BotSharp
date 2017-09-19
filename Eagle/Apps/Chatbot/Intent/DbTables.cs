@@ -75,6 +75,11 @@ namespace Apps.Chatbot.Intent
         public List<DmIntentExpressionItem> Data { get; set; }
         public Boolean AllowOverrideData { get; set; }
 
+        [NotMapped]
+        public bool IsFaq { get; set; }
+        [NotMapped]
+        public String FaqAnswer { get; set; }
+
         /// <summary>
         /// for frontend flag
         /// </summary>

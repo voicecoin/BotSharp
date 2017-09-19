@@ -108,22 +108,6 @@ namespace Apps.Chatbot.Conversation
             var agentRecord = dc.Table<AgentEntity>().First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
             DmAgentRequest agentRequestModel = new DmAgentRequest { Agent = agentRecord, Text = analyzerModel.Text, ConversationId = analyzerModel.ConversationId };
             DmAgentResponse response;
-            // 人物通，特殊处理
-            if (agentRequestModel.Agent.Id == "b8d4d157-611a-40cb-ad5a-142987a73b8a")
-            {
-                /*response = await HttpClientHelper.PostAsJsonAsync<DmAgentResponse>(Configuration.GetSection("NlpApi:PeopleHost").Value, Configuration.GetSection("NlpApi:PeoplePath").Value,
-                    new
-                    {
-                        Text = analyzerModel.Text,
-                        ConversationId = analyzerModel.ConversationId,
-                        AgentId = "f3123461-cdeb-4f0f-bdea-8b2c984115e8",
-                        AccessToken = "ea60f7d6e6ee45209370248f15eb91a1"
-                    });*/
-            }
-            else
-            {
-                // response = agentRequestModel.TextRequest(dc, Configuration);
-            }
 
             response = agentRequestModel.TextRequest(dc);
 

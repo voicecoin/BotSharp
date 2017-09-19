@@ -252,8 +252,11 @@ namespace Apps.Chatbot.DmServices
                 // try to get value from context
                 if (String.IsNullOrEmpty(parameter.Value))
                 {
-                    string contextName = contexts.First(x => x.Name == parameter.Name)?.Name;
-                    parameter.Value = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == contextName).Value;
+                    string contextName = contexts.FirstOrDefault(x => x.Name == parameter.Name)?.Name;
+                    if (!String.IsNullOrEmpty(contextName))
+                    {
+                        parameter.Value = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == contextName)?.Value;
+                    }
                 }
 
                 if (String.IsNullOrEmpty(parameter.Value))
