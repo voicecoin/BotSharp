@@ -40,7 +40,7 @@ namespace Apps.Chatbot.DmServices
             var expressions = queryable.ToList();
 
             // 加入快速问答语料
-            var faqs = dc.Table<FaqEntity>().Where(x => x.AgentId == agentRequestModel.Agent.Id)
+            var faqs = dc.Table<FaqEntity>().Where(x => allyIds.Contains(x.AgentId))
                 .Select(x => new IntentExpressionEntity
                 {
                     Id = x.Id,
@@ -75,7 +75,7 @@ namespace Apps.Chatbot.DmServices
             bayesResolver.Dictionary = corpus;
             var resolutionResults = bayesResolver.Resolve(document, false);
 
-            // 处理少主题无法匹配的情况
+            // 处理少语料无法匹配的情况
             if(resolutionResults.Count == 0)
             {
                 LevenshteinResolverEngine levenshteinResolver = new LevenshteinResolverEngine();

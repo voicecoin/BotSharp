@@ -107,7 +107,13 @@ namespace Apps.Chatbot.Agent
         {
             // 查询知识库
             string subjectEntity = subject.Substring(1);
-            string subjectValue = parameterEntities.First(x => x.Name == subjectEntity).Value;
+            string subjectValue = parameterEntities.FirstOrDefault(x => x.Name == subjectEntity)?.Value;
+
+            // 如果没有人名
+            if (String.IsNullOrEmpty(subjectValue))
+            {
+                return "你想知道谁资料？";
+            }
 
             List<Triple> triples = CnDbPeidaRdf.QueryEntity(Dc, subjectValue);
             List<String> predicts = triples.Select(x => x.Predicate).ToList();

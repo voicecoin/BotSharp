@@ -6,5 +6,6 @@
   "clientAccessToken": "4e0cf80467fa4536be57b358a6d54368",
   "developerAccessToken": "60d1cb87efde449ead6a329c4678170d",
   "isPublic": "False",
-  "language": "zh-cn"
+  "language": "zh-cn",
+  "skills": [ "a944921e-e91d-4d67-b115-0510b9729998" ]
 }

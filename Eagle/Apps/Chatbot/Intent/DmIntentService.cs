@@ -61,6 +61,17 @@ namespace Apps.Chatbot.Intent
                 .Where(x => x.IntentId == intentModel.Entity.Id)
                 .ToList();
 
+            // 默认加一个Response，避免前端各种报错
+            if(intentModel.Entity.Responses.Count == 0)
+            {
+                intentModel.Entity.Responses.Add(new IntentResponseEntity
+                {
+                    Parameters = new List<IntentResponseParameterEntity>(),
+                    AffectedContexts = new List<DmIntentResponseContext> { },
+                    Messages = new List<IntentResponseMessageEntity>()
+                });
+            }
+
             intentModel.Entity.Responses.ForEach(response =>
             {
                 if (String.IsNullOrEmpty(response.AffectedContextsJson))

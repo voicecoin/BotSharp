@@ -37,6 +37,8 @@ namespace Apps.Chatbot.Agent
         public String Avatar { get; set; }
 
         public Boolean IsSkillset { get; set; }
+        [NotMapped]
+        public List<String> Skills { get; set; }
 
         [NotMapped]
         public String Birthday
@@ -67,7 +69,7 @@ namespace Apps.Chatbot.Agent
 
         public override bool IsExist(CoreDbContext dc)
         {
-            return dc.Table<AgentSkillEntity>().Any(x => x.AgentId == AgentId || x.SkillId == SkillId);
+            return dc.Table<AgentSkillEntity>().Any(x => x.AgentId == AgentId && x.SkillId == SkillId);
         }
     }
 }

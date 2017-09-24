@@ -26,8 +26,6 @@ namespace Apps.Chatbot.Agent
             dm.AddEntity();
 
             InitAgent(env, dc);
-
-            InitAlignements(env, dc);
         }
 
         private static void InitAgent(IHostingEnvironment env, CoreDbContext context)
@@ -47,18 +45,24 @@ namespace Apps.Chatbot.Agent
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
                 BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
                 dm.AddEntity();
+
+                InitSkills(context, agent.Id, agent.Skills);
             });
         }
 
-        private static void InitAlignements(IHostingEnvironment env, CoreDbContext context)
+        private static void InitSkills(CoreDbContext context, string agentId, List<string> skills)
         {
-            var dm = new DomainModel<AgentSkillEntity>(context, new AgentSkillEntity
-            {
-                AgentId = "6dfd6dc6-2d63-408a-89cf-ee8ccef24c79",
-                SkillId = "1cfb40a9-c26d-4ffd-9a05-186d33ea36e9"
-            });
+            if (skills == null) return;
 
-            dm.AddEntity();
+            skills.ForEach(skill => {
+                var dm = new DomainModel<AgentSkillEntity>(context, new AgentSkillEntity
+                {
+                    AgentId = agentId,
+                    SkillId = skill
+                });
+
+                dm.AddEntity();
+            });
         }
 
         private static EntityEntity LoadEntityFromJsonFile(IHostingEnvironment env, AgentEntity agent, string name)

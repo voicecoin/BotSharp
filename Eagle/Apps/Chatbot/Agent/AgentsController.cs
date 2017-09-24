@@ -87,7 +87,9 @@ namespace Apps.Chatbot.Agent
             {
                 Name = "未命名机器人",
                 Language = "zh-cn",
-                CreatedUserId = GetCurrentUser().Id
+                CreatedUserId = GetCurrentUser().Id,
+                ClientAccessToken = Guid.NewGuid().ToString("N"),
+                DeveloperAccessToken = Guid.NewGuid().ToString("N")
             };
 
             return Ok(intent);

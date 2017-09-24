@@ -243,7 +243,6 @@ namespace Apps.Chatbot.DmServices
         public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, List<DmIntentResponseContext> contexts, List<DmIntentExpressionItem> segs, string conversationId)
         {
             var segments = segs.Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
-            var parameters = new List<IntentResponseParameterEntity>();
 
             responseModel.Parameters.ForEach(parameter =>
             {
@@ -265,26 +264,27 @@ namespace Apps.Chatbot.DmServices
                 }
 
                 // 把识别出的实体放入数据库
-                dc.Transaction<IDbRecord4Core>(delegate
+                if (!String.IsNullOrEmpty(parameter.Value))
                 {
-                    var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
-                    if (existedParameter == null)
+                    dc.Transaction<IDbRecord4Core>(delegate
                     {
-                        var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
+                        var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
+                        if (existedParameter == null)
                         {
-                            ConversationId = conversationId,
-                            Name = parameter.Name,
-                            Value = parameter.Value
-                        });
-                        dm.AddEntity();
-                    }
-                    else
-                    {
-                        existedParameter.Value = parameter.Value;
-                    }
-                });
-
-                parameters.Add(parameter);
+                            var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
+                            {
+                                ConversationId = conversationId,
+                                Name = parameter.Name,
+                                Value = parameter.Value
+                            });
+                            dm.AddEntity();
+                        }
+                        else
+                        {
+                            existedParameter.Value = parameter.Value;
+                        }
+                    });
+                }
             });
 
             return dc.Table<ConversationParameterEntity>().Where(x => x.ConversationId == conversationId).Select(x => new IntentResponseParameterEntity

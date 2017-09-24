@@ -38,7 +38,7 @@ namespace Apps.Chatbot.Entity
 
         public override bool IsExist(CoreDbContext dc)
         {
-            return dc.Table<EntityEntity>().Any(x => x.Name == Name);
+            return dc.Table<EntityEntity>().Any(x => x.AgentId == AgentId && x.Name == Name);
         }
 
         /// <summary>

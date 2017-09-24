@@ -83,19 +83,21 @@ namespace Apps.Chatbot.Entity
 
         // POST: api/EntityEntries
         [HttpPost("{entityId}")]
-        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] EntityEntryEntity entityEntryModel)
+        public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] EntityEntryEntity entity)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            dc.CurrentUser = GetCurrentUser();
+
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.CreatedUserId = dc.CurrentUser.Id;
+            entity.ModifiedDate = DateTime.UtcNow;
+            entity.ModifiedUserId = dc.CurrentUser.Id;
+            entity.EntityId = entityId;
 
             dc.Transaction<IDbRecord4Core>(delegate {
-                entityEntryModel.EntityId = entityId;
-                entityEntryModel.Add(dc);
+                entity.Add(dc);
             });
 
-            return CreatedAtAction("GetEntityEntries", new { id = entityEntryModel.Id }, entityEntryModel);
+            return CreatedAtAction("GetEntityEntries", new { id = entity.Id }, entity);
         }
 
         // DELETE: api/EntityEntries/5

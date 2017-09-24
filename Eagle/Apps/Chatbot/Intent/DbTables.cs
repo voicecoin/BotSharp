@@ -73,6 +73,14 @@ namespace Apps.Chatbot.Intent
         public String DataJson { get; set; }
         [NotMapped]
         public List<DmIntentExpressionItem> Data { get; set; }
+
+        /*[JsonIgnore]
+        [Column("Dependency")]
+        [MaxLength]
+        public String DependencyJson { get; set; }
+        [NotMapped]
+        public List<DmIntentExpressionItem> Dependency { get; set; }*/
+
         public Boolean AllowOverrideData { get; set; }
 
         [NotMapped]
