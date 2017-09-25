@@ -20,7 +20,7 @@ namespace Apps.WeChat
     public class WexinMessageHandler : MessageHandler<CustomMessageContext>
     {
         public CoreDbContext dc { get; set; }
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
 
         public WexinMessageHandler(XDocument inputStream, PostModel postModel, int maxRecordCount = 0)
             : base(inputStream, postModel, maxRecordCount)

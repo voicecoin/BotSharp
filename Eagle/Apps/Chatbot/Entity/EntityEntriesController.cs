@@ -10,7 +10,6 @@ using Apps.Chatbot.DomainModels;
 using Utility;
 using Apps.Chatbot.DmServices;
 using Core.Interfaces;
-using Enyim.Caching;
 
 namespace Apps.Chatbot.Entity
 {

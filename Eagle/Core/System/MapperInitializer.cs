@@ -12,7 +12,9 @@ namespace Core
 {
     public class MapperInitializer : IInitializationLoader
     {
-        public void Initialize(IConfigurationRoot config, IHostingEnvironment env)
+        public int Priority => 100;
+
+        public void Initialize(IConfiguration config, IHostingEnvironment env)
         {
             // Initialize AutoMapper
             Mapper.Initialize(cfg =>

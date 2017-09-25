@@ -11,17 +11,17 @@ namespace Core
     public class InitializationLoader
     {
         public IHostingEnvironment Env { get; set; }
-        public IConfigurationRoot config {get;set;}
+        public IConfiguration Config {get;set;}
         public void Load()
         {
             var coreLoaders = TypeHelper.GetInstanceWithInterface<IInitializationLoader>("Core");
             coreLoaders.ForEach(loader => {
-                loader.Initialize(config, Env);
+                loader.Initialize(Config, Env);
             });
 
             var appsLoaders = TypeHelper.GetInstanceWithInterface<IInitializationLoader>("Apps");
             appsLoaders.ForEach(loader => {
-                loader.Initialize(config, Env);
+                loader.Initialize(Config, Env);
             });
         }
     }

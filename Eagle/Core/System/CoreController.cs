@@ -1,6 +1,6 @@
 ﻿using Core.Account;
-using Enyim.Caching;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,16 +13,15 @@ using Utility;
 
 namespace Core
 {
-#if AUTH_REQUIRED
     [Authorize]
-#endif
     [Produces("application/json")]
     [Route("v1/[controller]")]
     [ServiceFilter(typeof(ApiExceptionFilter))]
     public class CoreController : ControllerBase
     {
-        public static IConfigurationRoot Configuration { get; set; }
         protected readonly CoreDbContext dc;
+        
+        protected CoreDbContext Dc { get; set; }
 
         public CoreController()
         {
@@ -31,11 +30,12 @@ namespace Core
             dc = new CoreDbContext();
             dc.CurrentUser = GetCurrentUser();
             dc.InitDb();
+            Dc = dc;
         }
 
         protected String GetConfig(string path)
         {
-            return Configuration.GetSection(path).Value;
+            return CoreDbContext.Configuration.GetSection(path).Value;
         }
 
         protected UserEntity GetCurrentUser()
@@ -44,8 +44,8 @@ namespace Core
             {
                 return new UserEntity
                 {
-                    Id = this.User.Claims.First(x => x.Type.Equals("UserId")).Value,
-                    UserName = this.User.Identity.Name
+                    Id = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserId"))?.Value,
+                    UserName = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value
                 };
             }
             else

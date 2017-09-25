@@ -16,7 +16,9 @@ namespace Core.Scheduler
 {
     public class SchedulerInitializer : IInitializationLoader
     {
-        public void Initialize(IConfigurationRoot config, IHostingEnvironment env)
+        public int Priority => 500;
+
+        public void Initialize(IConfiguration config, IHostingEnvironment env)
         {
             bool enable = bool.Parse(config.GetSection("Scheduler:Enable").Value);
             if (!enable) return;
@@ -32,7 +34,7 @@ namespace Core.Scheduler
             sched.Start();
         }
 
-        private static void Schedule(IScheduler sched, Type type, IConfigurationRoot config)
+        private static void Schedule(IScheduler sched, Type type, IConfiguration config)
         {
             IScheduleJob scheduleJob = (IScheduleJob)Activator.CreateInstance(type);
 

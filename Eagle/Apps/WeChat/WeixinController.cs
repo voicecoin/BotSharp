@@ -12,7 +12,6 @@ using Core;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.CoreMvcExtension;
-using Enyim.Caching;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,11 +28,6 @@ namespace Apps.WeChat
         private readonly string EncodingAESKey = "9Rn0jQZ3GgqaVdJKgWTc99U7YSMfb7x95ccBPlHEKA4";
         private readonly string AppId = "wx12b178fb4ffd4560";
         //private readonly string AppSecret = "56b83db6271585b9b48cee68fadb9940";
-
-        public WeixinController(IMemcachedClient memcachedClient)
-        {
-            dc.MemcachedClient = memcachedClient;
-        }
 
         // 灵溪花谷 lingxihuagu wxd4ff56849b9bd433 znSwewfQPsSVX4E0CF69ALTYDXlm3HTlMVygzsUpKPY
 
@@ -74,7 +68,7 @@ namespace Apps.WeChat
             
             var messageHandler = new WexinMessageHandler(document, postModel);// 接收消息（第一步）
             messageHandler.dc = dc;
-            messageHandler.Configuration = Configuration;
+            messageHandler.Configuration = CoreDbContext.Configuration;
 
             messageHandler.Execute();// 执行微信处理过程（第二步）
 

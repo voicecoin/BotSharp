@@ -14,7 +14,9 @@ namespace Core
 {
     public class DbInitializer : IInitializationLoader
     {
-        public void Initialize(IConfigurationRoot config, IHostingEnvironment env)
+        public int Priority => 1;
+
+        public void Initialize(IConfiguration config, IHostingEnvironment env)
         {
             CoreDbContext dc = new CoreDbContext();
             dc.InitDb();

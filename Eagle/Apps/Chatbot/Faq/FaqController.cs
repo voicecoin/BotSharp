@@ -70,7 +70,7 @@ namespace Apps.Chatbot.Faq
                 file.CopyTo(stream);
             }
 
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var gb2312 = Encoding.GetEncoding("GB2312");
             var content = System.IO.File.ReadAllText(filePath, gb2312);
             var faqs = content.Split(new string[] { "-break-" }, StringSplitOptions.RemoveEmptyEntries).Where(x => !String.IsNullOrEmpty(x)).ToList();

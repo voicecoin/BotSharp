@@ -3,8 +3,8 @@
     "Enable": true,
     "Crons": {
       "TestJob": "0 0/1 * * * ?",
-      "CorpusPosJob": "0 0/1 * * * ?",
-      "FaqPosJob": "30 0/1 * * * ?"
+      "CorpusPosJob": "0/30 * * * * ?",
+      "FaqPosJob": "0/45 * * * * ?"
     }
   }
 }

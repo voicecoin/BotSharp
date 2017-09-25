@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.DmServices;
-using Enyim.Caching;
 using Microsoft.AspNetCore.Authorization;
 using Apps.Chatbot.Intent;
 

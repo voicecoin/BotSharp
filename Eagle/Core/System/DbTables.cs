@@ -50,12 +50,12 @@ namespace Core
                 entry.Entity.ModifiedDate = DateTime.UtcNow;
             };
 
-            Triggers<IDbRecord>.Updated += entry =>
+            Triggers<DbRecord>.Updated += entry =>
             {
 
             };
 
-            Triggers<IDbRecord>.UpdateFailed += entry =>
+            Triggers<DbRecord>.UpdateFailed += entry =>
             {
 
             };

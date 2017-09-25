@@ -24,7 +24,7 @@ namespace Apps.Chatbot.Analyzer
                             orderby expression.ModifiedDate
                             select new { ExpressionId = expression.Id, AgentId = intent.AgentId, Text = expression.Text };
 
-            var result = sentences.Take(10).ToList();
+            var result = sentences.Take(5).ToList();
 
             result.ForEach(sentence => {
                 AgentEntity agent = new AgentEntity { Id = sentence.AgentId };

@@ -10,7 +10,8 @@ namespace Core.Interfaces
 {
     public interface IInitializationLoader
     {
-        void Initialize(IConfigurationRoot config, IHostingEnvironment env);
+        int Priority { get; }
+        void Initialize(IConfiguration config, IHostingEnvironment env);
     }
 
     /// <summary>
@@ -22,6 +23,7 @@ namespace Core.Interfaces
     }
     public interface IDbRecord4Core { }
     public interface IDbRecord4MySql { }
+    public interface IMySqlGsmpTable { }
 
     /// <summary>
     /// Domain model, based on Domain-Driven Design concept.
@@ -47,7 +49,7 @@ namespace Core.Interfaces
         /// value smaller is higher priority
         /// </summary>
         int Priority { get; }
-        void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc);
+        void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc);
     }
 
     public interface IDbTableAmend

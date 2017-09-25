@@ -4,11 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Core;
-using Apps.Chatbot.DomainModels;
 using Utility;
 using Core.Interfaces;
-using Apps.Chatbot.DmServices;
-using Enyim.Caching;
 using System.Collections.Generic;
 using Core.Enums;
 

@@ -24,7 +24,7 @@ namespace Core.Block
         public List<ViewColumEntity> Columns { get; set; }
         [NotMapped]
         public List<ViewActionEntity> Actions { get; set; }
-
+        public String IdFieldName { get; set; }
         /// <summary>
         /// 有些数据Host在外部，通过Rest Api去取数据
         /// </summary>

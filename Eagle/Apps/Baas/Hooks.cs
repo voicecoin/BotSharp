@@ -14,7 +14,7 @@ namespace Apps.Baas
     public class Hooks : IHookDbInitializer
     {
         public int Priority => 999;
-        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
         {
             var dm = new BundleDomainModel<UserEntity>(dc, new UserEntity
             {

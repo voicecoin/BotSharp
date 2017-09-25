@@ -10,7 +10,9 @@ namespace Core.Menu
 {
     public class MenuInitializer : IInitializationLoader
     {
-        public void Initialize(IConfigurationRoot config, IHostingEnvironment env)
+        public int Priority => 100;
+
+        public void Initialize(IConfiguration config, IHostingEnvironment env)
         {
         }
     }

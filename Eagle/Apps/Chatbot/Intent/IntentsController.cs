@@ -10,7 +10,6 @@ using Utility;
 using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Intent;
 using Core.Interfaces;
-using Enyim.Caching;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Apps.Chatbot.Intent

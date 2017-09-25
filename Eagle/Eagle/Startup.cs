@@ -7,36 +7,21 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
-using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Core;
+using Newtonsoft.Json.Serialization;
 
 namespace Eagle
 {
     public partial class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddJsonFile("authsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"authsettings.{env.EnvironmentName}.json", optional: true)
-                .AddJsonFile("schedulersettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"schedulersettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-
-            CoreController.Configuration = Configuration;
-            CoreDbContext.Configuration = Configuration;
-            CoreDbContext.Env = env;
+            Configuration = configuration;
+            
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -45,69 +30,40 @@ namespace Eagle
 
             services.AddCors();
 
-            services.AddAuthentication();
-
-            bool enableMemcached = bool.Parse(Configuration.GetSection("enyimMemcached:Enable").Value);
-            if (enableMemcached)
-            {
-                services.AddEnyimMemcached(options => Configuration.GetSection("enyimMemcached").Bind(options));
-            }
+            ConfigureJwtAuthService(services);
 
             // Add framework services.
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true;
-                options.FormatterMappings.SetMediaTypeMappingForFormat("xml", new MediaTypeHeaderValue("application/xml"));
-                options.RespectBrowserAcceptHeader = true;
-            }).AddXmlSerializerFormatters()
-              .AddXmlDataContractSeria‌​lizerFormatters()
-              .AddJsonOptions(options =>
-              {
-                  options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                  //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-              });
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                //options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
-            bool enableMemcached = bool.Parse(Configuration.GetSection("enyimMemcached:Enable").Value);
-            if (enableMemcached)
-            {
-                app.UseEnyimMemcached();
-            }
+            app.UseAuthentication();
 
-            ConfigureAuth(app);
+            app.UseMvc();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "API",
-                    template: "v1/{controller=Home}/{action=Index}/{id?}");
-            });
-
-            // for wwwroot
-            app.UseDefaultFiles();
-
-            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/static-files
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                //FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"AdminUI")),
-                //RequestPath = new PathString("/AdminUI"),
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
-                }
-            });
+            CoreDbContext.Configuration = Configuration;
+            CoreDbContext.Env = env;
 
             InitializationLoader loader = new InitializationLoader();
             loader.Env = env;
-            loader.config = Configuration;
+            loader.Config = Configuration;
             loader.Load();
         }
     }

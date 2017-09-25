@@ -20,7 +20,7 @@ namespace Apps.Chatbot.Agent
     {
         public int Priority => 100;
 
-        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
         {
             var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "Chatbot Agent", EntityName = "Agent" });
             dm.AddEntity();

@@ -13,7 +13,7 @@ namespace Core.Node
     public class Hooks : IHookDbInitializer
     {
         public int Priority => 1;
-        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
         {
             if (dc.Table<BundleEntity>().Any(x => x.EntityName == "Node")) return;
 

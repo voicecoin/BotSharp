@@ -14,7 +14,7 @@ namespace Core.Bundle
         void LoadFieldRecords(CoreDbContext dc);
     }
 
-    public interface IBundlable<T> where T : Interfaces.IDbRecord
+    public interface IBundlable<T> where T : IDbRecord
     {
         string BundleId { get; set; }
         void LoadFieldRecords();

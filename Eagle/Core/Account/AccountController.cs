@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using Core.Interfaces;
 using Core.Node;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Core.Account
 {
@@ -32,7 +31,7 @@ namespace Core.Account
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
-            var user = dc.Table<UserEntity>().Find(GetCurrentUser().Id);
+            var user = dc.Table<UserEntity>().FirstOrDefault(x => x.UserName == GetCurrentUser().UserName);
 
             return Ok(user);
         }

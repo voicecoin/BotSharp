@@ -1,0 +1,9 @@
+{
+  "SmsOne": {
+    "Host": "http://localhost:14617",
+    //"Host": "http://onetest.smsassist.com",
+    "MercuryWebApi": "http://localhost:59165",
+    "LoginPath": "/Account/LoginFromWindowsClient",
+    "UserProfilePath": "/UserProfile/MyProfile"
+  }
+}

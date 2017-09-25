@@ -12,7 +12,7 @@ namespace DataFactory
         public EfDbContext4MySql(DbContextOptions options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseMySql(ConnectionString);
+            optionsBuilder.UseMySql(ConnectionString);
             base.OnConfiguring(optionsBuilder);
         }
     }

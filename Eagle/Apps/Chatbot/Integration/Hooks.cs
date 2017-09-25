@@ -12,7 +12,7 @@ namespace Apps.Chatbot.Integration
     {
         public int Priority => 101;
 
-        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
         {
             var dm = new DomainModel<AgentPlatformEntity>(dc,
                 new AgentPlatformEntity

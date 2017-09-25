@@ -18,6 +18,8 @@ namespace Core
         public async Task<object> Http([FromBody] JObject data, [FromQuery] string host, [FromQuery] string path)
         {
             string hostUrl = GetConfig(host);
+            var user = GetCurrentUser();
+            data.Add("CurrentUserName", user.UserName);
             return await HttpClientHelper.PostAsJsonAsync<Object>(hostUrl, path, data);
         }
     }

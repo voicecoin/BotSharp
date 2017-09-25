@@ -7,7 +7,6 @@ using Apps.Chatbot.DomainModels;
 using Utility;
 using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Agent;
-using Enyim.Caching;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Text;
@@ -113,8 +112,8 @@ namespace Apps.Chatbot.Conversation
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {
-                var url = Configuration.GetSection("NlpApi:TulingUrl").Value;
-                var key = Configuration.GetSection("NlpApi:TulingKey").Value;
+                var url = CoreDbContext.Configuration.GetSection("NlpApi:TulingUrl").Value;
+                var key = CoreDbContext.Configuration.GetSection("NlpApi:TulingKey").Value;
 
                 var result = await RestHelper.Rest<TulingResponse>(url,
                     new

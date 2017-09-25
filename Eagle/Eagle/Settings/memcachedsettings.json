@@ -1,0 +1,11 @@
+{
+  "enyimMemcached": {
+    "Enable": false,
+    "Servers": [
+      {
+        "Address": "localhost",
+        "Port": 11211
+      }
+    ]
+  }
+}

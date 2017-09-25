@@ -19,7 +19,7 @@ namespace Core.Account
     {
         public int Priority => 1000;
 
-        public void Load(IHostingEnvironment env, IConfigurationRoot config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
         {
             InitRoles(dc);
 
