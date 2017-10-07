@@ -31,7 +31,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="App_Data\Yaya.db" />
+    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="App_Data\天气查询\Entities\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,8 @@ namespace Apps.Nlp
         /// <summary>
         /// 中文版维基百科实体库
         /// </summary>
-        CnDbPedia = 6
+        CnDbPedia = 6,
+        YayaAi = 8
     }
 
     public enum CacheType

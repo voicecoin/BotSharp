@@ -154,7 +154,7 @@ namespace Apps.Chatbot.DmServices
             });
 
             // 对人物机器人的回复做转换
-            if(agentRequestModel.Agent.Id == "b8d4d157-611a-40cb-ad5a-142987a73b8a")
+            if(intent.AgentId == "b8d4d157-611a-40cb-ad5a-142987a73b8a")
             {
                 PeopleResponseParser peopleResponseParser = new PeopleResponseParser();
                 response.Text = peopleResponseParser.FillReplyTemplate(dc, parameters.Where(x => !String.IsNullOrEmpty(x.Value)).ToList(), response.Text);

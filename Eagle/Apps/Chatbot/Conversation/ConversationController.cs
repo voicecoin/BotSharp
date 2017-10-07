@@ -112,20 +112,27 @@ namespace Apps.Chatbot.Conversation
 
             if (response == null || String.IsNullOrEmpty(response.Text))
             {
-                var url = CoreDbContext.Configuration.GetSection("NlpApi:TulingUrl").Value;
-                var key = CoreDbContext.Configuration.GetSection("NlpApi:TulingKey").Value;
+                // 是否转向闲聊机器人
+                if (dc.Table<AgentSkillEntity>().Any(x => x.AgentId == agentRequestModel.Agent.Id && x.SkillId == "c3c498cf-3009-4791-9704-819a693577b7"))
+                {
+                    var url = CoreDbContext.Configuration.GetSection("NlpApi:TulingUrl").Value;
+                    var key = CoreDbContext.Configuration.GetSection("NlpApi:TulingKey").Value;
 
-                var result = await RestHelper.Rest<TulingResponse>(url,
-                    new
-                    {
-                        userid = analyzerModel.ConversationId,
-                        key = key,
-                        info = analyzerModel.Text
-                    });
+                    var result = await RestHelper.Rest<TulingResponse>(url,
+                        new
+                        {
+                            userid = analyzerModel.ConversationId,
+                            key = key,
+                            info = analyzerModel.Text
+                        });
 
-                result.ResponseTime = (DateTime.UtcNow - timeStart).Milliseconds;
-                result.Log(MyLogLevel.DEBUG);
-                return result.Text;
+                    result.ResponseTime = (DateTime.UtcNow - timeStart).Milliseconds;
+                    return result.Text;
+                }
+                else
+                {
+                    return "不明白你在说啥。";
+                }
             }
             else
             {

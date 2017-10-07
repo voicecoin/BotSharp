@@ -29,7 +29,7 @@ namespace Apps.Chatbot.Agent
                 string entityValue = parameters[1];
                 string entityName = parameterEntities.First(x => x.Value.ToString() == entityValue).Value;
 
-                List<Triple> triples = CnDbPeidaRdf.QueryEntity(Dc, subject);
+                List<Triple> triples = CombinedRdf.QueryEntity(Dc, subject);
                 /*List<String> synonoms = aiController.GetAllSynonoms(entityName, entityValue);
 
                 foreach (String synonym in synonoms)
@@ -56,7 +56,7 @@ namespace Apps.Chatbot.Agent
                 string entityValue = parameters.Last();
                 string entityName = parameterEntities.First(x => x.Value.ToString() == entityValue).Value;
 
-                List<Triple> triples = CnDbPeidaRdf.QueryEntity(Dc, subject);
+                List<Triple> triples = CombinedRdf.QueryEntity(Dc, subject);
                 List<String> synonoms = (from entity in Dc.Table<EntityEntity>()
                                         join entry in Dc.Table<EntityEntryEntity>() on entity.Id equals entry.EntityId
                                         join synonym in Dc.Table<EntityEntrySynonymEntity>() on entry.Id equals synonym.EntityEntryId
@@ -87,6 +87,12 @@ namespace Apps.Chatbot.Agent
                 response = tokenName;
             }
 
+            // 如果有不能解析的Token
+            if (response.Contains("@"))
+            {
+                response = "我不知道呀。";
+            }
+
             return response;
         }
 
@@ -115,7 +121,7 @@ namespace Apps.Chatbot.Agent
                 return "你想知道谁资料？";
             }
 
-            List<Triple> triples = CnDbPeidaRdf.QueryEntity(Dc, subjectValue);
+            List<Triple> triples = CombinedRdf.QueryEntity(Dc, subjectValue);
             List<String> predicts = triples.Select(x => x.Predicate).ToList();
 
             string predictEntity = predict.Substring(1);
@@ -123,11 +129,21 @@ namespace Apps.Chatbot.Agent
 
             string objectValue = String.Empty;
 
-            List<String> synonoms = (from entity in Dc.Table<EntityEntity>()
+            String entryId = (from entity in Dc.Table<EntityEntity>()
                                      join entry in Dc.Table<EntityEntryEntity>() on entity.Id equals entry.EntityId
                                      join synonym in Dc.Table<EntityEntrySynonymEntity>() on entry.Id equals synonym.EntityEntryId
                                      where entity.Id == "3286b09e-f542-42ec-a404-55b5d93e57bc" && (entry.Value == predictValue || synonym.Synonym == predictValue)
+                                     select entry.Id).FirstOrDefault();
+
+            List<String> synonoms = (from entry in Dc.Table<EntityEntryEntity>()
+                                     join synonym in Dc.Table<EntityEntrySynonymEntity>() on entry.Id equals synonym.EntityEntryId
+                                     where entry.Id == entryId
                                      select synonym.Synonym).ToList();
+
+            if (!synonoms.Contains(predictValue))
+            {
+                synonoms.Add(predictValue);
+            }
 
             foreach (String synonym in synonoms)
             {
