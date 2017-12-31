@@ -1,63 +1,62 @@
-﻿using EntityFrameworkCore.Triggers;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using Core.Account;
 using Microsoft.Extensions.Configuration;
-using DataFactory;
 using System.Data.SqlClient;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using MySql.Data.MySqlClient;
-using System.Data.Common;
+using EntityFrameworkCore.BootKit;
+using Microsoft.Data.Sqlite;
 
 namespace Core
 {
-    public class CoreDbContext : EfDbBase
+    public class CoreDbContext : Database
     {
         public UserEntity CurrentUser { get; set; }
         public static IConfiguration Configuration { get; set; }
         public static IHostingEnvironment Env { get; set; }
+        public static String[] Assembles { get; set; }
 
         public void InitDb()
         {
             string db = Configuration.GetSection("Database:Default").Value;
+            string connectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
+
             if (db.Equals("SqlServer"))
             {
-                EfDbContext4SqlServer.ConnectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
-                BindDbContext<IDbRecord4Core, EfDbContext4SqlServer>(new EfDbBinding
+                BindDbContext<IDbRecord, DbContext4SqlServer>(new DatabaseBind
                 {
-                    connection4Master = new SqlConnection(EfDbContext4SqlServer.ConnectionString)
+                    MasterConnection = new SqlConnection(connectionString),
+                    CreateDbIfNotExist = true,
+                    AssemblyNames = Assembles
                 });
             }
             else if (db.Equals("Sqlite"))
             {
-                EfDbContext4Sqlite.ConnectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
-                EfDbContext4Sqlite.ConnectionString = EfDbContext4Sqlite.ConnectionString.Replace("|DataDirectory|\\", Env.ContentRootPath + "\\App_Data\\");
-                BindDbContext<IDbRecord4Core, EfDbContext4Sqlite>(new EfDbBinding
+                connectionString = connectionString.Replace("|DataDirectory|\\", Env.ContentRootPath + "\\App_Data\\");
+                BindDbContext<IDbRecord, DbContext4Sqlite>(new DatabaseBind
                 {
-                    connection4Master = new SqlConnection(EfDbContext4SqlServer.ConnectionString)
+                    MasterConnection = new SqliteConnection(connectionString),
+                    CreateDbIfNotExist = true,
+                    AssemblyNames = Assembles
                 });
             }
             else if (db.Equals("MySql"))
             {
-                EfDbContext4MySql.ConnectionString = Configuration.GetSection("Database:ConnectionStrings")[db];
-                BindDbContext<IDbRecord4MySql, EfDbContext4MySql>(new EfDbBinding
+                BindDbContext<IDbRecord, DbContext4MySql>(new DatabaseBind
                 {
-                    connection4Master = new MySqlConnection(EfDbContext4MySql.ConnectionString)
+                    MasterConnection = new MySqlConnection(connectionString),
+                    CreateDbIfNotExist = true,
+                    AssemblyNames = Assembles
                 });
             }
-
-            // init GSMP connection
-            /*string gsmp = Configuration.GetSection("Database:SmsOneGsmp").Value;
-            BindDbContext<IMySqlGsmpTable, EfDbContext4MySql>(new EfDbBinding
+            else if (db.Equals("InMemory"))
             {
-                connection4Master = new MySqlConnection(gsmp),
-                connection4Slaves = new List<DbConnection> { new MySqlConnection(gsmp) }
-            });*/
+                BindDbContext<IDbRecord, DbContext4Memory>(new DatabaseBind
+                {
+                    AssemblyNames = Assembles
+                });
+            }
         }
 
         public T GetCache<T>(string key)

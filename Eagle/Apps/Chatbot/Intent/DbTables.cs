@@ -1,6 +1,5 @@
-﻿using Apps.Chatbot.DomainModels;
-using Core;
-using Core.Interfaces;
+﻿using Core;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Intent
 {
     [Table("Chatbot_Intents")]
-    public class IntentEntity : DbRecord, IDbRecord4Core
+    public class IntentEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -53,7 +52,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentExpressions")]
-    public class IntentExpressionEntity : DbRecord, IDbRecord4Core
+    public class IntentExpressionEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -101,7 +100,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentResponses")]
-    public class IntentResponseEntity : DbRecord, IDbRecord4Core
+    public class IntentResponseEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -128,7 +127,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentResponseMessages")]
-    public class IntentResponseMessageEntity : DbRecord, IDbRecord4Core
+    public class IntentResponseMessageEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -149,7 +148,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentResponseParameters")]
-    public class IntentResponseParameterEntity : DbRecord, IDbRecord4Core
+    public class IntentResponseParameterEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

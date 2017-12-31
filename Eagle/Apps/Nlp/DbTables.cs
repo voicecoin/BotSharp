@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Text;
 namespace Apps.Nlp
 {
     [Table("NlpParseCache")]
-    public class NlpParseCache : IDbRecord4Core
+    public class NlpParseCache : IDbRecord
     {
         [Key]
         [StringLength(36)]

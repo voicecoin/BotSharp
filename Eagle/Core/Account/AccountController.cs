@@ -7,6 +7,7 @@ using Core.Interfaces;
 using Core.Node;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Account
 {
@@ -73,7 +74,7 @@ namespace Core.Account
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserEntity accountModel)
         {
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 var dm = new BundleDomainModel<UserEntity>(dc, accountModel);
                 dm.AddEntity();
             });

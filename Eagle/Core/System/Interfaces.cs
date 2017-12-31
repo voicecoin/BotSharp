@@ -1,4 +1,5 @@
 ﻿using Core.Menu;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,17 +14,6 @@ namespace Core.Interfaces
         int Priority { get; }
         void Initialize(IConfiguration config, IHostingEnvironment env);
     }
-
-    /// <summary>
-    /// All table should implement this table inteface
-    /// </summary>
-    public interface IDbRecord
-    {
-        bool IsExist(CoreDbContext dc);
-    }
-    public interface IDbRecord4Core { }
-    public interface IDbRecord4MySql { }
-    public interface IMySqlGsmpTable { }
 
     /// <summary>
     /// Domain model, based on Domain-Driven Design concept.

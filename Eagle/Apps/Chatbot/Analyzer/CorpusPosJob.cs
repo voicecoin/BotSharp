@@ -11,6 +11,7 @@ using Apps.Chatbot.Agent;
 using Apps.Chatbot.DmServices;
 using Core.Interfaces;
 using Newtonsoft.Json;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Analyzer
 {
@@ -44,7 +45,7 @@ namespace Apps.Chatbot.Analyzer
                 var userSay = new IntentExpressionEntity() { Data = data };
 
                 // Save to database
-                Dc.Transaction<IDbRecord4Core>(delegate {
+                Dc.Transaction<IDbRecord>(delegate {
                     var expressionEntity = Dc.Table<IntentExpressionEntity>().Find(sentence.ExpressionId);
                     expressionEntity.DataJson = JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     expressionEntity.ModifiedDate = DateTime.UtcNow;
@@ -54,7 +55,7 @@ namespace Apps.Chatbot.Analyzer
 
             });
             
-            return null;
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Core.Block;
-using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +10,7 @@ using System.Text;
 namespace Core.Page
 {
     [Table("Pages")]
-    public class PageEntity : DbRecord, IDbRecord4Core
+    public class PageEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -30,7 +30,7 @@ namespace Core.Page
     }
 
     [Table("PageBlocks")]
-    public class PageBlockEntity : DbRecord, IDbRecord4Core
+    public class PageBlockEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

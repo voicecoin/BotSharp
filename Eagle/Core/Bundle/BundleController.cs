@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Bundle
 {
@@ -61,7 +62,7 @@ namespace Core.Bundle
             dc.CurrentUser = GetCurrentUser();
             var dm = new DomainModel<BundleEntity>(dc, bundleEntity);
 
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 dm.Add(dc);
             });
 

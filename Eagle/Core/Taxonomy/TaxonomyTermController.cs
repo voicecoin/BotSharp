@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using DbExtensions;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Taxonomy
 {
@@ -65,7 +66,7 @@ namespace Core.Taxonomy
                 return BadRequest(ModelState);
             }
             
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 var dm = new DomainModel<TaxonomyTermEntity>(dc, taxonomyTermEntity);
                 dm.AddEntity();
             });

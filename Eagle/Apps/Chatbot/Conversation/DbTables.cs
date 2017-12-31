@@ -1,6 +1,7 @@
 ﻿using Apps.Chatbot.Intent;
 using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Conversation
 {
     [Table("Chatbot_Conversations")]
-    public class ConversationEntity : DbRecord, IDbRecord4Core
+    public class ConversationEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -32,7 +33,7 @@ namespace Apps.Chatbot.Conversation
     }
 
     [Table("Chatbot_ConversationMessages")]
-    public class ConversationMessageEntity : DbRecord, IDbRecord4Core
+    public class ConversationMessageEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -47,7 +48,7 @@ namespace Apps.Chatbot.Conversation
     }
 
     [Table("Chatbot_ConversationParameters")]
-    public class ConversationParameterEntity : DbRecord, IDbRecord4Core
+    public class ConversationParameterEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

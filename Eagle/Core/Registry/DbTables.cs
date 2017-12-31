@@ -1,4 +1,4 @@
-﻿using Core.Interfaces;
+﻿using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +12,7 @@ namespace Core.Registry
     /// System dictionary
     /// </summary>
     [Table("Registries")]
-    public class RegistryEntity : DbRecord, IDbRecord4Core
+    public class RegistryEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -22,7 +22,7 @@ namespace Core.Registry
     }
 
     [Table("RegistryEntries")]
-    public class RegistryEntryEntity : DbRecord, IDbRecord4Core
+    public class RegistryEntryEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

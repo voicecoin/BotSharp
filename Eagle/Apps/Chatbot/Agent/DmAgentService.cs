@@ -5,6 +5,7 @@ using Apps.Chatbot.Faq;
 using Apps.Chatbot.Intent;
 using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Microsoft.Extensions.Configuration;
 using MWL.DocumentResolver;
 using Newtonsoft.Json;
@@ -133,7 +134,7 @@ namespace Apps.Chatbot.DmServices
             }
 
             // 保存意图上下文
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 var conversation = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
                 conversation.IntentId = intent.Id;
                 if (!String.IsNullOrEmpty(conversation.ContextsJson))

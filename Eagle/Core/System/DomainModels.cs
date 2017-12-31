@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public class DomainModel<T> : IDomainModel<T> where T : DbRecord
+    public class DomainModel<T> : IDomainModel<T> where T : CoreDbRecord
     {
         public CoreDbContext Dc { get; set; }
 

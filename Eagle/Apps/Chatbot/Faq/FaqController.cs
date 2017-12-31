@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace Apps.Chatbot.Faq
         [HttpDelete("{agentId}/{id}")]
         public void Delete(string agentId, string id)
         {
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 var faq = dc.Table<FaqEntity>().Find(id);
                 dc.Table<FaqEntity>().Remove(faq);
             });
@@ -52,7 +53,7 @@ namespace Apps.Chatbot.Faq
             entity.ModifiedDate = DateTime.UtcNow;
             entity.ModifiedUserId = dc.CurrentUser.Id;
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 dc.Table<FaqEntity>().Add(entity);
             });
@@ -77,7 +78,7 @@ namespace Apps.Chatbot.Faq
 
             dc.CurrentUser = GetCurrentUser();
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 faqs.ForEach(pair =>
                 {

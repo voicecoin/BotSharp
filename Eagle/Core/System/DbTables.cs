@@ -10,6 +10,7 @@ using Core.Enums;
 using Core.Interfaces;
 using Core.Node;
 using Core.Bundle;
+using EntityFrameworkCore.BootKit;
 
 namespace Core
 {
@@ -21,31 +22,31 @@ namespace Core
     /// Add-Migration Initial -context "VDbContext"
     /// Update-Database -context "VDbContext"
     /// </summary>
-    public abstract class DbRecord : IDbRecord
+    public abstract class CoreDbRecord : DbRecord, IDbRecord
     {
-        static DbRecord()
+        static CoreDbRecord()
         {
-            Triggers<DbRecord>.Inserting += entry =>
+            Triggers<CoreDbRecord>.Inserting += entry =>
             {
                 entry.Entity.CreatedDate = DateTime.UtcNow;
                 entry.Entity.ModifiedDate = entry.Entity.CreatedDate;
             };
 
-            Triggers<DbRecord>.Inserted += entry =>
+            Triggers<CoreDbRecord>.Inserted += entry =>
             {
             };
 
-            Triggers<DbRecord>.Deleting += entry =>
-            {
-
-            };
-
-            Triggers<DbRecord>.Deleted += entry =>
+            Triggers<CoreDbRecord>.Deleting += entry =>
             {
 
             };
 
-            Triggers<DbRecord>.Updating += entry =>
+            Triggers<CoreDbRecord>.Deleted += entry =>
+            {
+
+            };
+
+            Triggers<CoreDbRecord>.Updating += entry =>
             {
                 entry.Entity.ModifiedDate = DateTime.UtcNow;
             };
@@ -60,11 +61,6 @@ namespace Core
 
             };
         }
-
-        [Key]
-        [StringLength(36)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public String Id { get; set; }
 
         public EntityStatus Status { get; set; }
 
@@ -100,7 +96,7 @@ namespace Core
         }
     }
 
-    public abstract class BundleDbRecord : DbRecord
+    public abstract class BundleDbRecord : CoreDbRecord
     {
         [Required]
         public string BundleId { get; set; }

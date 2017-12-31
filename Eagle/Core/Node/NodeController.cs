@@ -10,6 +10,7 @@ using Utility;
 using Core.Interfaces;
 using Core.Bundle;
 using Microsoft.AspNetCore.Authorization;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Node
 {
@@ -68,7 +69,7 @@ namespace Core.Node
             node.ModifiedUserId = GetCurrentUser().Id;
             node.ModifiedDate = DateTime.UtcNow;
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 NodeEntity nodeRecord = node.Map<NodeEntity>();
                 dc.Table<NodeEntity>().Add(nodeRecord);

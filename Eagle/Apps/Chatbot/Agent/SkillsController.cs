@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Agent
 {
@@ -33,7 +34,7 @@ namespace Apps.Chatbot.Agent
             var skill = dc.Table<AgentSkillEntity>().FirstOrDefault(x => x.AgentId == agentId && x.SkillId == skillId);
             if (skill != null) return true;
 
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 var dm = new DomainModel<AgentSkillEntity>(dc, new AgentSkillEntity
                 {
                     AgentId = agentId,
@@ -49,7 +50,7 @@ namespace Apps.Chatbot.Agent
         [HttpDelete("{agentId}/{skillId}")]
         public bool RemoveSkill(String agentId, String skillId)
         {
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
 
                 var skill = dc.Table<AgentSkillEntity>().FirstOrDefault(x => x.AgentId == agentId && x.SkillId == skillId);
                 if(skill != null)

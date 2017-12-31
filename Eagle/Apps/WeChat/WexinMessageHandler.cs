@@ -14,6 +14,7 @@ using Apps.Chatbot.Conversation;
 using Apps.Chatbot.Agent;
 using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.DmServices;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.WeChat
 {
@@ -61,7 +62,7 @@ namespace Apps.WeChat
             var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentRecord.Id && x.CreatedUserId == dc.CurrentUser.Id);
             if (conversation == null)
             {
-                dc.Transaction<IDbRecord4Core>(delegate
+                dc.Transaction<IDbRecord>(delegate
                 {
                     var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
                     {

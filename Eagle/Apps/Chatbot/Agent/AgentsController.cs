@@ -8,6 +8,7 @@ using Utility;
 using Core.Interfaces;
 using System.Collections.Generic;
 using Core.Enums;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Agent
 {
@@ -102,7 +103,7 @@ namespace Apps.Chatbot.Agent
             }
 
             dc.CurrentUser = GetCurrentUser();
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 var agentRecord = dc.Table<AgentEntity>().Find(id);
 
                 agentRecord.Name = agentModel.Name;
@@ -133,7 +134,7 @@ namespace Apps.Chatbot.Agent
 
             bool result = false;
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 result = dm.AddEntity();
             });

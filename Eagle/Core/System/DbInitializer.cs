@@ -9,6 +9,7 @@ using Core.Field;
 using Core.Interfaces;
 using Core.Account;
 using Microsoft.Extensions.Configuration;
+using EntityFrameworkCore.BootKit;
 
 namespace Core
 {
@@ -33,7 +34,7 @@ namespace Core
 
             // initial app db order by priority
             instances.OrderBy(x => x.Priority).ToList()
-                .ForEach(instance => dc.Transaction<IDbRecord4Core>(() => instance.Load(env, config, dc)));
+                .ForEach(instance => dc.Transaction<IDbRecord>(() => instance.Load(env, config, dc)));
 
             instances = TypeHelper.GetInstanceWithInterface<IHookDbInitializer>("Apps");
 
@@ -41,7 +42,7 @@ namespace Core
             instances.OrderBy(x => x.Priority).ToList()
                 .ForEach(instance =>
                 {
-                    dc.Transaction<IDbRecord4Core>(() => instance.Load(env, config, dc));
+                    dc.Transaction<IDbRecord>(() => instance.Load(env, config, dc));
                 });
         }
     }

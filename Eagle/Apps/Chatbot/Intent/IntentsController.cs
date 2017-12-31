@@ -11,6 +11,7 @@ using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Intent;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Intent
 {
@@ -79,7 +80,7 @@ namespace Apps.Chatbot.Intent
                 return BadRequest("Id is not match");
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 new DomainModel<IntentEntity>(dc, intentModel).Update();
             });
@@ -93,7 +94,7 @@ namespace Apps.Chatbot.Intent
         {
             bool result = false;
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 intentEntity.AgentId = agentId;
                 result = new DomainModel<IntentEntity>(dc, intentEntity).AddEntity();

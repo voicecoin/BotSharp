@@ -1,6 +1,5 @@
-﻿using Core.Block;
-using Core.Interfaces;
-using Core.Page;
+﻿using Core.Page;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +10,7 @@ using System.Text;
 namespace Core.Block
 {
     [Table("Blocks")]
-    public class BlockEntity : DbRecord, IDbRecord4Core
+    public class BlockEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

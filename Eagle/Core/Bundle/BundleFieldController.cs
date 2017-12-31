@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Bundle
 {
@@ -82,7 +83,7 @@ namespace Core.Bundle
         [HttpPost]
         public async Task<IActionResult> PostBundleFieldEntity([FromBody] BundleFieldEntity bundleFieldModel)
         {
-            dc.Transaction<IDbRecord4Core>(() => new DomainModel<BundleFieldEntity>(dc, bundleFieldModel).Add(dc));
+            dc.Transaction<IDbRecord>(() => new DomainModel<BundleFieldEntity>(dc, bundleFieldModel).Add(dc));
 
             return CreatedAtAction("PostBundleFieldEntity", new { id = bundleFieldModel.Id }, bundleFieldModel);
         }

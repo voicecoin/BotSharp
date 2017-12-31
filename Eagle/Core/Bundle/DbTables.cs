@@ -1,5 +1,5 @@
 ﻿using Core.Enums;
-using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Core.Bundle
 {
     [Table("Bundles")]
-    public class BundleEntity : DbRecord, IDbRecord4Core
+    public class BundleEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -27,7 +27,7 @@ namespace Core.Bundle
     }
 
     [Table("BundleFields")]
-    public class BundleFieldEntity : DbRecord, IDbRecord4Core
+    public class BundleFieldEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -46,7 +46,7 @@ namespace Core.Bundle
     }
 
     [Table("BundleFieldSettings")]
-    public class BundleFieldSettingEntity : DbRecord, IDbRecord4Core
+    public class BundleFieldSettingEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

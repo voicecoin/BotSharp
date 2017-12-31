@@ -7,10 +7,10 @@ using Apps.Chatbot.DomainModels;
 using Utility;
 using Apps.Chatbot.DmServices;
 using Apps.Chatbot.Agent;
-using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using System.Collections.Generic;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Conversation
 {
@@ -19,7 +19,7 @@ namespace Apps.Chatbot.Conversation
         [HttpGet("{conversationId}/Reset")]
         public void Reset(string conversationId)
         {
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
 
                 var conversation = dc.Table<ConversationEntity>().Find(conversationId);
 
@@ -45,7 +45,7 @@ namespace Apps.Chatbot.Conversation
             var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentId && x.CreatedUserId == dc.CurrentUser.Id);
             if (conversation == null)
             {
-                dc.Transaction<IDbRecord4Core>(delegate
+                dc.Transaction<IDbRecord>(delegate
                 {
                     var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
                     {

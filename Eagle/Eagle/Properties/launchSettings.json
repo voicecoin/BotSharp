@@ -15,7 +15,8 @@
       }
     },
     "Eagle": {
-      "commandName": "IISExpress"
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:9000/"
     }
   }
 }

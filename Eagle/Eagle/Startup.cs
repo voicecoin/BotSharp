@@ -60,6 +60,7 @@ namespace Eagle
 
             CoreDbContext.Configuration = Configuration;
             CoreDbContext.Env = env;
+            CoreDbContext.Assembles = new String[] { "Core", "Apps" };
 
             InitializationLoader loader = new InitializationLoader();
             loader.Env = env;

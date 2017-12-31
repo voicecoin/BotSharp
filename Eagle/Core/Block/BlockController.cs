@@ -1,6 +1,7 @@
 ﻿using Core.Block;
 using Core.Interfaces;
 using Core.Node;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ namespace Core.Block
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 var dm = new DomainModel<BlockEntity>(dc, blockEntity);
                 dm.AddEntity();

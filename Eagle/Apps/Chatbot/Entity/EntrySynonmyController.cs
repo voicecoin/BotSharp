@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,7 +24,7 @@ namespace Apps.Chatbot.Entity
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 dm.AddEntity();
             });
 
@@ -44,7 +45,7 @@ namespace Apps.Chatbot.Entity
                 return NotFound();
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 dc.Table<EntityEntrySynonymEntity>().Remove(entitySynonym);
             });
 

@@ -1,5 +1,5 @@
 ﻿using Core;
-using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Agent
 {
     [Table("Chatbot_Agents")]
-    public class AgentEntity : BundleDbRecord, IDbRecord4Core
+    public class AgentEntity : BundleDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -58,7 +58,7 @@ namespace Apps.Chatbot.Agent
     /// 机器人结盟，赋予一个机器人具有跟其它机器人一样的能力。
     /// </summary>
     [Table("Chatbot_AgentSkills")]
-    public class AgentSkillEntity : DbRecord, IDbRecord4Core
+    public class AgentSkillEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

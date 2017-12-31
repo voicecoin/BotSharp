@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ using System.Text;
 namespace Apps.Chatbot.Integration
 {
     [Table("Chatbot_AgentPlatforms")]
-    public class AgentPlatformEntity : DbRecord, IDbRecord4Core
+    public class AgentPlatformEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

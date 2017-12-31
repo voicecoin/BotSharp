@@ -1,7 +1,7 @@
 ﻿using Core.Block;
 using Core.Enums;
-using Core.Interfaces;
 using Core.View;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Text;
 namespace Core.Block
 {
     [Table("Views")]
-    public class ViewEntity : DbRecord, IDbRecord4Core
+    public class ViewEntity : CoreDbRecord, IDbRecord
     {
         public String Name { get; set; }
         public RepresentType RepresentType { get; set; }
@@ -44,7 +44,7 @@ namespace Core.Block
     }
 
     [Table("ViewColumns")]
-    public class ViewColumEntity : DbRecord, IDbRecord4Core
+    public class ViewColumEntity : CoreDbRecord, IDbRecord
     {
         [JsonIgnore]
         [StringLength(36)]
@@ -60,7 +60,7 @@ namespace Core.Block
     }
 
     [Table("ViewActions")]
-    public class ViewActionEntity : DbRecord, IDbRecord4Core
+    public class ViewActionEntity : CoreDbRecord, IDbRecord
     {
         [JsonIgnore]
         [StringLength(36)]

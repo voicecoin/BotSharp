@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
@@ -78,7 +79,7 @@ namespace Core
                 return BadRequest();
             }
 
-            int ret = dc.Transaction<IDbRecord4Core>(delegate
+            int ret = dc.Transaction<IDbRecord>(delegate
             {
                 var data = dc.Find(tableType, id);
 
@@ -139,7 +140,7 @@ namespace Core
                 return BadRequest();
             }
 
-            int ret = dc.Transaction<IDbRecord4Core>(delegate
+            int ret = dc.Transaction<IDbRecord>(delegate
             {
                 var data = dc.Find(tableType, id);
                 data.SetValue(model.Field, model.Value);

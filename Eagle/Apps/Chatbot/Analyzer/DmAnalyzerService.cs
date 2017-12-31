@@ -4,6 +4,7 @@ using Apps.Chatbot.Entity;
 using Apps.Chatbot.Intent;
 using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -266,7 +267,7 @@ namespace Apps.Chatbot.DmServices
                 // 把识别出的实体放入数据库
                 if (!String.IsNullOrEmpty(parameter.Value))
                 {
-                    dc.Transaction<IDbRecord4Core>(delegate
+                    dc.Transaction<IDbRecord>(delegate
                     {
                         var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
                         if (existedParameter == null)

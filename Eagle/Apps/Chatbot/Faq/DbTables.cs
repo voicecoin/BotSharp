@@ -1,6 +1,6 @@
 ﻿using Apps.Chatbot.Intent;
 using Core;
-using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Text;
 namespace Apps.Chatbot.Faq
 {
     [Table("Chatbot_Faqs")]
-    public class FaqEntity : DbRecord, IDbRecord4Core
+    public class FaqEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

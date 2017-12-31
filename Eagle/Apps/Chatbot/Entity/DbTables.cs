@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Apps.Chatbot.Entity
     /// 比如地名，时间，计量单位，机构名，品牌，职位，产品名
     /// </summary>
     [Table("Chatbot_Entities")]
-    public class EntityEntity : DbRecord, IDbRecord4Core
+    public class EntityEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -55,7 +56,7 @@ namespace Apps.Chatbot.Entity
     /// 比如“北京”，“上海”，这些属于地点。
     /// </summary>
     [Table("Chatbot_EntityEntries")]
-    public class EntityEntryEntity : DbRecord, IDbRecord4Core
+    public class EntityEntryEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -86,7 +87,7 @@ namespace Apps.Chatbot.Entity
     /// 实体条目同义词
     /// </summary>
     [Table("Chatbot_EntityEntrySynonyms")]
-    public class EntityEntrySynonymEntity : DbRecord, IDbRecord4Core
+    public class EntityEntrySynonymEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

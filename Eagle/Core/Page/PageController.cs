@@ -1,6 +1,7 @@
 ﻿using Core.Block;
 using Core.Interfaces;
 using Core.Node;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,7 @@ namespace Core.Page
                 return BadRequest(ModelState);
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate
+            dc.Transaction<IDbRecord>(delegate
             {
                 var dm = new DomainModel<PageEntity>(dc, pageEntity);
                 DmPageService.Add(dm);

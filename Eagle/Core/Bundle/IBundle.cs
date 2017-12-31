@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

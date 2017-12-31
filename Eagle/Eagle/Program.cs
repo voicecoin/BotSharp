@@ -27,22 +27,6 @@ namespace Eagle
                     settings.ToList().ForEach(setting => {
                         config.AddJsonFile(setting, optional: false, reloadOnChange: true);
                     });
-
-                    /*if (env.IsDevelopment())
-                    {
-                        var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
-                        if (appAssembly != null)
-                        {
-                            config.AddUserSecrets(appAssembly, optional: true);
-                        }
-                    }
-
-                    config.AddEnvironmentVariables();
-
-                    if (args != null)
-                    {
-                        config.AddCommandLine(args);
-                    }*/
                 })
                 .UseStartup<Startup>()
                 .Build();

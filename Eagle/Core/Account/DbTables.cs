@@ -1,6 +1,7 @@
 ﻿using Core.Bundle;
 using Core.Entity;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace Core.Account
 {
     [Table("Users")]
-    public class UserEntity : BundleDbRecord, IBundlable, IDbRecord4Core
+    public class UserEntity : BundleDbRecord, IBundlable, IDbRecord
     {
         [Required]
         [StringLength(32)]
@@ -42,7 +43,7 @@ namespace Core.Account
     }
 
     [Table("Roles")]
-    public class RoleEntity : DbRecord, IDbRecord4Core
+    public class RoleEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [StringLength(32)]

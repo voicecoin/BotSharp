@@ -11,6 +11,7 @@ using Apps.Chatbot.DomainModels;
 using Utility;
 using Apps.Chatbot.DmServices;
 using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Entity
 {
@@ -86,7 +87,7 @@ namespace Apps.Chatbot.Entity
                 return BadRequest();
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 entityModel.Update(dc);
             });
 
@@ -106,7 +107,7 @@ namespace Apps.Chatbot.Entity
                 entity.ModifiedDate = DateTime.UtcNow;
                 entity.ModifiedUserId = dc.CurrentUser.Id;
 
-                dc.Transaction<IDbRecord4Core>(delegate
+                dc.Transaction<IDbRecord>(delegate
                 {
                     entity.AgentId = agentId;
                     entity.Add(dc);
@@ -131,7 +132,7 @@ namespace Apps.Chatbot.Entity
                 return NotFound();
             }
 
-            dc.Transaction<IDbRecord4Core>(delegate {
+            dc.Transaction<IDbRecord>(delegate {
                 entities.Delete(dc);
             });
 

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
-using Core;
-using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Menu
 {
-    public class MenuEntity : DbRecord, IDbRecord4Core
+    public class MenuEntity : DbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]

@@ -5,19 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Bundle;
-using Core.Interfaces;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Taxonomy
 {
     [Table("Taxonomies")]
-    public class TaxonomyEntity : BundleDbRecord, IBundlable, IDbRecord4Core
+    public class TaxonomyEntity : BundleDbRecord, IBundlable, IDbRecord
     {
         [MaxLength(512, ErrorMessage = "Description cannot be longer than 512 characters.")]
         public String Description { get; set; }
     }
 
     [Table("TaxonomyTerms")]
-    public class TaxonomyTermEntity : DbRecord, IDbRecord4Core
+    public class TaxonomyTermEntity : CoreDbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Taxonomy Term Name cannot be longer than 50 characters.")]

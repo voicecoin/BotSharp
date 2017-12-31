@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Core;
 using Core.Field;
-using Microsoft.EntityFrameworkCore;
-using Models;
 using Core.Bundle;
-using Core.Interfaces;
 using Core.Enums;
 using Newtonsoft.Json.Linq;
+using EntityFrameworkCore.BootKit;
 
 namespace Core.Node
 {
     [Table("Nodes")]
-    public class NodeEntity : BundleDbRecord, IBundlable, IDbRecord4Core
+    public class NodeEntity : BundleDbRecord, IBundlable, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -31,23 +28,23 @@ namespace Core.Node
     }
 
     [Table("NodeBooleanFields")]
-    public class NodeBooleanFieldEntity : BooleanFieldEntity, IDbRecord4Core { }
+    public class NodeBooleanFieldEntity : BooleanFieldEntity, IDbRecord { }
     [Table("NodeTextFields")]
-    public class NodeTextFieldEntity : TextFieldEntity, IDbRecord4Core { }
+    public class NodeTextFieldEntity : TextFieldEntity, IDbRecord { }
     [Table("NodeRichTextFields")]
-    public class NodeRichTextFieldEntity : RichTextFieldEntity, IDbRecord4Core { }
+    public class NodeRichTextFieldEntity : RichTextFieldEntity, IDbRecord { }
     [Table("NodeAddressFields")]
-    public class NodeAddressFieldEntity : AddressFieldEntity, IDbRecord4Core { }
+    public class NodeAddressFieldEntity : AddressFieldEntity, IDbRecord { }
     [Table("NodeEntityReferenceFields")]
-    public class NodeEntityReferenceFieldEntity : EntityReferenceFieldEntity, IDbRecord4Core { }
+    public class NodeEntityReferenceFieldEntity : EntityReferenceFieldEntity, IDbRecord { }
     [Table("NodeTaxonomyTermFields")]
-    public class NodeTaxonomyTermFieldEntity : TaxonomyTermFieldEntity, IDbRecord4Core { }
+    public class NodeTaxonomyTermFieldEntity : TaxonomyTermFieldEntity, IDbRecord { }
     [Table("NodeNumberFields")]
-    public class NodeNumberFieldEntity : NumberFieldEntity, IDbRecord4Core { }
+    public class NodeNumberFieldEntity : NumberFieldEntity, IDbRecord { }
     [Table("NodeCurrencyFields")]
-    public class NodeCurrencyFieldEntity : CurrencyFieldEntity, IDbRecord4Core { }
+    public class NodeCurrencyFieldEntity : CurrencyFieldEntity, IDbRecord { }
     [Table("NodeDateTimeFields")]
-    public class NodeDateTimeFieldEntity : DateTimeFieldEntity, IDbRecord4Core { }
+    public class NodeDateTimeFieldEntity : DateTimeFieldEntity, IDbRecord { }
     [Table("NodeImageFields")]
-    public class NodeImageFieldEntity : ImageFieldEntity, IDbRecord4Core { }
+    public class NodeImageFieldEntity : ImageFieldEntity, IDbRecord { }
 }
