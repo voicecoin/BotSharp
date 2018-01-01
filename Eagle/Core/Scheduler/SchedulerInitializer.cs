@@ -11,6 +11,7 @@ using System.Reflection;
 using Utility;
 using System.Linq;
 using Quartz.Impl.Triggers;
+using DotNetToolkit;
 
 namespace Core.Scheduler
 {
@@ -28,8 +29,7 @@ namespace Core.Scheduler
             // get a scheduler
             IScheduler sched = schedFact.GetScheduler().Result;
 
-            TypeHelper.GetClassesWithInterface(typeof(IScheduleJob), "Core").ForEach(type => Schedule(sched, type, config));
-            TypeHelper.GetClassesWithInterface(typeof(IScheduleJob), "Apps").ForEach(type => Schedule(sched, type, config));
+            TypeHelper.GetClassesWithInterface<IScheduleJob>("Core", "Apps").ForEach(type => Schedule(sched, type, config));
 
             sched.Start();
         }

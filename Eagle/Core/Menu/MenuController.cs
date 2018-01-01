@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using DotNetToolkit;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -164,10 +165,7 @@ namespace Core.Menu
             // Level 1 menus
             menu.Add(docs);
 
-            TypeHelper.GetInstanceWithInterface<IHookMenu>("Core").ForEach(m => m.UpdateMenu(menu, dc));
-
-            // Add menus from apps
-            TypeHelper.GetInstanceWithInterface<IHookMenu>("Apps").ForEach(m => m.UpdateMenu(menu, dc));
+            TypeHelper.GetInstanceWithInterface<IHookMenu>("Core", "Apps").ForEach(m => m.UpdateMenu(menu, dc));
 
             return Ok(menu);
         }

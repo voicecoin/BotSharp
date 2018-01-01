@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using DotNetToolkit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -14,12 +15,7 @@ namespace Core
         public IConfiguration Config {get;set;}
         public void Load()
         {
-            var coreLoaders = TypeHelper.GetInstanceWithInterface<IInitializationLoader>("Core");
-            coreLoaders.ForEach(loader => {
-                loader.Initialize(Config, Env);
-            });
-
-            var appsLoaders = TypeHelper.GetInstanceWithInterface<IInitializationLoader>("Apps");
+            var appsLoaders = TypeHelper.GetInstanceWithInterface<IInitializationLoader>("Core", "Apps");
             appsLoaders.ForEach(loader => {
                 loader.Initialize(Config, Env);
             });
