@@ -1,4 +1,5 @@
 ﻿using Core;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Apps.Nlp
 {
     public class WikiInfoBoxRdf
     {
-        public static List<Triple> QueryEntity(CoreDbContext Dc, string s)
+        public static List<Triple> QueryEntity(Database Dc, string s)
         {
             NlpParseCache cache = Dc.Table<NlpParseCache>().FirstOrDefault(x => x.Parser == NlpEngine.YayaAi && x.Type == CacheType.Knowledge && x.Text == s);
 

@@ -10,10 +10,9 @@ using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.DmServices;
 using Core;
 using Apps.Chatbot.Intent;
-using Apps.Chatbot.Entity;
-using Core.Bundle;
 using Apps.Chatbot.Agent;
 using Microsoft.Extensions.Configuration;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Entity
 {
@@ -21,7 +20,7 @@ namespace Apps.Chatbot.Entity
     {
         public int Priority => 110;
 
-        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, Database dc)
         {
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
@@ -39,7 +38,7 @@ namespace Apps.Chatbot.Entity
             });
         }
 
-        private static void InitEntities(IHostingEnvironment env, CoreDbContext context, AgentEntity agent)
+        private static void InitEntities(IHostingEnvironment env, Database context, AgentEntity agent)
         {
             string dir = $"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Entities";
             if (!Directory.Exists(dir)) return;

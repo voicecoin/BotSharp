@@ -1,6 +1,7 @@
 ﻿using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Intent;
 using Core;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace Apps.Chatbot.Intent
 {
     public static class DmIntentResponseService
     {
-        public static void Update(this DomainModel<IntentResponseEntity> responseModel)
+        public static void Update(this IntentResponseEntity responseModel)
         {
-            CoreDbContext dc = responseModel.Dc;
+            /*CoreDbContext dc = responseModel.Dc;
 
             var response = dc.Table<IntentResponseEntity>().Find(responseModel.Entity.Id);
             if(response == null)
@@ -58,14 +59,14 @@ namespace Apps.Chatbot.Intent
                     var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
                     dm.AddEntity();
                 });
-            }
+            }*/
 
         }
 
-        public static void Delete(this DomainModel<IntentResponseEntity> responseModel, CoreDbContext dc)
+        public static void Delete(this IntentResponseEntity responseModel, Database dc)
         {
             // Remove Items first
-            responseModel.Entity.Parameters.ForEach(parameter => {
+            /*responseModel.Entity.Parameters.ForEach(parameter => {
 
             });
 
@@ -75,19 +76,19 @@ namespace Apps.Chatbot.Intent
 
             dc.Table<IntentResponseEntity>().Remove(dc.Table<IntentResponseEntity>().Find(responseModel.Entity.Id));
 
-            dc.SaveChanges();
+            dc.SaveChanges();*/
         }
 
-        public static void Add(this DomainModel<IntentResponseEntity> responseModel)
+        public static void Add(this IntentResponseEntity responseModel)
         {
-            if (!responseModel.AddEntity()) return;
+            /*if (!responseModel.AddEntity()) return;
 
             if (responseModel.Entity.AffectedContexts != null)
             {
                 responseModel.Entity.AffectedContextsJson = JsonConvert.SerializeObject(responseModel.Entity.AffectedContexts);
             }
 
-            CoreDbContext dc = responseModel.Dc;
+            Database dc = responseModel.Dc;
 
             if (responseModel.Entity.Messages != null)
             {
@@ -117,7 +118,7 @@ namespace Apps.Chatbot.Intent
                     var dm = new DomainModel<IntentResponseParameterEntity>(dc, parameter);
                     dm.AddEntity();
                 });
-            }
+            }*/
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using EntityFrameworkCore.BootKit;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,12 +9,11 @@ namespace Core.Scheduler
 {
     public abstract class ScheduleJobBase : IScheduleJob, IJob
     {
-        protected CoreDbContext Dc { get; set; }
+        protected Database Dc { get; set; }
 
         public ScheduleJobBase()
         {
-            Dc = new CoreDbContext();
-            Dc.InitDb();
+            Dc = new DefaultDataContextLoader().GetDefaultDc();
         }
 
         /// <summary>

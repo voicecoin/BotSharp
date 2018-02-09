@@ -2,6 +2,7 @@
 using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.Intent;
 using Core;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace Apps.Chatbot.Intent
 {
     public static partial class DmIntentService
     {
-        public static void Load(this DomainModel<IntentEntity> intentModel)
+        public static void Load(this IntentEntity intentModel)
         {
-            CoreDbContext dc = intentModel.Dc;
+            /*Database dc = intentModel.Dc;
             intentModel.LoadEntity();
 
             var intentExpressions = dc.Table<IntentExpressionEntity>().Where(x => x.IntentId == intentModel.Entity.Id).ToList();
@@ -114,13 +115,13 @@ namespace Apps.Chatbot.Intent
                         parameter.Prompts = JsonConvert.DeserializeObject<List<string>>(parameter.PromptsJson);
                     }
                 });
-            });
+            });*/
         }
 
 
-        public static bool Add(this DomainModel<IntentEntity> intentModel)
+        public static bool Add(this IntentEntity intentModel)
         {
-            if (!intentModel.AddEntity()) return false;
+            /*if (!intentModel.AddEntity()) return false;
 
             if(intentModel.Entity.Contexts != null)
             {
@@ -144,14 +145,14 @@ namespace Apps.Chatbot.Intent
                 response.IntentId = intentModel.Entity.Id;
                 var dm = new DomainModel<IntentResponseEntity>(intentModel.Dc, response);
                 dm.Add();
-            });
+            });*/
 
             return true;
         }
 
-        public static void Update(this DomainModel<IntentEntity> intentModel)
+        public static void Update(this IntentEntity intentModel)
         {
-            CoreDbContext dc = intentModel.Dc;
+            /*CoreDbContext dc = intentModel.Dc;
             var intentRecord = dc.Table<IntentEntity>().Find(intentModel.Entity.Id);
             intentRecord.Name = intentModel.Entity.Name;
             intentRecord.Description = intentModel.Entity.Description;
@@ -169,7 +170,7 @@ namespace Apps.Chatbot.Intent
             }
 
             intentModel.Entity.UserSays.ForEach(expression => new DomainModel<IntentExpressionEntity>(dc, expression).Update());
-            intentModel.Entity.Responses.ForEach(response => new DomainModel<IntentResponseEntity>(dc, response).Update());
+            intentModel.Entity.Responses.ForEach(response => new DomainModel<IntentResponseEntity>(dc, response).Update());*/
         }
     }
 }

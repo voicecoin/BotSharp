@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,7 @@ namespace Apps.Chatbot.Faq
     public class FaqController : CoreController
     {
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<FaqEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
+        public PageResult<FaqEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<FaqEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -29,7 +30,7 @@ namespace Apps.Chatbot.Faq
 
             var items = query.Skip((page - 1) * size).Take(size).ToList();
 
-            return new DmPageResult<FaqEntity> { Total = total, Page = page, Size = size, Items = items };
+            return new PageResult<FaqEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         [HttpDelete("{agentId}/{id}")]
@@ -46,12 +47,12 @@ namespace Apps.Chatbot.Faq
         {
             if (entity.IsExist(dc)) return;
 
-            dc.CurrentUser = GetCurrentUser();
+            /*dc.CurrentUser = GetCurrentUser();
 
             entity.CreatedDate = DateTime.UtcNow;
             entity.CreatedUserId = dc.CurrentUser.Id;
             entity.ModifiedDate = DateTime.UtcNow;
-            entity.ModifiedUserId = dc.CurrentUser.Id;
+            entity.ModifiedUserId = dc.CurrentUser.Id;*/
 
             dc.Transaction<IDbRecord>(delegate
             {
@@ -76,7 +77,7 @@ namespace Apps.Chatbot.Faq
             var content = System.IO.File.ReadAllText(filePath, gb2312);
             var faqs = content.Split(new string[] { "-break-" }, StringSplitOptions.RemoveEmptyEntries).Where(x => !String.IsNullOrEmpty(x)).ToList();
 
-            dc.CurrentUser = GetCurrentUser();
+            //dc.CurrentUser = GetCurrentUser();
 
             dc.Transaction<IDbRecord>(delegate
             {
@@ -86,10 +87,10 @@ namespace Apps.Chatbot.Faq
 
                     FaqEntity entity = new FaqEntity
                     {
-                        CreatedDate = DateTime.UtcNow,
+                        /*CreatedDate = DateTime.UtcNow,
                         CreatedUserId = dc.CurrentUser.Id,
                         ModifiedDate = DateTime.UtcNow,
-                        ModifiedUserId = dc.CurrentUser.Id,
+                        ModifiedUserId = dc.CurrentUser.Id,*/
                         Question = faq[0],
                         Answer = faq[1],
                         AgentId = agentId

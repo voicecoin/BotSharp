@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Agent
 {
     [Table("Chatbot_Agents")]
-    public class AgentEntity : BundleDbRecord, IDbRecord
+    public class AgentEntity : DbRecord, IDbRecord
     {
         [Required]
         [MaxLength(50, ErrorMessage = "Entity Name cannot be longer than 50 characters.")]
@@ -45,10 +45,10 @@ namespace Apps.Chatbot.Agent
         {
             get
             {
-                return CreatedDate.ToString("yyyy年M月dd日");
+                return UpdatedTime.ToString("yyyy年M月dd日");
             }
         }
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<AgentEntity>().Any(x => x.Name == Name || x.Id == Id);
         }
@@ -58,7 +58,7 @@ namespace Apps.Chatbot.Agent
     /// 机器人结盟，赋予一个机器人具有跟其它机器人一样的能力。
     /// </summary>
     [Table("Chatbot_AgentSkills")]
-    public class AgentSkillEntity : CoreDbRecord, IDbRecord
+    public class AgentSkillEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -67,7 +67,7 @@ namespace Apps.Chatbot.Agent
         [StringLength(36)]
         public String SkillId { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<AgentSkillEntity>().Any(x => x.AgentId == AgentId && x.SkillId == SkillId);
         }

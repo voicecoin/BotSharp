@@ -1,5 +1,4 @@
-﻿using Core.Menu;
-using EntityFrameworkCore.BootKit;
+﻿using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -39,17 +38,12 @@ namespace Core.Interfaces
         /// value smaller is higher priority
         /// </summary>
         int Priority { get; }
-        void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc);
+        void Load(IHostingEnvironment env, IConfiguration config, Database dc);
     }
 
     public interface IDbTableAmend
     {
-        void Amend(CoreDbContext dc);
-    }
-
-    public interface IHookMenu
-    {
-        void UpdateMenu(List<VmMenu> menus, CoreDbContext dc);
+        void Amend(Database dc);
     }
 
     public interface IEntityPermission

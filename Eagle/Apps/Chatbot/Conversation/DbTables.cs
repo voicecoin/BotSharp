@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Conversation
 {
     [Table("Chatbot_Conversations")]
-    public class ConversationEntity : CoreDbRecord, IDbRecord
+    public class ConversationEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -33,7 +33,7 @@ namespace Apps.Chatbot.Conversation
     }
 
     [Table("Chatbot_ConversationMessages")]
-    public class ConversationMessageEntity : CoreDbRecord, IDbRecord
+    public class ConversationMessageEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -48,7 +48,7 @@ namespace Apps.Chatbot.Conversation
     }
 
     [Table("Chatbot_ConversationParameters")]
-    public class ConversationParameterEntity : CoreDbRecord, IDbRecord
+    public class ConversationParameterEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]

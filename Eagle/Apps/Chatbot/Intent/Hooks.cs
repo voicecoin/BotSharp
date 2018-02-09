@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Newtonsoft.Json;
 using Core.Interfaces;
-using Apps.Chatbot.DmServices;
-using Core;
-using Core.Bundle;
 using Apps.Chatbot.Agent;
 using Microsoft.Extensions.Configuration;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Intent
 {
@@ -18,7 +16,7 @@ namespace Apps.Chatbot.Intent
     {
         public int Priority => 120;
 
-        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, Database dc)
         {
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
@@ -37,7 +35,7 @@ namespace Apps.Chatbot.Intent
             });
         }
 
-        private static void InitIntents(IHostingEnvironment env, CoreDbContext context, AgentEntity agent)
+        private static void InitIntents(IHostingEnvironment env, Database context, AgentEntity agent)
         {
             string dir = $"{env.ContentRootPath}\\App_Data\\{agent.Name}\\Intents";
             if (!Directory.Exists(dir)) return;
@@ -52,7 +50,7 @@ namespace Apps.Chatbot.Intent
                     intentModel.AgentId = agent.Id;
                     intentModel.Name = intentName;
 
-                    new DomainModel<IntentEntity>(context, intentModel).Add();
+                    //new DomainModel<IntentEntity>(context, intentModel).Add();
                 });
             });
         }

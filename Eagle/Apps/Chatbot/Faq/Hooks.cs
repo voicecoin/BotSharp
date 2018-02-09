@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.IO;
 using Apps.Chatbot.Agent;
+using EntityFrameworkCore.BootKit;
 
 namespace Apps.Chatbot.Faq
 {
@@ -16,7 +17,7 @@ namespace Apps.Chatbot.Faq
     {
         public int Priority => 1000;
 
-        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, Database dc)
         {
             var agentNames = LoadJson<List<String>>(env, "Agents");
 
@@ -35,19 +36,19 @@ namespace Apps.Chatbot.Faq
             });
         }
 
-        private static void InitFaqs(IHostingEnvironment env, CoreDbContext dc, AgentEntity agent)
+        private static void InitFaqs(IHostingEnvironment env, Database dc, AgentEntity agent)
         {
             var faqs = LoadJson<List<FaqEntity>>(env, $"{agent.Name}\\Faq");
 
             faqs?.ForEach(faq =>
             {
-                var dm = new DomainModel<FaqEntity>(dc, new FaqEntity
+                /*var dm = new DomainModel<FaqEntity>(dc, new FaqEntity
                 {
                     AgentId = agent.Id,
                     Question = faq.Question,
                     Answer = faq.Answer
                 });
-                dm.AddEntity();
+                dm.AddEntity();*/
             });
         }
 

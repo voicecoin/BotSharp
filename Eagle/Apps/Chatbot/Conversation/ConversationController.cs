@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using System.Collections.Generic;
 using EntityFrameworkCore.BootKit;
+using DotNetToolkit;
 
 namespace Apps.Chatbot.Conversation
 {
@@ -41,20 +42,19 @@ namespace Apps.Chatbot.Conversation
         {
             var conversationId = Guid.Empty.ToString();
 
-            dc.CurrentUser = GetCurrentUser();
-            var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentId && x.CreatedUserId == dc.CurrentUser.Id);
+            var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentId);
             if (conversation == null)
             {
                 dc.Transaction<IDbRecord>(delegate
                 {
-                    var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
+                    /*var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
                     {
                         AgentId = agentId
                     });
 
                     dm.AddEntity();
 
-                    conversationId = dm.Entity.Id;
+                    conversationId = dm.Entity.Id;*/
                 });
             }
             else
@@ -101,7 +101,6 @@ namespace Apps.Chatbot.Conversation
             // analyzerModel.Log(MyLogLevel.DEBUG);
             // Yaya UserName: gh_0a3fe78f2d13, key: ce36fa6d0ec047248da3354519658734
             // Lingxihuagu UserName: gh_c96a6311ab6d, key: f8bc556e63364c5a8b4e37000d897704
-            dc.CurrentUser = GetCurrentUser();
             var timeStart = DateTime.UtcNow;
 
             var agentRecord = dc.Table<AgentEntity>().First(x => x.ClientAccessToken == analyzerModel.ClientAccessToken);
@@ -115,8 +114,8 @@ namespace Apps.Chatbot.Conversation
                 // 是否转向闲聊机器人
                 if (dc.Table<AgentSkillEntity>().Any(x => x.AgentId == agentRequestModel.Agent.Id && x.SkillId == "c3c498cf-3009-4791-9704-819a693577b7"))
                 {
-                    var url = CoreDbContext.Configuration.GetSection("NlpApi:TulingUrl").Value;
-                    var key = CoreDbContext.Configuration.GetSection("NlpApi:TulingKey").Value;
+                    var url = Database.Configuration.GetSection("NlpApi:TulingUrl").Value;
+                    var key = Database.Configuration.GetSection("NlpApi:TulingKey").Value;
 
                     var result = await RestHelper.Rest<TulingResponse>(url,
                         new
@@ -136,7 +135,7 @@ namespace Apps.Chatbot.Conversation
             }
             else
             {
-                response.Log(MyLogLevel.DEBUG);
+                response.Log();
 
                 return response.Text;
             }

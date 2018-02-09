@@ -22,12 +22,12 @@ namespace Apps.Chatbot.DmServices
         /// <param name="analyzerModel"></param>
         /// <param name="dc"></param>
         /// <returns></returns>
-        public static List<DmIntentExpressionItem> PosTagger(this DmAgentRequest analyzerModel, CoreDbContext dc)
+        public static List<DmIntentExpressionItem> PosTagger(this DmAgentRequest analyzerModel, Database dc)
         {
             string text = analyzerModel.Text;
             // Check from Cache
-            var cache = dc.GetCache<List<DmIntentExpressionItem>>(analyzerModel.Text);
-            if (cache != null) return cache;
+            //var cache = dc.GetCache<List<DmIntentExpressionItem>>(analyzerModel.Text);
+            //if (cache != null) return cache;
 
 
             List <EntityEntity> allEntities = dc.Table<EntityEntity>()/*.Where(x => x.AgentId == analyzerModel.Agent.Id || x.AgentId == Constants.GenesisAgentId)*/.ToList();
@@ -69,7 +69,7 @@ namespace Apps.Chatbot.DmServices
             var response = client.Execute(request);
             string jsongContent = response.Result.Content;
             var result = JsonConvert.DeserializeObject<NlpirResult>(jsongContent);*/
-            string url = CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value + "nlpir/wordsplit/" + text;
+            string url = Database.Configuration.GetSection("NlpApi:NlpirUrl").Value + "nlpir/wordsplit/" + text;
             var result = RestHelper.GetSync<NlpirResult>(url);
 
             // 只需要识别实体
@@ -135,12 +135,12 @@ namespace Apps.Chatbot.DmServices
 
             var analyzedResult = merged.OrderBy(x => x.Position).ToList();
 
-            var c = dc.SetCache(analyzerModel.Text, analyzedResult);
+            //var c = dc.SetCache(analyzerModel.Text, analyzedResult);
 
             return analyzedResult;
         }
 
-        public static List<DmIntentExpressionItem> Segment(this DmAgentRequest analyzerModel, CoreDbContext dc)
+        public static List<DmIntentExpressionItem> Segment(this DmAgentRequest analyzerModel, Database dc)
         {
             var taggers = PosTagger(analyzerModel, dc);
 
@@ -229,7 +229,7 @@ namespace Apps.Chatbot.DmServices
         /// </summary>
         /// <param name="responseModel"></param>
         /// <param name="dc"></param>
-        public static IntentResponseMessageEntity PostResponse(this IntentResponseEntity responseModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static IntentResponseMessageEntity PostResponse(this IntentResponseEntity responseModel, Database dc, DmAgentRequest agentRequestModel)
         {
             // 随机选择一个回答。
             IntentResponseMessageEntity messageModel = responseModel.Messages.Random();
@@ -241,7 +241,7 @@ namespace Apps.Chatbot.DmServices
             return messageModel;
         }
 
-        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, CoreDbContext dc, List<DmIntentResponseContext> contexts, List<DmIntentExpressionItem> segs, string conversationId)
+        public static List<IntentResponseParameterEntity> ExtractParameter(this IntentResponseEntity responseModel, Database dc, List<DmIntentResponseContext> contexts, List<DmIntentExpressionItem> segs, string conversationId)
         {
             var segments = segs.Where(x => !String.IsNullOrEmpty(x.Meta)).ToList();
 
@@ -272,13 +272,13 @@ namespace Apps.Chatbot.DmServices
                         var existedParameter = dc.Table<ConversationParameterEntity>().FirstOrDefault(x => x.ConversationId == conversationId && x.Name == parameter.Name);
                         if (existedParameter == null)
                         {
-                            var dm = new DomainModel<ConversationParameterEntity>(dc, new ConversationParameterEntity
+                            var dm = dc.Table<ConversationParameterEntity>().Add(new ConversationParameterEntity
                             {
                                 ConversationId = conversationId,
                                 Name = parameter.Name,
                                 Value = parameter.Value
                             });
-                            dm.AddEntity();
+                            //dm.AddEntity();
                         }
                         else
                         {
@@ -301,7 +301,7 @@ namespace Apps.Chatbot.DmServices
         /// <param name="messageModel"></param>
         /// <param name="dc"></param>
         /// <param name="agent"></param>
-        public static void ReplaceSystemToken(this IntentResponseMessageEntity messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel)
+        public static void ReplaceSystemToken(this IntentResponseMessageEntity messageModel, Database dc, DmAgentRequest agentRequestModel)
         {
             List<String> speechs = new List<string>();
 
@@ -309,7 +309,7 @@ namespace Apps.Chatbot.DmServices
                 speech = speech.Replace("{@agent.name}", agentRequestModel.Agent.Name);
                 speech = speech.Replace("{@agent.description}", agentRequestModel.Agent.Description);
 
-                TimeSpan age = DateTime.UtcNow - agentRequestModel.Agent.CreatedDate;
+                TimeSpan age = DateTime.UtcNow - agentRequestModel.Agent.UpdatedTime;
                 speech = speech.Replace("{@agent.age}", $"我刚出生{(int)age.TotalDays}天");
 
                 speechs.Add(speech);
@@ -324,7 +324,7 @@ namespace Apps.Chatbot.DmServices
         /// <param name="messageModel"></param>
         /// <param name="dc"></param>
         /// <param name="agent"></param>
-        public static void ReplaceParameterToken(this IntentResponseMessageEntity messageModel, CoreDbContext dc, DmAgentRequest agentRequestModel, IntentResponseEntity responseModel)
+        public static void ReplaceParameterToken(this IntentResponseMessageEntity messageModel, Database dc, DmAgentRequest agentRequestModel, IntentResponseEntity responseModel)
         {
             List<String> speechs = new List<string>();
             var entities = dc.Table<ConversationParameterEntity>().Where(x => x.ConversationId == agentRequestModel.ConversationId)

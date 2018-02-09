@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Core;
 using Newtonsoft.Json.Serialization;
+using EntityFrameworkCore.BootKit;
 
 namespace Eagle
 {
@@ -58,9 +59,8 @@ namespace Eagle
 
             app.UseMvc();
 
-            CoreDbContext.Configuration = Configuration;
-            CoreDbContext.Env = env;
-            CoreDbContext.Assembles = new String[] { "Core", "Apps" };
+            Database.Configuration = Configuration;
+            Database.Assemblies = new String[] { "Core", "Apps" };
 
             InitializationLoader loader = new InitializationLoader();
             loader.Env = env;

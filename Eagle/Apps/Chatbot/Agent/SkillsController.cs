@@ -35,13 +35,13 @@ namespace Apps.Chatbot.Agent
             if (skill != null) return true;
 
             dc.Transaction<IDbRecord>(delegate {
-                var dm = new DomainModel<AgentSkillEntity>(dc, new AgentSkillEntity
+                /*var dm = new DomainModel<AgentSkillEntity>(dc, new AgentSkillEntity
                 {
                     AgentId = agentId,
                     SkillId = skillId
                 });
 
-                dm.AddEntity();
+                dm.AddEntity();*/
             });
 
             return true;

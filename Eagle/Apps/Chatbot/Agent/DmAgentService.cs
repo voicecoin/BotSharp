@@ -19,7 +19,7 @@ namespace Apps.Chatbot.DmServices
 {
     public static class DmAgentService
     {
-        public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, CoreDbContext dc)
+        public static DmAgentResponse TextRequest(this DmAgentRequest agentRequestModel, Database dc)
         {
             DmAgentResponse response = new DmAgentResponse();
 
@@ -100,10 +100,10 @@ namespace Apps.Chatbot.DmServices
 
             var intent = dc.Table<IntentEntity>().First(m => m.Id == intentId);
 
-            var dm = new DomainModel<IntentEntity>(dc, intent.Map<IntentEntity>());
-            dm.Load();
+            /*var dm = new DomainModel<IntentEntity>(dc, intent.Map<IntentEntity>());
+            dm.Load();*/
 
-            IntentResponseEntity responseModel = dm.Entity.Responses.First();
+            IntentResponseEntity responseModel = null;// dm.Entity.Responses.First();
 
             // 上文Context
             var context = dc.Table<ConversationEntity>().First(x => x.Id == agentRequestModel.ConversationId);
@@ -218,9 +218,9 @@ namespace Apps.Chatbot.DmServices
             return tfidf.Select(x => x.Value).ToArray();
         }
 
-        public static bool Add(this BundleDomainModel<AgentEntity> dmAgent)
+        public static bool Add(this AgentEntity dmAgent)
         {
-            dmAgent.Entity.Language = "zh-cn";
+            /*dmAgent.Entity.Language = "zh-cn";
 
 
             if (String.IsNullOrEmpty(dmAgent.Entity.ClientAccessToken))
@@ -233,7 +233,9 @@ namespace Apps.Chatbot.DmServices
                 dmAgent.Entity.DeveloperAccessToken = Guid.NewGuid().ToString("N");
             }
 
-            return dmAgent.AddEntity();
+            return dmAgent.AddEntity();*/
+
+            return true;
         }
     }
 }

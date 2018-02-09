@@ -7,8 +7,8 @@ using Core;
 using Utility;
 using Core.Interfaces;
 using System.Collections.Generic;
-using Core.Enums;
 using EntityFrameworkCore.BootKit;
+using DotNetToolkit;
 
 namespace Apps.Chatbot.Agent
 {
@@ -16,7 +16,7 @@ namespace Apps.Chatbot.Agent
     {
         // GET: v1/Agents
         [HttpGet("Query")]
-        public DmPageResult<AgentEntity> GetAllAgents(string name, [FromQuery] int page = 1)
+        public PageResult<AgentEntity> GetAllAgents(string name, [FromQuery] int page = 1)
         {
             var query = dc.Table<AgentEntity>().AsQueryable();
             if (!String.IsNullOrEmpty(name))
@@ -29,32 +29,28 @@ namespace Apps.Chatbot.Agent
             int size = 20;
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<AgentEntity>()).ToList();
-            return new DmPageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
+            return new PageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         [HttpGet("MyAgents")]
         public IEnumerable<Object> MyAgents()
         {
             var user = GetCurrentUser();
-            return dc.Table<AgentEntity>().Where(x => x.CreatedUserId == user.Id && x.Status != EntityStatus.Hidden).OrderBy(x => x.CreatedDate).Select(x => new { x.Name, x.Id });
+            return dc.Table<AgentEntity>().Select(x => new { x.Name });
         }
 
         // GET: v1/Agents
         [HttpGet("{userId}/Query")]
-        public DmPageResult<AgentEntity> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
+        public PageResult<AgentEntity> GetAgents([FromRoute] string userId, string name, [FromQuery] int page = 1)
         {
-            var query = dc.Table<AgentEntity>().Where(x => x.CreatedUserId == userId && x.Status != EntityStatus.Hidden);
-            if (!String.IsNullOrEmpty(name))
-            {
-                query = query.Where(x => x.Name.Contains(name));
-            }
+            var query = dc.Table<AgentEntity>();
 
             var total = query.Count();
 
             int size = 20;
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<AgentEntity>()).ToList();
-            return new DmPageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
+            return new PageResult<AgentEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Agents/5
@@ -66,7 +62,7 @@ namespace Apps.Chatbot.Agent
                 return BadRequest(ModelState);
             }
 
-            var agents = await dc.Table<AgentEntity>().SingleOrDefaultAsync(m => m.Id == id);
+            var agents = dc.Table<AgentEntity>().FirstOrDefault();
 
             if (agents == null)
             {
@@ -85,7 +81,6 @@ namespace Apps.Chatbot.Agent
             {
                 Name = "未命名机器人",
                 Language = "zh-cn",
-                CreatedUserId = GetCurrentUser().Id,
                 ClientAccessToken = Guid.NewGuid().ToString("N"),
                 DeveloperAccessToken = Guid.NewGuid().ToString("N")
             };
@@ -97,12 +92,6 @@ namespace Apps.Chatbot.Agent
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAgents([FromRoute] string id, [FromBody] AgentEntity agentModel)
         {
-            if (id != agentModel.Id)
-            {
-                return BadRequest("Agent id not match.");
-            }
-
-            dc.CurrentUser = GetCurrentUser();
             dc.Transaction<IDbRecord>(delegate {
                 var agentRecord = dc.Table<AgentEntity>().Find(id);
 
@@ -123,30 +112,12 @@ namespace Apps.Chatbot.Agent
         [HttpPost]
         public async Task<IActionResult> PostAgent([FromBody] AgentEntity agentModel)
         {
-            dc.CurrentUser = GetCurrentUser();
-            var dm = new BundleDomainModel<AgentEntity>(dc, agentModel);
-            dm.ValideModel(ModelState);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            bool result = false;
-
-            dc.Transaction<IDbRecord>(delegate
-            {
-                result = dm.AddEntity();
-            });
-
-            if (result)
-            {
-                return Ok(dm.Entity);
-            }
-            else
-            {
-                return BadRequest("创建失败, 请检查配置。");
-            }
+            return Ok();
         }
 
         // DELETE: v1/Agents/5
@@ -158,7 +129,7 @@ namespace Apps.Chatbot.Agent
                 return BadRequest(ModelState);
             }
 
-            var agents = await dc.Table<AgentEntity>().SingleOrDefaultAsync(m => m.Id == id);
+            var agents = dc.Table<AgentEntity>().FirstOrDefault();
             if (agents == null)
             {
                 return NotFound();
@@ -168,11 +139,6 @@ namespace Apps.Chatbot.Agent
             dc.SaveChanges();
 
             return Ok(agents);
-        }
-
-        private bool AgentsExists(string id)
-        {
-            return dc.Table<AgentEntity>().Any(e => e.Id == id);
         }
     }
 }

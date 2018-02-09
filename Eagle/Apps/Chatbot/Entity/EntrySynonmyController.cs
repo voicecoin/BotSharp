@@ -16,7 +16,7 @@ namespace Apps.Chatbot.Entity
         [HttpPost("{entryId}")]
         public IActionResult PostEntrySynonmy(string entryId, [FromBody] EntityEntrySynonymEntity synonymModel)
         {
-            var dm = new DomainModel<EntityEntrySynonymEntity>(dc, synonymModel);
+            /*EntityEntrySynonymEntity dm = new DomainModel<EntityEntrySynonymEntity>(dc, synonymModel);
             dm.ValideModel(ModelState);
 
             if (!ModelState.IsValid)
@@ -26,7 +26,7 @@ namespace Apps.Chatbot.Entity
 
             dc.Transaction<IDbRecord>(delegate {
                 dm.AddEntity();
-            });
+            });*/
 
             return CreatedAtAction("GetEntityEntries", new { id = synonymModel.Id }, synonymModel.Synonym);
         }

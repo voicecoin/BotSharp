@@ -9,10 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetToolkit" Version="1.0.0" />
-    <PackageReference Include="EntityFrameworkCore.BootKit" Version="1.2.0" />
+    <PackageReference Include="ContentFoundation.Core" Version="1.5.1" />
+    <PackageReference Include="DotNetToolkit" Version="1.3.0" />
+    <PackageReference Include="EntityFrameworkCore.BootKit" Version="1.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
-    <PackageReference Include="Quartz" Version="3.0.0" />
+    <PackageReference Include="Quartz" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>

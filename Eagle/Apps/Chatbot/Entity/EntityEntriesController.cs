@@ -11,6 +11,7 @@ using Utility;
 using Apps.Chatbot.DmServices;
 using Core.Interfaces;
 using EntityFrameworkCore.BootKit;
+using DotNetToolkit;
 
 namespace Apps.Chatbot.Entity
 {
@@ -18,7 +19,7 @@ namespace Apps.Chatbot.Entity
     {
         // GET: v1/EntityEntries
         [HttpGet("{entityId}/Query")]
-        public DmPageResult<EntityEntryEntity> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
+        public PageResult<EntityEntryEntity> GetEntityEntries(string entityId, string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<EntityEntryEntity>().Where(x => x.EntityId == entityId);
             if (!String.IsNullOrEmpty(name))
@@ -38,7 +39,7 @@ namespace Apps.Chatbot.Entity
                 item.Synonyms = synonyms.Where(x => x.EntityEntryId == item.Id).Select(x => x.Synonym);
             });
 
-            return new DmPageResult<EntityEntryEntity> { Total = total, Page = page, Size = size, Items = items };
+            return new PageResult<EntityEntryEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/EntityEntries/5
@@ -85,12 +86,12 @@ namespace Apps.Chatbot.Entity
         [HttpPost("{entityId}")]
         public async Task<IActionResult> PostEntityEntry(string entityId, [FromBody] EntityEntryEntity entity)
         {
-            dc.CurrentUser = GetCurrentUser();
+            /*dc.CurrentUser = GetCurrentUser();
 
             entity.CreatedDate = DateTime.UtcNow;
             entity.CreatedUserId = dc.CurrentUser.Id;
             entity.ModifiedDate = DateTime.UtcNow;
-            entity.ModifiedUserId = dc.CurrentUser.Id;
+            entity.ModifiedUserId = dc.CurrentUser.Id;*/
             entity.EntityId = entityId;
 
             dc.Transaction<IDbRecord>(delegate {

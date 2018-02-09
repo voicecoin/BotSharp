@@ -12,6 +12,8 @@ using Core;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.CoreMvcExtension;
+using DotNetToolkit;
+using EntityFrameworkCore.BootKit;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,7 +54,7 @@ namespace Apps.WeChat
         [FormatFilter]
         public async Task<ActionResult> Post(PostModel postModel)
         {
-            postModel.Log(MyLogLevel.DEBUG);
+            postModel.Log();
 
             if (!CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, Token))
             {
@@ -68,7 +70,7 @@ namespace Apps.WeChat
             
             var messageHandler = new WexinMessageHandler(document, postModel);// 接收消息（第一步）
             messageHandler.dc = dc;
-            messageHandler.Configuration = CoreDbContext.Configuration;
+            messageHandler.Configuration = Database.Configuration;
 
             messageHandler.Execute();// 执行微信处理过程（第二步）
 

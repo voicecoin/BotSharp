@@ -1,4 +1,6 @@
 ﻿using Core;
+using DotNetToolkit;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,7 @@ namespace Apps.Nlp
     /// </summary>
     public class CombinedRdf
     {
-        public static List<Triple> QueryEntity(CoreDbContext Dc, string s)
+        public static List<Triple> QueryEntity(Database Dc, string s)
         {
             List<Triple> combined = new List<Triple>();
 
@@ -23,7 +25,7 @@ namespace Apps.Nlp
             }
             catch (Exception ex)
             {
-                ex.Message.Log(MyLogLevel.ERROR);
+                ex.Message.Log();
             }
 
             try
@@ -33,7 +35,7 @@ namespace Apps.Nlp
             }
             catch (Exception ex)
             {
-                ex.Message.Log(MyLogLevel.ERROR);
+                ex.Message.Log();
             }
 
             return combined.Distinct(x => x.Predicate).ToList();

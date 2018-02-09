@@ -2,6 +2,7 @@
 using Apps.Chatbot.Intent;
 using Apps.Nlp;
 using Core;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Apps.Chatbot.Agent
 {
     public class PeopleResponseParser
     {
-        public string FillReplyTemplate(CoreDbContext Dc, List<IntentResponseParameterEntity> parameterEntities, string template)
+        public string FillReplyTemplate(Database Dc, List<IntentResponseParameterEntity> parameterEntities, string template)
         {
             string response = template;
 
@@ -96,7 +97,7 @@ namespace Apps.Chatbot.Agent
             return response;
         }
 
-        private String TranslateToken(CoreDbContext Dc, List<IntentResponseParameterEntity> parameterEntities, string template, List<String> tokens)
+        private String TranslateToken(Database Dc, List<IntentResponseParameterEntity> parameterEntities, string template, List<String> tokens)
         {
             if (tokens.Count < 2) return template;
 
@@ -109,7 +110,7 @@ namespace Apps.Chatbot.Agent
             return template;
         }
 
-        private String TranslateToken(CoreDbContext Dc, List<IntentResponseParameterEntity> parameterEntities, string template, string subject, string predict)
+        private String TranslateToken(Database Dc, List<IntentResponseParameterEntity> parameterEntities, string template, string subject, string predict)
         {
             // 查询知识库
             string subjectEntity = subject.Substring(1);

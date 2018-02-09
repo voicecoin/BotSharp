@@ -12,7 +12,7 @@ using System.Text;
 namespace Apps.Chatbot.Faq
 {
     [Table("Chatbot_Faqs")]
-    public class FaqEntity : CoreDbRecord, IDbRecord
+    public class FaqEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -33,7 +33,7 @@ namespace Apps.Chatbot.Faq
         [NotMapped]
         public List<DmIntentExpressionItem> Data { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<FaqEntity>().Any(x => x.AgentId == AgentId && x.Question == Question);
         }

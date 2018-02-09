@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using DotNetToolkit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -26,7 +27,7 @@ namespace Core
 
         public override void OnException(ExceptionContext context)
         {
-            context.Exception.Message.Log(MyLogLevel.ERROR);
+            context.Exception.Message.Log();
 
             ApiError apiError = null;
             if (context.Exception is ApiException)

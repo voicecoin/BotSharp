@@ -12,6 +12,7 @@ using Apps.Chatbot.Intent;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using EntityFrameworkCore.BootKit;
+using DotNetToolkit;
 
 namespace Apps.Chatbot.Intent
 {
@@ -19,7 +20,7 @@ namespace Apps.Chatbot.Intent
     {
         // GET: v1/Intents
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<IntentEntity> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
+        public PageResult<IntentEntity> GetIntents(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             var query = dc.Table<IntentEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -30,7 +31,7 @@ namespace Apps.Chatbot.Intent
             var total = query.Count();
 
             var items = query.Skip((page - 1) * size).Take(size).Select(x => x.Map<IntentEntity>()).ToList();
-            return new DmPageResult<IntentEntity> { Total = total, Page = page, Size = size, Items = items };
+            return new PageResult<IntentEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Intents/5
@@ -42,10 +43,10 @@ namespace Apps.Chatbot.Intent
                 return BadRequest(ModelState);
             }
 
-            var dm = new DomainModel<IntentEntity>(dc, new IntentEntity { Id = id });
-            dm.Load();
+            //var dm = new DomainModel<IntentEntity>(dc, new IntentEntity { Id = id });
+            //dm.Load();
 
-            return Ok(dm.Entity);
+            return Ok();
         }
 
         [HttpGet]
@@ -82,10 +83,10 @@ namespace Apps.Chatbot.Intent
 
             dc.Transaction<IDbRecord>(delegate
             {
-                new DomainModel<IntentEntity>(dc, intentModel).Update();
+                //new DomainModel<IntentEntity>(dc, intentModel).Update();
             });
 
-            return Ok(new { Id = intentModel.Id });
+            return Ok();
         }
 
         // POST: api/Intents
@@ -97,7 +98,7 @@ namespace Apps.Chatbot.Intent
             dc.Transaction<IDbRecord>(delegate
             {
                 intentEntity.AgentId = agentId;
-                result = new DomainModel<IntentEntity>(dc, intentEntity).AddEntity();
+                //result = new DomainModel<IntentEntity>(dc, intentEntity).AddEntity();
             });
 
             if (result)

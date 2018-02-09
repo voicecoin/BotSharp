@@ -12,6 +12,7 @@ using Utility;
 using Apps.Chatbot.DmServices;
 using Core.Interfaces;
 using EntityFrameworkCore.BootKit;
+using DotNetToolkit;
 
 namespace Apps.Chatbot.Entity
 {
@@ -19,7 +20,7 @@ namespace Apps.Chatbot.Entity
     {
         // GET: api/Entities
         [HttpGet("{agentId}/Query")]
-        public DmPageResult<EntityEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 20)
+        public PageResult<EntityEntity> GetEntities(string agentId, [FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int size = 20)
         {
             var query = dc.Table<EntityEntity>().Where(x => x.AgentId == agentId);
             if (!String.IsNullOrEmpty(name))
@@ -35,7 +36,7 @@ namespace Apps.Chatbot.Entity
             items.ForEach(item => {
                 item.Count = dc.Table<EntityEntryEntity>().Where(x => item.Id == x.EntityId).Count();
             });
-            return new DmPageResult<EntityEntity> { Total = total, Page = page, Size = size, Items = items };
+            return new PageResult<EntityEntity> { Total = total, Page = page, Size = size, Items = items };
         }
 
         // GET: v1/Entities/5
@@ -100,12 +101,12 @@ namespace Apps.Chatbot.Entity
         {
             if (!entity.IsExist(dc))
             {
-                dc.CurrentUser = GetCurrentUser();
+                /*dc.CurrentUser = GetCurrentUser();
 
                 entity.CreatedDate = DateTime.UtcNow;
                 entity.CreatedUserId = dc.CurrentUser.Id;
                 entity.ModifiedDate = DateTime.UtcNow;
-                entity.ModifiedUserId = dc.CurrentUser.Id;
+                entity.ModifiedUserId = dc.CurrentUser.Id;*/
 
                 dc.Transaction<IDbRecord>(delegate
                 {

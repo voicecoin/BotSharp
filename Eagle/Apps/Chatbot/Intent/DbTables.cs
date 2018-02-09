@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Apps.Chatbot.Intent
 {
     [Table("Chatbot_Intents")]
-    public class IntentEntity : CoreDbRecord, IDbRecord
+    public class IntentEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -38,7 +38,7 @@ namespace Apps.Chatbot.Intent
         [NotMapped]
         public List<String> Events { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<IntentEntity>().Any(x => x.AgentId == AgentId && x.Name == Name);
         }
@@ -52,7 +52,7 @@ namespace Apps.Chatbot.Intent
     }
 
     [Table("Chatbot_IntentExpressions")]
-    public class IntentExpressionEntity : CoreDbRecord, IDbRecord
+    public class IntentExpressionEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -93,14 +93,14 @@ namespace Apps.Chatbot.Intent
         [NotMapped]
         public Boolean Visible { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<IntentExpressionEntity>().Any(x => x.IntentId == IntentId && x.Text == Text);
         }
     }
 
     [Table("Chatbot_IntentResponses")]
-    public class IntentResponseEntity : CoreDbRecord, IDbRecord
+    public class IntentResponseEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -120,14 +120,14 @@ namespace Apps.Chatbot.Intent
         [NotMapped]
         public List<DmIntentResponseContext> AffectedContexts { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<IntentResponseEntity>().Any(x => x.IntentId == IntentId && x.AffectedContextsJson == AffectedContextsJson);
         }
     }
 
     [Table("Chatbot_IntentResponseMessages")]
-    public class IntentResponseMessageEntity : CoreDbRecord, IDbRecord
+    public class IntentResponseMessageEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -141,14 +141,14 @@ namespace Apps.Chatbot.Intent
         [NotMapped]
         public List<String> Speeches { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<IntentResponseMessageEntity>().Any(x => x.IntentResponseId == IntentResponseId && x.SpeechesJson == SpeechesJson);
         }
     }
 
     [Table("Chatbot_IntentResponseParameters")]
-    public class IntentResponseParameterEntity : CoreDbRecord, IDbRecord
+    public class IntentResponseParameterEntity : DbRecord, IDbRecord
     {
         [Required]
         [StringLength(36)]
@@ -174,7 +174,7 @@ namespace Apps.Chatbot.Intent
         [NotMapped]
         public List<String> Prompts { get; set; }
 
-        public override bool IsExist(CoreDbContext dc)
+        public bool IsExist(Database dc)
         {
             return dc.Table<IntentResponseParameterEntity>().Any(x => x.IntentResponseId == IntentResponseId && x.PromptsJson == PromptsJson);
         }

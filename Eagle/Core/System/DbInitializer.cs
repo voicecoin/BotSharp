@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Utility;
-using Core.Field;
 using Core.Interfaces;
-using Core.Account;
 using Microsoft.Extensions.Configuration;
 using EntityFrameworkCore.BootKit;
 using DotNetToolkit;
@@ -20,9 +17,7 @@ namespace Core
 
         public void Initialize(IConfiguration config, IHostingEnvironment env)
         {
-            CoreDbContext dc = new CoreDbContext();
-            dc.InitDb();
-            dc.CurrentUser = new UserEntity { Id = Constants.SystemUserId };
+            var dc = new DefaultDataContextLoader().GetDefaultDc();
 
             // Amend table structure
             var dbTableAmends = TypeHelper.GetInstanceWithInterface<IDbTableAmend>("Core");

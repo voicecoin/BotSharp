@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="14.8.11" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="14.8.12" />
     <PackageReference Include="Senparc.Weixin.MP.CoreMvc" Version="1.5.0" />
   </ItemGroup>
 

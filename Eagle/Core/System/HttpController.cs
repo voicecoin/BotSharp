@@ -19,7 +19,6 @@ namespace Core
         {
             string hostUrl = GetConfig(host);
             var user = GetCurrentUser();
-            data.Add("CurrentUserName", user.UserName);
             return await HttpClientHelper.PostAsJsonAsync<Object>(hostUrl, path, data);
         }
     }

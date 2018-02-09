@@ -11,8 +11,9 @@ using Apps.Chatbot.DmServices;
 using Core;
 using Apps.Chatbot.Intent;
 using Apps.Chatbot.Entity;
-using Core.Bundle;
 using Microsoft.Extensions.Configuration;
+using EntityFrameworkCore.BootKit;
+using CustomEntityFoundation.Bundles;
 
 namespace Apps.Chatbot.Agent
 {
@@ -20,15 +21,15 @@ namespace Apps.Chatbot.Agent
     {
         public int Priority => 100;
 
-        public void Load(IHostingEnvironment env, IConfiguration config, CoreDbContext dc)
+        public void Load(IHostingEnvironment env, IConfiguration config, Database dc)
         {
-            var dm = new DomainModel<BundleEntity>(dc, new BundleEntity { Name = "Chatbot Agent", EntityName = "Agent" });
-            dm.AddEntity();
+            var dm = new Bundle { Name = "Chatbot Agent", EntityName = "Agent" };
+            dc.Table<Bundle>().Add(dm);
 
             InitAgent(env, dc);
         }
 
-        private static void InitAgent(IHostingEnvironment env, CoreDbContext context)
+        private static void InitAgent(IHostingEnvironment env, Database context)
         {
             // create a agent
             var agentNames = LoadJson<List<String>>(env, "Agents");
@@ -43,25 +44,25 @@ namespace Apps.Chatbot.Agent
             agentNames.ForEach(agentName =>
             {
                 var agent = LoadJson<AgentEntity>(env, $"{agentName}\\Agent");
-                BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
+                /*BundleDomainModel<AgentEntity> dm = new BundleDomainModel<AgentEntity>(context, agent);
                 dm.AddEntity();
 
-                InitSkills(context, agent.Id, agent.Skills);
+                InitSkills(context, agent.Id, agent.Skills);*/
             });
         }
 
-        private static void InitSkills(CoreDbContext context, string agentId, List<string> skills)
+        private static void InitSkills(Database context, string agentId, List<string> skills)
         {
             if (skills == null) return;
 
             skills.ForEach(skill => {
-                var dm = new DomainModel<AgentSkillEntity>(context, new AgentSkillEntity
+                /*var dm = new DomainModel<AgentSkillEntity>(context, new AgentSkillEntity
                 {
                     AgentId = agentId,
                     SkillId = skill
                 });
 
-                dm.AddEntity();
+                dm.AddEntity();*/
             });
         }
 

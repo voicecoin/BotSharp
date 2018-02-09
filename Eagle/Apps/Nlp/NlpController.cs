@@ -1,5 +1,6 @@
 ﻿using Apps.Chatbot.DomainModels;
 using Core;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -14,7 +15,7 @@ namespace Apps.Nlp
         [HttpGet("pos")]
         public IEnumerable<NlpirSegment> Pos([FromQuery] string text)
         {
-            string url = CoreDbContext.Configuration.GetSection("NlpApi:NlpirUrl").Value + "nlpir/wordsplit/" + text;
+            string url = Database.Configuration.GetSection("NlpApi:NlpirUrl").Value + "nlpir/wordsplit/" + text;
             var result = RestHelper.GetSync<NlpirResult>(url);
             return result.WordSplit;
         }

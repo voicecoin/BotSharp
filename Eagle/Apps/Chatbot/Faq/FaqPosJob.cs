@@ -22,7 +22,7 @@ namespace Apps.Chatbot.Analyzer
         {
             var sentences = from intent in Dc.Table<FaqEntity>()
                             where String.IsNullOrEmpty(intent.DataJson)
-                            orderby intent.ModifiedDate
+                            orderby intent.UpdatedTime
                             select new { ExpressionId = intent.Id, AgentId = intent.AgentId, Text = intent.Question };
 
             var result = sentences.Take(5).ToList();
@@ -48,8 +48,8 @@ namespace Apps.Chatbot.Analyzer
                 Dc.Transaction<IDbRecord>(delegate {
                     var expressionEntity = Dc.Table<FaqEntity>().Find(sentence.ExpressionId);
                     expressionEntity.DataJson = JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                    expressionEntity.ModifiedDate = DateTime.UtcNow;
-                    expressionEntity.ModifiedUserId = Constants.JobUserId;
+                    /*expressionEntity.ModifiedDate = DateTime.UtcNow;
+                    expressionEntity.ModifiedUserId = Constants.JobUserId;*/
                 });
 
             });

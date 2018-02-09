@@ -1,4 +1,5 @@
-﻿using Core.Account;
+﻿using ContentFoundation.Core.Account;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -19,41 +20,36 @@ namespace Core
     [ServiceFilter(typeof(ApiExceptionFilter))]
     public class CoreController : ControllerBase
     {
-        protected readonly CoreDbContext dc;
+        protected readonly Database dc;
         
-        protected CoreDbContext Dc { get; set; }
+        protected Database Dc { get; set; }
 
         public CoreController()
         {
-            //dc = new CoreDbContext(new DbContextOptions<CoreDbContext>() { });
-
-            dc = new CoreDbContext();
-            dc.CurrentUser = GetCurrentUser();
-            dc.InitDb();
-            Dc = dc;
+            dc = new DefaultDataContextLoader().GetDefaultDc();
         }
 
         protected String GetConfig(string path)
         {
-            return CoreDbContext.Configuration.GetSection(path).Value;
+            return Database.Configuration.GetSection(path).Value;
         }
 
-        protected UserEntity GetCurrentUser()
+        protected User GetCurrentUser()
         {
             if (this.User != null)
             {
-                return new UserEntity
+                return new User
                 {
                     Id = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserId"))?.Value,
-                    UserName = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value
+                    Name = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value
                 };
             }
             else
             {
-                return new UserEntity
+                return new User
                 {
                     Id = Guid.Empty.ToString(),
-                    UserName = "Anonymous"
+                    Name = "Anonymous"
                 };
             }
         }

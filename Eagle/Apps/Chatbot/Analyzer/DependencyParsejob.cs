@@ -22,7 +22,7 @@ namespace Apps.Chatbot.Analyzer
             var sentences = from intent in Dc.Table<IntentEntity>()
                             join expression in Dc.Table<IntentExpressionEntity>() on intent.Id equals expression.IntentId
                             where String.IsNullOrEmpty(expression.DataJson)
-                            orderby expression.ModifiedDate
+                            orderby expression.UpdatedTime
                             select new { ExpressionId = expression.Id, AgentId = intent.AgentId, Text = expression.Text };
 
             var result = sentences.Take(10).ToList();
@@ -48,8 +48,6 @@ namespace Apps.Chatbot.Analyzer
                 Dc.Transaction<IDbRecord>(delegate {
                     var expressionEntity = Dc.Table<IntentExpressionEntity>().Find(sentence.ExpressionId);
                     expressionEntity.DataJson = JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                    expressionEntity.ModifiedDate = DateTime.UtcNow;
-                    expressionEntity.ModifiedUserId = Constants.JobUserId;
                     expressionEntity.AllowOverrideData = true;
                 });
 

@@ -15,12 +15,13 @@ using Apps.Chatbot.Agent;
 using Apps.Chatbot.DomainModels;
 using Apps.Chatbot.DmServices;
 using EntityFrameworkCore.BootKit;
+using DotNetToolkit;
 
 namespace Apps.WeChat
 {
     public class WexinMessageHandler : MessageHandler<CustomMessageContext>
     {
-        public CoreDbContext dc { get; set; }
+        public Database dc { get; set; }
         public IConfiguration Configuration { get; set; }
 
         public WexinMessageHandler(XDocument inputStream, PostModel postModel, int maxRecordCount = 0)
@@ -40,7 +41,7 @@ namespace Apps.WeChat
 
         public override IResponseMessageBase OnTextRequest(RequestMessageText requestMessage)
         {
-            requestMessage.Log(MyLogLevel.DEBUG);
+            requestMessage.Log();
 
             string clientAccessToken = "dcab96ca3f844d029f145b085dabe2c7"; // Default as Yaya
 
@@ -59,17 +60,15 @@ namespace Apps.WeChat
 
             var agentRecord = dc.Table<AgentEntity>().First(x => x.ClientAccessToken == clientAccessToken);
 
-            var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentRecord.Id && x.CreatedUserId == dc.CurrentUser.Id);
+            var conversation = dc.Table<ConversationEntity>().FirstOrDefault(x => x.AgentId == agentRecord.Id);
             if (conversation == null)
             {
                 dc.Transaction<IDbRecord>(delegate
                 {
-                    var dm = new DomainModel<ConversationEntity>(dc, new ConversationEntity
+                    var dm = dc.Table<ConversationEntity>().Add(new ConversationEntity
                     {
                         AgentId = agentRecord.Id
                     });
-
-                    dm.AddEntity();
 
                     conversationId = dm.Entity.Id;
                 });
