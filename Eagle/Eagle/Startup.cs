@@ -60,6 +60,7 @@ namespace Eagle
             app.UseMvc();
 
             Database.Configuration = Configuration;
+            Database.ContentRootPath = env.ContentRootPath;
             Database.Assemblies = new String[] { "Core", "Apps" };
 
             InitializationLoader loader = new InitializationLoader();

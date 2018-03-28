@@ -9,15 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ContentFoundation.Core" Version="1.5.1" />
-    <PackageReference Include="DotNetToolkit" Version="1.3.0" />
-    <PackageReference Include="EntityFrameworkCore.BootKit" Version="1.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
-    <PackageReference Include="Quartz" Version="3.0.2" />
+    <PackageReference Include="DotNetToolkit" Version="1.4.0" />
+    <PackageReference Include="EntityFrameworkCore.BootKit" Version="1.5.4" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Quartz" Version="3.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EntityFrameworkCore.BootKit">
+      <HintPath>..\..\..\..\..\.nuget\packages\entityframeworkcore.bootkit\1.5.1\lib\netcoreapp2.0\EntityFrameworkCore.BootKit.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

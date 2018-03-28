@@ -1,5 +1,4 @@
-﻿using ContentFoundation.Core.Account;
-using EntityFrameworkCore.BootKit;
+﻿using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -34,23 +33,11 @@ namespace Core
             return Database.Configuration.GetSection(path).Value;
         }
 
-        protected User GetCurrentUser()
+        protected String CurrentUserId
         {
-            if (this.User != null)
+            get
             {
-                return new User
-                {
-                    Id = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserId"))?.Value,
-                    Name = this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value
-                };
-            }
-            else
-            {
-                return new User
-                {
-                    Id = Guid.Empty.ToString(),
-                    Name = "Anonymous"
-                };
+                return this.User.Claims.FirstOrDefault(x => x.Type.Equals("UserId")).Value;
             }
         }
     }

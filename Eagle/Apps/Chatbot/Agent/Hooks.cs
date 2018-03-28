@@ -6,14 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Newtonsoft.Json;
 using Core.Interfaces;
-using Apps.Chatbot.DomainModels;
-using Apps.Chatbot.DmServices;
-using Core;
-using Apps.Chatbot.Intent;
 using Apps.Chatbot.Entity;
 using Microsoft.Extensions.Configuration;
 using EntityFrameworkCore.BootKit;
-using CustomEntityFoundation.Bundles;
 
 namespace Apps.Chatbot.Agent
 {
@@ -23,9 +18,6 @@ namespace Apps.Chatbot.Agent
 
         public void Load(IHostingEnvironment env, IConfiguration config, Database dc)
         {
-            var dm = new Bundle { Name = "Chatbot Agent", EntityName = "Agent" };
-            dc.Table<Bundle>().Add(dm);
-
             InitAgent(env, dc);
         }
 

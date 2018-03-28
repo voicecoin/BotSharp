@@ -35,7 +35,6 @@ namespace Apps.Chatbot.Agent
         [HttpGet("MyAgents")]
         public IEnumerable<Object> MyAgents()
         {
-            var user = GetCurrentUser();
             return dc.Table<AgentEntity>().Select(x => new { x.Name });
         }
 
