@@ -1,9 +1,0 @@
-{
-  "Database": {
-    "Default": "Sqlite",
-    "ConnectionStrings": {
-      "Sqlite": "Data Source=|DataDirectory|\\Yaya.db;",
-      "SqlServer": "Server=(localdb)\\MSSQLLocalDB;Database=Yaya;Trusted_Connection=True;MultipleActiveResultSets=true"
-    }
-  }
-}
