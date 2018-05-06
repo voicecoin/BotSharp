@@ -1,0 +1,38 @@
+[
+  {
+    "value": "Google Now",
+    "synonyms": [
+      "Google Now"
+    ]
+  },
+  {
+    "value": "Alexa",
+    "synonyms": [
+      "Alexa"
+    ]
+  },
+  {
+    "value": "Siri",
+    "synonyms": [
+      "Siri"
+    ]
+  },
+  {
+    "value": "Alpha Go",
+    "synonyms": [
+      "Alpha Go"
+    ]
+  },
+  {
+    "value": "Apple Sales Bot",
+    "synonyms": [
+      "Apple Sales Bot"
+    ]
+  },
+  {
+    "value": "Voicehub",
+    "synonyms": [
+      "Voicehub"
+    ]
+  }
+]

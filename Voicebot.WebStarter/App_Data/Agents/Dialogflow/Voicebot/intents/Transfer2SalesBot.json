@@ -1,0 +1,103 @@
+{
+  "id": "b8eb0664-900d-4844-b2a4-ed8a5da09889",
+  "name": "Transfer2SalesBot",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [
+        {
+          "name": "Transfer2SalesBot-followup",
+          "parameters": {},
+          "lifespan": 2
+        }
+      ],
+      "parameters": [
+        {
+          "id": "402bd1c2-5ea0-4100-afda-db364a80839f",
+          "required": true,
+          "dataType": "@ProductName",
+          "name": "ProductName",
+          "value": "$ProductName",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What is the product name?"
+            },
+            {
+              "lang": "en",
+              "value": "What do you want to buy?"
+            }
+          ],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "voice",
+            "parameters": [
+              "Joanna"
+            ]
+          }
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "OK, It\u0027s connecting to Apple\u0027s chatbot. Please wait for a second."
+        },
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "delay",
+            "parameters": [
+              3000
+            ]
+          }
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Great, It\u0027s connected for you."
+        },
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "delay",
+            "parameters": [
+              1000
+            ]
+          }
+        },
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "voice",
+            "parameters": [
+              "Matthew"
+            ]
+          }
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new iPhone 10, correct?"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1523755855,
+  "fallbackIntent": false,
+  "events": []
+}

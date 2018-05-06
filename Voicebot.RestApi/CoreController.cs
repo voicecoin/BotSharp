@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Voicebot.RestApi
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
-    [Route("[controller]")]
+    [Route("v1/[controller]")]
     [ServiceFilter(typeof(ApiExceptionFilter))]
     public class CoreController : ControllerBase
     {

@@ -1,0 +1,34 @@
+{
+  "id": "e3a0bff4-a4b8-4db6-96c4-202561b30703",
+  "name": "Default Welcome Intent",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "",
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Hi! Welcome to use voice enabled, world wide web."
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "How can I help you?"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1521314998,
+  "fallbackIntent": false,
+  "events": []
+}
