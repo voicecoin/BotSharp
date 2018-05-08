@@ -5,6 +5,7 @@ using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +47,11 @@ namespace Voicebot.RestApi.Agents
         }
 
         [HttpGet("MyAgents")]
-        public List<Object> MyAgents()
+        public Object MyAgents()
         {
-            return Query(CurrentUserId).Items;
+            return Query(CurrentUserId).Items.Select(x => JObject.FromObject(x))
+                .Select(x => new { Id = x["Id"].ToString(), Name = x["Name"].ToString() })
+                .ToList();
         }
 
         [HttpGet("{userId}/query")]

@@ -78,5 +78,21 @@ namespace Voicebot.RestApi.Agents
 
             return string.Join(".", speeches);
         }
+
+        [HttpGet("{conversationId}/reset")]
+        public void Reset([FromRoute] string conversationId)
+        {
+            dc.DbTran(() => {
+
+                dc.Table<ConversationContext>()
+                    .RemoveRange(dc.Table<ConversationContext>()
+                            .Where(x => x.ConversationId == conversationId)
+                            .ToList());
+
+                dc.Table<Conversation>()
+                    .Remove(dc.Table<Conversation>().Find(conversationId));
+
+            });
+        }
     }
 }

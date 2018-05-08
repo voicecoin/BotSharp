@@ -1,5 +1,5 @@
 ﻿{
   "Rasa": {
-    "Nlu": "http://d2e0ea66.ngrok.io"
+    "Nlu": "http://localhost:5000"
   }
 }

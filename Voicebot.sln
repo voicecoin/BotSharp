@@ -11,9 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voicebot.RestApi", "Voicebo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotSharp.Core", "..\..\BotSharp\BotSharp.Core\BotSharp.Core.csproj", "{8E60B2D7-0DD8-433A-A41F-45A8FA3AF27F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetToolkit", "..\..\DotNetToolkit\DotNetToolkit\DotNetToolkit.csproj", "{EB61EB58-5249-4947-B20B-6752BC84FA5C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voicebot.UnitTest", "Voicebot.UnitTest\Voicebot.UnitTest.csproj", "{59FF8C43-D4A9-4582-80C0-9039A9006D64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voicebot.UnitTest", "Voicebot.UnitTest\Voicebot.UnitTest.csproj", "{59FF8C43-D4A9-4582-80C0-9039A9006D64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +35,6 @@ Global
 		{8E60B2D7-0DD8-433A-A41F-45A8FA3AF27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E60B2D7-0DD8-433A-A41F-45A8FA3AF27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E60B2D7-0DD8-433A-A41F-45A8FA3AF27F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB61EB58-5249-4947-B20B-6752BC84FA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB61EB58-5249-4947-B20B-6752BC84FA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB61EB58-5249-4947-B20B-6752BC84FA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB61EB58-5249-4947-B20B-6752BC84FA5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{59FF8C43-D4A9-4582-80C0-9039A9006D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59FF8C43-D4A9-4582-80C0-9039A9006D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59FF8C43-D4A9-4582-80C0-9039A9006D64}.Release|Any CPU.ActiveCfg = Release|Any CPU

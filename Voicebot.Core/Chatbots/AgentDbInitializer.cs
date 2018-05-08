@@ -27,7 +27,7 @@ namespace Voicebot.Core.Chatbots
             var rasa = new RasaAi(dc);
             var importer = new AgentImporterInDialogflow();
 
-            string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents{Path.DirectorySeparatorChar}";
+            string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents";
             var agent = rasa.RestoreAgent(importer, "Voicebot", dataDir);
             agent.Id = "f4811cf8-0eb8-4eb3-8271-fe2bc6da27f3";
             agent.UserId = "8da9e1e0-42dc-420a-8016-79b04c1297d0";

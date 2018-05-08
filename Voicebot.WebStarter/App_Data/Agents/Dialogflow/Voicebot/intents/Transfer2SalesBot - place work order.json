@@ -1,7 +1,7 @@
 {
   "id": "f9cb6112-f549-49c4-b773-087baa45c621",
   "parentId": "f65a1d78-c530-4a60-9be0-e30f5555ba00",
-  "rootParentId": "b8eb0664-900d-4844-b2a4-ed8a5da09889",
+  "rootParentId": "f65a1d78-c530-4a60-9be0-e30f5555ba00",
   "name": "Transfer2SalesBot - place work order",
   "auto": true,
   "contexts": [

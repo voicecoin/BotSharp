@@ -1,9 +1,9 @@
 [
   {
-    "id": "40b6f141-1430-481e-9084-7c2eefc1d15b",
+    "id": "1aeebd70-822f-469e-87b4-0969818b821d",
     "data": [
       {
-        "text": "Thank you, bye",
+        "text": "Have a good one",
         "userDefined": false
       }
     ],
@@ -24,16 +24,16 @@
     "updated": 1525024535
   },
   {
-    "id": "1aeebd70-822f-469e-87b4-0969818b821d",
+    "id": "a50ec408-4a7c-44bd-8979-ddb842f550e9",
     "data": [
       {
-        "text": "Have a good one",
+        "text": "OK, bye",
         "userDefined": false
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1525024535
+    "updated": 1523755540
   },
   {
     "id": "389f80b8-25af-4a74-a6c9-a884ee924a55",
@@ -60,16 +60,16 @@
     "updated": 1523755540
   },
   {
-    "id": "a50ec408-4a7c-44bd-8979-ddb842f550e9",
+    "id": "40b6f141-1430-481e-9084-7c2eefc1d15b",
     "data": [
       {
-        "text": "OK, bye",
+        "text": "Thank you, bye",
         "userDefined": false
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1523755540
+    "updated": 1525024535
   },
   {
     "id": "7cc26fa5-fbad-4999-a1c8-c140ca860728",

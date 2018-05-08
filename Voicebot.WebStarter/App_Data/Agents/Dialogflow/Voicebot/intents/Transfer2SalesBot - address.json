@@ -18,9 +18,9 @@
           "lifespan": 1
         },
         {
-          "name": "Transfer2SalesBot-yes-followup",
+          "name": "Transfer2SalesBot-followup",
           "parameters": {},
-          "lifespan": 1
+          "lifespan": 0
         }
       ],
       "parameters": [],
@@ -48,7 +48,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1525018658,
+  "lastUpdate": 1525650992,
   "fallbackIntent": false,
   "events": []
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Voicebot.RestApi.Intents
+namespace Voicebot.RestApi.Agents
 {
-    class IntentController
+    class IntentsController
     {
     }
 }

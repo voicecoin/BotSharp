@@ -1,11 +1,9 @@
 {
   "id": "f65a1d78-c530-4a60-9be0-e30f5555ba00",
-  "parentId": "f31b69b7-1f8c-4d79-8ba9-cbfe574d6985",
-  "rootParentId": "b8eb0664-900d-4844-b2a4-ed8a5da09889",
   "name": "Transfer2SalesBot - payment",
   "auto": true,
   "contexts": [
-    "Transfer2SalesBot-yes-yes-followup"
+    "ConfirmedAddress"
   ],
   "responses": [
     {
@@ -16,6 +14,11 @@
           "name": "Transfer2SalesBot-payment-followup",
           "parameters": {},
           "lifespan": 1
+        },
+        {
+          "name": "ConfirmedAddress",
+          "parameters": {},
+          "lifespan": 0
         }
       ],
       "parameters": [],
@@ -43,7 +46,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1525018645,
+  "lastUpdate": 1525651106,
   "fallbackIntent": false,
   "events": []
 }

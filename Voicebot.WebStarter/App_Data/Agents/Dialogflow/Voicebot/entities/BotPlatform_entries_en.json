@@ -6,15 +6,9 @@
     ]
   },
   {
-    "value": "Alexa",
+    "value": "Voicehub",
     "synonyms": [
-      "Alexa"
-    ]
-  },
-  {
-    "value": "Siri",
-    "synonyms": [
-      "Siri"
+      "Voicehub"
     ]
   },
   {
@@ -30,9 +24,15 @@
     ]
   },
   {
-    "value": "Voicehub",
+    "value": "Siri",
     "synonyms": [
-      "Voicehub"
+      "Siri"
+    ]
+  },
+  {
+    "value": "Alexa",
+    "synonyms": [
+      "Alexa"
     ]
   }
 ]

@@ -5,7 +5,6 @@
   "name": "Transfer2SalesBot - confirm address",
   "auto": true,
   "contexts": [
-    "Transfer2SalesBot-yes-followup",
     "SalesBotRequestAddress"
   ],
   "responses": [
@@ -14,9 +13,9 @@
       "action": "",
       "affectedContexts": [
         {
-          "name": "Transfer2SalesBot-yes-yes-followup",
+          "name": "ConfirmedAddress",
           "parameters": {},
-          "lifespan": 1
+          "lifespan": 2
         }
       ],
       "parameters": [],
@@ -44,7 +43,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1525018671,
+  "lastUpdate": 1525651078,
   "fallbackIntent": false,
   "events": []
 }
