@@ -47,11 +47,11 @@ namespace Voicebot.RestApi.Agents
         }
 
         [HttpGet("MyAgents")]
-        public Object MyAgents()
+        public PageResult<VmAgent> MyAgents()
         {
-            return Query(CurrentUserId).Items.Select(x => JObject.FromObject(x))
-                .Select(x => new { Id = x["Id"].ToString(), Name = x["Name"].ToString() })
-                .ToList();
+            var result = new PageResult<VmAgent>() { };
+            var query = dc.Table<Agent>().Where(x => x.UserId == CurrentUserId).Select(x => x.ToObject<VmAgent>());
+            return result.LoadRecords<VmAgent>(query);
         }
 
         [HttpGet("{userId}/query")]

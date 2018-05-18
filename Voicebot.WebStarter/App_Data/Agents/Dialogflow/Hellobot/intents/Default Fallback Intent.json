@@ -1,0 +1,34 @@
+﻿{
+  "id": "dd92ae87-01c0-4c5e-9f2c-c35d41222e33",
+  "name": "Default Fallback Intent",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "input.unknown",
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "zh-cn",
+          "speech": [
+            "对不起，我听不懂你的问题。",
+            "请你再说一遍。",
+            "我怕我听不懂你的话。",
+            "我对最后的部分还有一些糊涂。",
+            "请再讲一次好吗？"
+          ]
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": true,
+  "events": []
+}

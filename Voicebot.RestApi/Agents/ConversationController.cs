@@ -2,18 +2,28 @@
 using BotSharp.Core.Engines;
 using BotSharp.Core.Models;
 using EntityFrameworkCore.BootKit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Voicebot.Core.Chatbots.Tuling;
 using Voicebot.Core.Utility;
 
 namespace Voicebot.RestApi.Agents
 {
+    /// <summary>
+    /// Dialog controller
+    /// </summary>
     public class ConversationController : CoreController
     {
+        /// <summary>
+        /// Start a new conversation, reset contexts.
+        /// </summary>
+        /// <param name="agentId"></param>
+        /// <returns></returns>
         [HttpGet("{agentId}")]
         public string Start([FromRoute] string agentId)
         {
@@ -37,9 +47,31 @@ namespace Voicebot.RestApi.Agents
             return conversation.Id;
         }
 
+        /// <summary>
+        /// Text request
+        /// </summary>
+        /// <param name="conversationId"></param>
+        /// <param name="clientAccessToken"></param>
+        /// <param name="text">user say</param>
+        /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("{conversationId}/{clientAccessToken}")]
-        public string Request([FromRoute] string conversationId, [FromRoute] string clientAccessToken, [FromQuery] string text)
+        public new string Request([FromRoute] string conversationId, [FromRoute] string clientAccessToken, [FromQuery] string text)
         {
+            if (clientAccessToken == "50dbb57981654aa1a6bbf24f612f207f")
+            {
+                var tuling = new TulingAgent();
+                var tulingResponse = tuling.Request(new TulingRequest
+                {
+                    Perception = new TulingRequestPerception
+                    {
+                        InputText = new TulingInputText { Text = text }
+                    }
+                });
+
+                return tulingResponse.Results.FirstOrDefault(x => x.ResultType == "text").Values.Text;
+            }
+
             var config = new AIConfiguration(clientAccessToken, SupportedLanguage.English);
             config.SessionId = conversationId;
 
@@ -79,6 +111,10 @@ namespace Voicebot.RestApi.Agents
             return string.Join(".", speeches);
         }
 
+        /// <summary>
+        /// Rest contexts
+        /// </summary>
+        /// <param name="conversationId"></param>
         [HttpGet("{conversationId}/reset")]
         public void Reset([FromRoute] string conversationId)
         {

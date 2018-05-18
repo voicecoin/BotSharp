@@ -2,12 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RuntimeIdentifiers>Portable;win10-x64;centos.7-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <Compile Remove="App_Data\Logs\**" />
+    <Content Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <Content Remove="App_Data\Logs\**" />
+    <EmbeddedResource Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <EmbeddedResource Remove="App_Data\Logs\**" />
+    <None Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <None Remove="App_Data\Logs\**" />
   </ItemGroup>
 

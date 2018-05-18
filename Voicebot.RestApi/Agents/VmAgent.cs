@@ -9,6 +9,8 @@ namespace Voicebot.RestApi.Agents
     /// </summary>
     public class VmAgent
     {
+        public String Id { get; set; }
+
         public String Name { get; set; }
 
         public String Description { get; set; }
@@ -16,5 +18,7 @@ namespace Voicebot.RestApi.Agents
         public Boolean Published { get; set; }
 
         public String Language { get; set; }
+
+        public String Birthday { get; set; }
     }
 }
