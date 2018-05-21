@@ -38,6 +38,26 @@ namespace Voicebot.RestApi.Agents
             return agentId;
         }
 
+        /// <summary>
+        /// Delete a existed agent permanently
+        /// </summary>
+        /// <param name="agentId"></param>
+        [HttpDelete]
+        public void Delete([FromRoute] string agentId)
+        {
+
+        }
+
+        /// <summary>
+        /// Update existed agent
+        /// </summary>
+        /// <param name="agent"></param>
+        [HttpPut]
+        public void Update([FromBody] VmAgent agent)
+        {
+
+        }
+
         [HttpGet("{agentId}")]
         public Object GetAgentDetail([FromRoute] string agentId)
         {

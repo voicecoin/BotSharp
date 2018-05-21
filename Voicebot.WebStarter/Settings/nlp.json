@@ -1,5 +1,11 @@
 ﻿{
   "Rasa": {
     "Nlu": "http://localhost:5000"
+  },
+
+  "Tuling": {
+    "Url": "http://openapi.tuling123.com",
+    "ApiKey": "ce36fa6d0ec047248da3354519658734",
+    "UserId": "zhaojianwen"
   }
 }

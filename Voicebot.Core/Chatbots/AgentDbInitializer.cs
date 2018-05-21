@@ -50,7 +50,7 @@ namespace Voicebot.Core.Chatbots
             var importer = new AgentImporterInDialogflow();
 
             string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents";
-            var agent = rasa.RestoreAgent(importer, "Hellobot", dataDir);
+            var agent = rasa.RestoreAgent(importer, "Yayabot", dataDir);
             agent.Id = "b2ca5be5-72f0-4a91-83b6-3bab99dc0810";
             agent.UserId = "8da9e1e0-42dc-420a-8016-79b04c1297d0";
             agent.ClientAccessToken = "50dbb57981654aa1a6bbf24f612f207f";
