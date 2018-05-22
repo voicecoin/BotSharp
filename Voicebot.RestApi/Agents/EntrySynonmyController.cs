@@ -11,12 +11,12 @@ namespace Voicebot.RestApi.Agents
     public class EntrySynonmyController : CoreController
     {
         [HttpPost("{entryId}")]
-        public EntityEntrySynonym CreateEntrySynonym([FromRoute] string entryId, [FromBody] EntityEntrySynonym synonym)
+        public EntrySynonym CreateEntrySynonym([FromRoute] string entryId, [FromBody] EntrySynonym synonym)
         {
             dc.DbTran(() =>
             {
                 synonym.EntityEntryId = entryId;
-                dc.Table<EntityEntrySynonym>().Add(synonym);
+                dc.Table<EntrySynonym>().Add(synonym);
             });
 
             return synonym;
@@ -27,12 +27,12 @@ namespace Voicebot.RestApi.Agents
         {
             dc.DbTran(() =>
             {
-                var existedSynonym = dc.Table<EntityEntrySynonym>()
+                var existedSynonym = dc.Table<EntrySynonym>()
                     .FirstOrDefault(x => x.EntityEntryId == entryId && x.Synonym == synonym);
 
                 if (existedSynonym != null)
                 {
-                    dc.Table<EntityEntrySynonym>().Remove(existedSynonym);
+                    dc.Table<EntrySynonym>().Remove(existedSynonym);
                 }
             });
 

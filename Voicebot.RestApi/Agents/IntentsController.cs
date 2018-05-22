@@ -1,4 +1,6 @@
-﻿using BotSharp.Core.Intents;
+﻿using BotSharp.Core.Agents;
+using BotSharp.Core.Engines;
+using BotSharp.Core.Intents;
 using DotNetToolkit;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,11 +19,13 @@ namespace Voicebot.RestApi.Agents
         /// Create a intent for agent
         /// </summary>
         /// <param name="agentId"></param>
+        /// <param name="intent"></param>
         /// <returns></returns>
         [HttpPost]
-        public VmIntent CreateIntent([FromRoute] string agentId)
+        public string CreateIntent([FromRoute] string agentId, [FromBody] VmIntentDetail intent)
         {
-            return new VmIntent();
+            var agent = new RasaAi(dc).LoadAgentById(dc, agentId);
+            return agent.CreateIntent(dc, intent.ToObject<Intent>());
         }
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace Voicebot.RestApi.Agents
         /// <param name="intentId"></param>
         /// <param name="intent"></param>
         [HttpPut("{intentId}")]
-        public void UpdateIntent([FromRoute] string intentId, [FromBody] VmIntent intent)
+        public void UpdateIntent([FromRoute] string intentId, [FromBody] VmIntentDetail intent)
         {
 
         }

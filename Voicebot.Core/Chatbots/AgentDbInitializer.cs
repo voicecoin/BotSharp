@@ -41,7 +41,7 @@ namespace Voicebot.Core.Chatbots
             agent.ClientAccessToken = "d018bf12a8a8419797fe3965637389b0";
             agent.DeveloperAccessToken = "8553e861eecd4cd7a1c6aff6bdd1cd2f";
 
-            rasa.SaveAgent(agent);
+            rasa.agent.SaveAgent(dc);
         }
 
         private void ImportHellobot(Database dc)
@@ -56,7 +56,7 @@ namespace Voicebot.Core.Chatbots
             agent.ClientAccessToken = "50dbb57981654aa1a6bbf24f612f207f";
             agent.DeveloperAccessToken = "da38d1468cde461b8643f899c680a26b";
 
-            rasa.SaveAgent(agent);
+            rasa.agent.SaveAgent(dc);
         }
     }
 }

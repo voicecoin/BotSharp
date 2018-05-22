@@ -89,7 +89,7 @@ namespace Voicebot.RestApi.Agents
             var config = new AIConfiguration(clientAccessToken, SupportedLanguage.English);
 
             var rasa = new RasaAi(dc, config);
-            rasa.agent = rasa.LoadAgent();
+            rasa.agent = rasa.LoadAgent(dc, config);
             return rasa.Train(dc);
         }
     }

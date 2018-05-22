@@ -26,7 +26,7 @@ namespace Voicebot.RestApi.Agents
             {
                 if (x.Synonyms == null)
                 {
-                    x.Synonyms = new List<EntityEntrySynonym>();
+                    x.Synonyms = new List<EntrySynonym>();
                 }
             });
 
