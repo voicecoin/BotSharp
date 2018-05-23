@@ -7,5 +7,14 @@
     "Url": "http://openapi.tuling123.com",
     "ApiKey": "ce36fa6d0ec047248da3354519658734",
     "UserId": "zhaojianwen"
+  },
+
+  "Nlpir": {
+    "Url": "http://52.221.65.135:8001"
+  },
+
+  "BosonNlp": {
+    "Url": "http://api.bosonnlp.com",
+    "Token": "aQcr0dVd.11905.XAEVGsS0VzCU"
   }
 }

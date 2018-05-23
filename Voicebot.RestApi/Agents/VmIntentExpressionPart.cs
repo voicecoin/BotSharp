@@ -16,5 +16,7 @@ namespace Voicebot.RestApi.Agents
         public String Meta { get; set; }
 
         public Boolean UserDefined { get; set; }
+
+        public int Start { get; set; }
     }
 }
