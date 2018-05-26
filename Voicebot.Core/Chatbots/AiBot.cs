@@ -18,6 +18,10 @@ namespace Voicebot.Core.Chatbots
         {
             agent.ClientAccessToken = Guid.NewGuid().ToString("N");
             agent.DeveloperAccessToken = Guid.NewGuid().ToString("N");
+            if(String.IsNullOrEmpty(agent.Language))
+            {
+                agent.Language = "zh";
+            }
 
             dc.Table<Agent>().Add(agent);
 

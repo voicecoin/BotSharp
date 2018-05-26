@@ -29,6 +29,7 @@ namespace Voicebot.RestApi.Agents
         {
             var bot = new AiBot();
             string agentId = String.Empty;
+            agent.UserId = CurrentUserId;
 
             dc.DbTran(() =>
             {

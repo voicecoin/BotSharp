@@ -1,6 +1,6 @@
 ﻿{
   "Rasa": {
-    "Nlu": "http://localhost:5000"
+    "Nlu": "http://voicebot.local:5000"
   },
 
   "Tuling": {
