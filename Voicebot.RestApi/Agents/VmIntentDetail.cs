@@ -11,6 +11,8 @@ namespace Voicebot.RestApi.Agents
     {
         public string Id { get; set; }
 
+        public string AgentId { get; set; }
+
         public string Name { get; set; }
 
         public bool Auto { get; set; }

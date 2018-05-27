@@ -3,6 +3,7 @@ using BotSharp.Core.Engines;
 using BotSharp.Core.Entities;
 using BotSharp.Core.Intents;
 using DotNetToolkit;
+using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -128,24 +129,48 @@ namespace Voicebot.RestApi.Agents
         /// <param name="agentId"></param>
         /// <param name="intent"></param>
         /// <returns></returns>
-        [HttpPost]
-        public string CreateIntent([FromRoute] string agentId, [FromBody] VmIntentDetail intent)
+        [HttpPost("{agentId}")]
+        public IActionResult CreateIntent([FromRoute] string agentId, [FromBody] VmIntentDetail intent)
         {
+            if(agentId != intent.AgentId)
+            {
+                return BadRequest("AgentId is not matched with intent agentId.");
+            }
+
             var agent = new RasaAi(dc).LoadAgentById(dc, agentId);
-            return agent.CreateIntent(dc, intent.ToObject<Intent>());
+
+            dc.DbTran(() => {
+                intent.Id = agent.CreateIntent(dc, intent.ToObject<Intent>());
+            });
+
+            return Ok(intent.Id);
         }
 
         /// <summary>
         /// List all intents for specific agent
         /// </summary>
         /// <param name="agentId"></param>
+        /// <param name="page">page number</param>
         /// <returns></returns>
-        [HttpGet("{agentId}")]
-        public PageResult<VmIntent> MyIntents([FromRoute] string agentId)
+        [HttpGet("{agentId}/Query")]
+        public PageResult<VmIntent> MyIntents([FromRoute] string agentId, [FromQuery] int page = 1)
         {
-            var result = new PageResult<VmIntent>() { };
+            var result = new PageResult<VmIntent>() { Page = page };
             var query = dc.Table<Intent>().Where(x => x.AgentId == agentId).Select(x => x.ToObject<VmIntent>());
             return result.LoadRecords<VmIntent>(query);
+        }
+
+        /// <summary>
+        /// Get intent detail config
+        /// </summary>
+        /// <param name="intentId"></param>
+        /// <returns></returns>
+        [HttpGet("{intentId}")]
+        public VmIntentDetail GetIntentById([FromRoute] string intentId)
+        {
+            var agent = new RasaAi(dc);
+            var intent = agent.GetIntent(dc, intentId);
+            return intent.ToObject<VmIntentDetail>();
         }
 
         /// <summary>

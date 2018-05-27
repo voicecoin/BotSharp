@@ -10,8 +10,6 @@ namespace Voicebot.RestApi.Agents
     {
         public AIResponseMessageType Type { get; set; }
 
-        public String Lang { get; set; }
-
         public String Speech { get; set; }
 
         public JObject Payload { get; set; }
