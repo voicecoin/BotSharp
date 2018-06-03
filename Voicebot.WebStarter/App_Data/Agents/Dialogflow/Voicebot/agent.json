@@ -2,6 +2,7 @@
   "description": "Voicebot is the bridge that connects all the bots hosted in voice enable internet",
   "language": "en",
   "disableInteractionLogs": false,
+  "disableStackdriverLogs": true,
   "googleAssistant": {
     "googleAssistantCompatible": false,
     "project": "voicehub-4eee6",

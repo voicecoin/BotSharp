@@ -8,9 +8,14 @@ namespace Voicebot.RestApi.Agents
 {
     public class VmIntentResponseMessage
     {
+        public VmIntentResponseMessage()
+        {
+            Speeches = new List<string>();
+        }
+
         public AIResponseMessageType Type { get; set; }
 
-        public String Speech { get; set; }
+        public List<String> Speeches { get; set; }
 
         public JObject Payload { get; set; }
     }

@@ -36,7 +36,10 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Would you like to pay with Voicecoin?"
+          "speech": [
+            "Would you like to pay with Voicecoin?",
+            "Do you want to pay with Voicecoin?"
+          ]
         }
       ],
       "defaultResponsePlatforms": {},
@@ -46,7 +49,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1525651106,
+  "lastUpdate": 1527943606,
   "fallbackIntent": false,
   "events": []
 }

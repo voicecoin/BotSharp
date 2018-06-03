@@ -10,12 +10,13 @@ using System.Text;
 
 namespace Voicebot.RestApi.Agents
 {
+    [Route("/v1/Entities")]
     public class EntityTypeController : CoreController
     {
         [HttpGet("{agentId}/query")]
-        public PageResult<EntityType> Query([FromRoute] string agentId)
+        public PageResult<EntityType> Query([FromRoute] string agentId, [FromQuery] int page)
         {
-            var result = new PageResult<EntityType>() { };
+            var result = new PageResult<EntityType>() { Page = page };
             var query = dc.Table<EntityType>().Include(x => x.Entries)
                 .Where(x => x.AgentId == agentId);
 
@@ -35,18 +36,36 @@ namespace Voicebot.RestApi.Agents
         /// Define a new entity type
         /// </summary>
         /// <param name="agentId"></param>
-        /// <param name="entity"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("{agentId}")]
-        public EntityType CreateEntityType([FromRoute] string agentId, [FromBody] EntityType entity)
+        public IActionResult CreateEntityType([FromRoute] string agentId, [FromBody] VmEntityType model)
         {
+            if (model == null) return BadRequest("entity is empty");
+
             dc.DbTran(() => {
-                entity.AgentId = agentId;
-                entity.Id = Guid.NewGuid().ToString();
+                model.AgentId = agentId;
+                model.Id = Guid.NewGuid().ToString();
+                var entity = new EntityType
+                {
+                    Name = model.Name,
+                    AgentId = model.AgentId,
+                    IsEnum = model.IsEnum,
+                    Entries = model.Entries.Select(x => new EntityEntry
+                    {
+                        Value = x.Value,
+                        Synonyms = x.Synonyms.Select(synonym => new EntrySynonym
+                        {
+                            Synonym = synonym
+                        })
+                        .ToList()
+                    })
+                        .ToList()
+                };
                 dc.Table<EntityType>().Add(entity);
             });
 
-            return entity;
+            return Ok(model.Id);
         }
 
         [HttpPut("{entityTypeId}")]

@@ -170,7 +170,37 @@ namespace Voicebot.RestApi.Agents
         {
             var agent = new RasaAi(dc);
             var intent = agent.GetIntent(dc, intentId);
-            return intent.ToObject<VmIntentDetail>();
+            var vm = new VmIntentDetail
+            {
+                Id = intent.Id,
+                AgentId = intent.AgentId,
+                Name = intent.Name,
+                Events = new List<string>(),
+                Contexts = intent.Contexts.Select(x => x.Name).ToList(),
+                UserSays = intent.UserSays.Select(x => x.ToObject<VmIntentExpression>()).ToList(),
+                Responses = intent.Responses.Select(x => {
+                    var response = x.ToObject<VmIntentResponse>();
+                    response.Messages = x.Messages.Select(msg => {
+
+                        if (msg.Speech == null) return new VmIntentResponseMessage();
+
+                        return new VmIntentResponseMessage
+                        {
+                            Payload = msg.Payload,
+                            Type = msg.Type,
+                            Speeches = msg.Speech.Substring(1, msg.Speech.Length - 2)
+                                .Split(',')
+                                .Select(speech => speech.Substring(1, speech.Length - 2))
+                                .ToList()
+                        };
+
+                    }).ToList();
+
+                    return response;
+                } ).ToList()
+            };
+      
+            return vm;
         }
 
         /// <summary>

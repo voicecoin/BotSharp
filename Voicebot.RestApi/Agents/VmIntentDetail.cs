@@ -17,6 +17,8 @@ namespace Voicebot.RestApi.Agents
 
         public bool Auto { get; set; }
 
+        public List<String> Contexts { get; set; }
+
         public List<String> Events { get; set; }
 
         public List<VmIntentResponse> Responses { get; set; }
