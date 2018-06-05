@@ -1,5 +1,8 @@
-﻿using System;
+﻿using BotSharp.Core.Intents;
+using DotNetToolkit;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Voicebot.RestApi.Agents
@@ -24,5 +27,26 @@ namespace Voicebot.RestApi.Agents
         public List<VmIntentResponse> Responses { get; set; }
 
         public List<VmIntentExpression> UserSays { get; set; }
+
+        public Intent ToIntent(Intent intent = null)
+        {
+            if(intent == null)
+            {
+                intent = new Intent
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    AgentId = AgentId,
+                    Name = Name
+                };
+            }
+
+            intent.Contexts = Contexts.Select(x => new IntentInputContext { Name = x }).ToList();
+
+            intent.UserSays = UserSays.Select(x => x.ToObject<IntentExpression>()).ToList();
+
+            intent.Responses = Responses.Select(x => x.ToIntentResponse()).ToList();
+
+            return intent;
+        }
     }
 }

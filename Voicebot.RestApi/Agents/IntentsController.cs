@@ -6,6 +6,7 @@ using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,17 +131,18 @@ namespace Voicebot.RestApi.Agents
         /// <param name="intent"></param>
         /// <returns></returns>
         [HttpPost("{agentId}")]
-        public IActionResult CreateIntent([FromRoute] string agentId, [FromBody] VmIntentDetail intent)
+        public IActionResult CreateIntent([FromRoute] string agentId, [FromBody] VmIntentDetail vmIntent)
         {
-            if(agentId != intent.AgentId)
+            if(agentId != vmIntent.AgentId)
             {
                 return BadRequest("AgentId is not matched with intent agentId.");
             }
 
             var agent = new RasaAi(dc).LoadAgentById(dc, agentId);
+            var intent = vmIntent.ToIntent();
 
             dc.DbTran(() => {
-                intent.Id = agent.CreateIntent(dc, intent.ToObject<Intent>());
+                intent.Id = agent.CreateIntent(dc, intent);
             });
 
             return Ok(intent.Id);
@@ -180,6 +182,8 @@ namespace Voicebot.RestApi.Agents
                 UserSays = intent.UserSays.Select(x => x.ToObject<VmIntentExpression>()).ToList(),
                 Responses = intent.Responses.Select(x => {
                     var response = x.ToObject<VmIntentResponse>();
+                    response.AffectedContexts = x.Contexts.Select(ctx => ctx.ToObject<VmIntentResponseContext>()).ToList();
+
                     response.Messages = x.Messages.Select(msg => {
 
                         if (msg.Speech == null) return new VmIntentResponseMessage();
@@ -188,10 +192,7 @@ namespace Voicebot.RestApi.Agents
                         {
                             Payload = msg.Payload,
                             Type = msg.Type,
-                            Speeches = msg.Speech.Substring(1, msg.Speech.Length - 2)
-                                .Split(',')
-                                .Select(speech => speech.Substring(1, speech.Length - 2))
-                                .ToList()
+                            Speeches = JsonConvert.DeserializeObject<List<String>>(msg.Speech)
                         };
 
                     }).ToList();
@@ -220,9 +221,25 @@ namespace Voicebot.RestApi.Agents
         /// <param name="intentId"></param>
         /// <param name="intent"></param>
         [HttpPut("{intentId}")]
-        public void UpdateIntent([FromRoute] string intentId, [FromBody] VmIntentDetail intent)
+        public IActionResult UpdateIntent([FromRoute] string intentId, [FromBody] VmIntentDetail vmIntent)
         {
+            var agent = new RasaAi(dc);
 
+            dc.DbTran(() => {
+                var intent = agent.GetIntent(dc, intentId);
+
+                // remove
+                var originalIntent = dc.Table<Intent>().Find(intentId);
+                dc.Table<Intent>().Remove(originalIntent);
+                dc.SaveChanges();
+
+                // add back
+                intent = vmIntent.ToIntent(intent);
+
+                dc.Table<Intent>().Add(intent);
+            });
+
+            return Ok();
         }
     }
 }
