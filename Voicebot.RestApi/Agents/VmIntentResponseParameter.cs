@@ -12,6 +12,8 @@ namespace Voicebot.RestApi.Agents
 
         public string DataType { get; set; }
 
+        public string DefaultValue { get; set; }
+
         public string Name { get; set; }
 
         public string Value { get; set; }

@@ -153,12 +153,18 @@ namespace Voicebot.RestApi.Agents
         /// </summary>
         /// <param name="agentId"></param>
         /// <param name="page">page number</param>
+        /// <param name="name">name filter</param>
         /// <returns></returns>
         [HttpGet("{agentId}/Query")]
-        public PageResult<VmIntent> MyIntents([FromRoute] string agentId, [FromQuery] int page = 1)
+        public PageResult<VmIntent> MyIntents([FromRoute] string agentId, [FromQuery] int page = 1, [FromQuery] string name = "")
         {
             var result = new PageResult<VmIntent>() { Page = page };
             var query = dc.Table<Intent>().Where(x => x.AgentId == agentId).Select(x => x.ToObject<VmIntent>());
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.ToLower().Contains(name.ToLower()));
+            }
+
             return result.LoadRecords<VmIntent>(query);
         }
 
@@ -183,6 +189,8 @@ namespace Voicebot.RestApi.Agents
                 Responses = intent.Responses.Select(x => {
                     var response = x.ToObject<VmIntentResponse>();
                     response.AffectedContexts = x.Contexts.Select(ctx => ctx.ToObject<VmIntentResponseContext>()).ToList();
+
+                    response.Parameters = x.Parameters.Select(p => p.ToObject<VmIntentResponseParameter>()).ToList();
 
                     response.Messages = x.Messages.Select(msg => {
 

@@ -84,13 +84,11 @@ namespace Voicebot.RestApi.Agents
         }
 
         [AllowAnonymous]
-        [HttpGet("{agentId}/train/{clientAccessToken}")]
-        public string Train([FromRoute] string agentId, [FromRoute] string clientAccessToken)
+        [HttpGet("{agentId}/train")]
+        public string Train([FromRoute] string agentId)
         {
-            var config = new AIConfiguration(clientAccessToken, SupportedLanguage.English);
-
-            var rasa = new RasaAi(dc, config);
-            rasa.agent = rasa.LoadAgent(dc, config);
+            var rasa = new RasaAi(dc);
+            rasa.agent = rasa.LoadAgentById(dc, agentId);
             return rasa.Train(dc);
         }
     }

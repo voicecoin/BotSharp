@@ -14,11 +14,16 @@ namespace Voicebot.RestApi.Agents
     public class EntityTypeController : CoreController
     {
         [HttpGet("{agentId}/query")]
-        public PageResult<EntityType> Query([FromRoute] string agentId, [FromQuery] int page)
+        public PageResult<EntityType> Query([FromRoute] string agentId, [FromQuery] int page = 1, [FromQuery] string name = "")
         {
             var result = new PageResult<EntityType>() { Page = page };
             var query = dc.Table<EntityType>().Include(x => x.Entries)
                 .Where(x => x.AgentId == agentId);
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.ToLower().Contains(name.ToLower()));
+            }
 
             var items = result.LoadRecords<EntityType>(query);
             items.Items.ForEach(x => x.Count = x.Entries.Count());
