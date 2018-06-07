@@ -1,14 +1,20 @@
 [
   {
+    "value": "iPhone 10",
+    "synonyms": [
+      "iPhone 10"
+    ]
+  },
+  {
     "value": "iPhone",
     "synonyms": [
       "iPhone"
     ]
   },
   {
-    "value": "iPhone 10",
+    "value": "phone",
     "synonyms": [
-      "iPhone 10"
+      "phone"
     ]
   }
 ]

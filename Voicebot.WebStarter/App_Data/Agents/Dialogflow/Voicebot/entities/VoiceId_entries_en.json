@@ -1,26 +1,26 @@
 [
   {
-    "value": "Matthew",
-    "synonyms": [
-      "Matthew"
-    ]
-  },
-  {
     "value": "Joanna",
     "synonyms": [
       "Joanna"
     ]
   },
   {
-    "value": "Kendra",
-    "synonyms": [
-      "Kendra"
-    ]
-  },
-  {
     "value": "Joey",
     "synonyms": [
       "Joey"
+    ]
+  },
+  {
+    "value": "Matthew",
+    "synonyms": [
+      "Matthew"
+    ]
+  },
+  {
+    "value": "Kendra",
+    "synonyms": [
+      "Kendra"
     ]
   }
 ]

@@ -40,9 +40,11 @@ namespace Voicebot.RestApi.Agents
                 };
             }
 
+            intent.Name = Name;
+
             intent.Contexts = Contexts.Select(x => new IntentInputContext { Name = x }).ToList();
 
-            intent.UserSays = UserSays.Select(x => x.ToObject<IntentExpression>()).ToList();
+            intent.UserSays = UserSays.Select(x => x.ToIntentExpression()).ToList();
 
             intent.Responses = Responses.Select(x => x.ToIntentResponse()).ToList();
 

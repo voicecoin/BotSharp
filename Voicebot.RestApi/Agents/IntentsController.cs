@@ -159,7 +159,12 @@ namespace Voicebot.RestApi.Agents
         public PageResult<VmIntent> MyIntents([FromRoute] string agentId, [FromQuery] int page = 1, [FromQuery] string name = "")
         {
             var result = new PageResult<VmIntent>() { Page = page };
-            var query = dc.Table<Intent>().Where(x => x.AgentId == agentId).Select(x => x.ToObject<VmIntent>());
+
+            var query = dc.Table<Intent>()
+                .Where(x => x.AgentId == agentId)
+                .OrderByDescending(x => x.UpdatedTime)
+                .Select(x => x.ToObject<VmIntent>());
+
             if (!String.IsNullOrEmpty(name))
             {
                 query = query.Where(x => x.Name.ToLower().Contains(name.ToLower()));
@@ -186,27 +191,7 @@ namespace Voicebot.RestApi.Agents
                 Events = new List<string>(),
                 Contexts = intent.Contexts.Select(x => x.Name).ToList(),
                 UserSays = intent.UserSays.Select(x => x.ToObject<VmIntentExpression>()).ToList(),
-                Responses = intent.Responses.Select(x => {
-                    var response = x.ToObject<VmIntentResponse>();
-                    response.AffectedContexts = x.Contexts.Select(ctx => ctx.ToObject<VmIntentResponseContext>()).ToList();
-
-                    response.Parameters = x.Parameters.Select(p => p.ToObject<VmIntentResponseParameter>()).ToList();
-
-                    response.Messages = x.Messages.Select(msg => {
-
-                        if (msg.Speech == null) return new VmIntentResponseMessage();
-
-                        return new VmIntentResponseMessage
-                        {
-                            Payload = msg.Payload,
-                            Type = msg.Type,
-                            Speeches = JsonConvert.DeserializeObject<List<String>>(msg.Speech)
-                        };
-
-                    }).ToList();
-
-                    return response;
-                } ).ToList()
+                Responses = intent.Responses.Select(x => VmIntentResponse.FromIntentResponse(x)).ToList()
             };
       
             return vm;
@@ -243,11 +228,12 @@ namespace Voicebot.RestApi.Agents
 
                 // add back
                 intent = vmIntent.ToIntent(intent);
+                intent.UpdatedTime = DateTime.UtcNow;
 
                 dc.Table<Intent>().Add(intent);
             });
 
-            return Ok();
+            return Ok(intentId);
         }
     }
 }

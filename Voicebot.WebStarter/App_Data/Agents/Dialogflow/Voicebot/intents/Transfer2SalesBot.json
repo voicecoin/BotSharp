@@ -31,6 +31,21 @@
             }
           ],
           "isList": false
+        },
+        {
+          "id": "97415c8c-da46-4f2f-8b91-ca48106efc86",
+          "required": true,
+          "dataType": "@VNS",
+          "name": "VNS",
+          "value": "$VNS",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "Where are you going?"
+            }
+          ],
+          "defaultValue": "Apple Store",
+          "isList": false
         }
       ],
       "messages": [
@@ -97,7 +112,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1526959874,
+  "lastUpdate": 1528349034,
   "fallbackIntent": false,
   "events": []
 }

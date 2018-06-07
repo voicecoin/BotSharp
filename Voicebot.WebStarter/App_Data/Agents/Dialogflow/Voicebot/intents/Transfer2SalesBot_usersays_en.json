@@ -1,21 +1,83 @@
 [
   {
-    "id": "f2a63308-16cb-49a2-b63a-b85ee4aa8173",
+    "id": "8db9fd58-380c-48bc-8614-0337a60b2647",
     "data": [
       {
-        "text": "I want to buy a mobile phone.",
+        "text": "I want to buy an ",
+        "userDefined": false
+      },
+      {
+        "text": "iPhone",
+        "alias": "ProductName",
+        "meta": "@ProductName",
+        "userDefined": true
+      },
+      {
+        "text": " through ",
+        "userDefined": false
+      },
+      {
+        "text": "apple online store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": true
+      },
+      {
+        "text": ".",
         "userDefined": false
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1519574544
+    "updated": 1528347356
   },
   {
-    "id": "da9c807d-3bab-4a2b-8265-c4763db7ced1",
+    "id": "1435eb25-8d4b-4ca8-9dbb-3082337a74b3",
     "data": [
       {
-        "text": "I\u0027m going to Apple Store to buy an ",
+        "text": "I want to buy a mobile ",
+        "userDefined": false
+      },
+      {
+        "text": "phone",
+        "alias": "ProductName",
+        "meta": "@ProductName",
+        "userDefined": true
+      },
+      {
+        "text": " at ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": true
+      },
+      {
+        "text": ".",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1528347356
+  },
+  {
+    "id": "0db6b911-30e1-45c4-b631-63dd8b84055d",
+    "data": [
+      {
+        "text": "I\u0027m going to ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": true
+      },
+      {
+        "text": " to buy an ",
         "userDefined": false
       },
       {
@@ -31,28 +93,6 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1521316673
-  },
-  {
-    "id": "0429e32c-66d9-4b4f-9049-e4b345dad841",
-    "data": [
-      {
-        "text": "I want to buy an ",
-        "userDefined": false
-      },
-      {
-        "text": "iPhone",
-        "alias": "ProductName",
-        "meta": "@ProductName",
-        "userDefined": true
-      },
-      {
-        "text": " through apple online store.",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": false,
-    "count": 0,
-    "updated": 1519574544
+    "updated": 1528347356
   }
 ]

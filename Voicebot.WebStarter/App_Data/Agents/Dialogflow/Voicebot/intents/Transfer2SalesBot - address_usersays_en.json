@@ -1,26 +1,14 @@
 [
   {
-    "id": "8b4a3768-a856-4a0b-a163-4c335c8839c2",
+    "id": "b8e2080b-52df-4c98-9c82-c64da37d7505",
     "data": [
       {
-        "text": "sounds good",
+        "text": "yes",
         "userDefined": false
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1518701506
-  },
-  {
-    "id": "d11b11a0-cdae-48a0-b4fa-429e0e3782cf",
-    "data": [
-      {
-        "text": "sure",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": false,
-    "count": 2,
     "updated": 1518701506
   },
   {
@@ -28,18 +16,6 @@
     "data": [
       {
         "text": "I don\u0027t mind",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": false,
-    "count": 0,
-    "updated": 1518701506
-  },
-  {
-    "id": "b8e2080b-52df-4c98-9c82-c64da37d7505",
-    "data": [
-      {
-        "text": "yes",
         "userDefined": false
       }
     ],
@@ -60,46 +36,10 @@
     "updated": 1518701506
   },
   {
-    "id": "be628026-1be2-4362-92f3-c5f6717b3e88",
+    "id": "8b4a3768-a856-4a0b-a163-4c335c8839c2",
     "data": [
       {
-        "text": "do it",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": false,
-    "count": 1,
-    "updated": 1518701506
-  },
-  {
-    "id": "4acd2968-8e9a-4dc5-bace-0c7a5164e5bd",
-    "data": [
-      {
-        "text": "that\u0027s correct",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": false,
-    "count": 0,
-    "updated": 1518701506
-  },
-  {
-    "id": "bdb52a79-6553-46f2-b26f-075b3309eb4e",
-    "data": [
-      {
-        "text": "confirm",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": false,
-    "count": 2,
-    "updated": 1518701506
-  },
-  {
-    "id": "0f861908-5805-4021-a9e9-4de567610f46",
-    "data": [
-      {
-        "text": "exactly",
+        "text": "sounds good",
         "userDefined": false
       }
     ],
@@ -120,6 +60,30 @@
     "updated": 1521316691
   },
   {
+    "id": "4acd2968-8e9a-4dc5-bace-0c7a5164e5bd",
+    "data": [
+      {
+        "text": "that\u0027s correct",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1518701506
+  },
+  {
+    "id": "0f861908-5805-4021-a9e9-4de567610f46",
+    "data": [
+      {
+        "text": "exactly",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1518701506
+  },
+  {
     "id": "6bf2fc69-4c76-49eb-94f7-decf7a14a424",
     "data": [
       {
@@ -129,6 +93,18 @@
     ],
     "isTemplate": false,
     "count": 0,
+    "updated": 1518701506
+  },
+  {
+    "id": "be628026-1be2-4362-92f3-c5f6717b3e88",
+    "data": [
+      {
+        "text": "do it",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 1,
     "updated": 1518701506
   },
   {
@@ -144,6 +120,18 @@
     "updated": 1518701506
   },
   {
+    "id": "d11b11a0-cdae-48a0-b4fa-429e0e3782cf",
+    "data": [
+      {
+        "text": "sure",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 2,
+    "updated": 1518701506
+  },
+  {
     "id": "6a177093-3910-4cc6-bec7-cda31350c688",
     "data": [
       {
@@ -153,6 +141,18 @@
     ],
     "isTemplate": false,
     "count": 0,
+    "updated": 1518701506
+  },
+  {
+    "id": "bdb52a79-6553-46f2-b26f-075b3309eb4e",
+    "data": [
+      {
+        "text": "confirm",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 2,
     "updated": 1518701506
   }
 ]
