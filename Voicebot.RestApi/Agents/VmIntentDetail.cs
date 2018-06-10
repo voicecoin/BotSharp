@@ -35,8 +35,7 @@ namespace Voicebot.RestApi.Agents
                 intent = new Intent
                 {
                     Id = Guid.NewGuid().ToString(),
-                    AgentId = AgentId,
-                    Name = Name
+                    AgentId = AgentId
                 };
             }
 

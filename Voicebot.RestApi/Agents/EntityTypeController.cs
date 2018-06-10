@@ -48,25 +48,27 @@ namespace Voicebot.RestApi.Agents
         {
             if (model == null) return BadRequest("entity is empty");
 
+            model.AgentId = agentId;
+            model.Id = Guid.NewGuid().ToString();
+
             dc.DbTran(() => {
-                model.AgentId = agentId;
-                model.Id = Guid.NewGuid().ToString();
+
                 var entity = new EntityType
                 {
                     Name = model.Name,
                     AgentId = model.AgentId,
                     IsEnum = model.IsEnum,
+                    Description = model.Description,
                     Entries = model.Entries.Select(x => new EntityEntry
                     {
                         Value = x.Value,
                         Synonyms = x.Synonyms.Select(synonym => new EntrySynonym
                         {
                             Synonym = synonym
-                        })
-                        .ToList()
-                    })
-                        .ToList()
+                        }).ToList()
+                    }).ToList()
                 };
+
                 dc.Table<EntityType>().Add(entity);
             });
 
@@ -74,18 +76,23 @@ namespace Voicebot.RestApi.Agents
         }
 
         [HttpPut("{entityTypeId}")]
-        public String UpdateEntityType([FromRoute] string entityTypeId, [FromBody] EntityType entity)
+        public String UpdateEntityType([FromRoute] string entityTypeId, [FromBody] VmEntityType model)
         {
             dc.DbTran(() => {
-                var existed = dc.Table<EntityType>().Find(entityTypeId);
-                existed.Color = entity.Color;
-                existed.Name = entity.Name;
-                existed.Description = entity.Description;
-                existed.IsEnum = entity.IsEnum;
-                existed.UpdatedTime = DateTime.UtcNow;
+
+                // remove
+                var entityType = dc.Table<EntityType>().Find(entityTypeId);
+                dc.Table<EntityType>().Remove(entityType);
+                dc.SaveChanges();
+
+                // add back
+                entityType = model.ToEntityType(entityType);
+                entityType.UpdatedTime = DateTime.UtcNow;
+
+                dc.Table<EntityType>().Add(entityType);
             });
 
-            return entity.Id;
+            return model.Id;
         }
 
         [HttpDelete("{entityTypeId}")]

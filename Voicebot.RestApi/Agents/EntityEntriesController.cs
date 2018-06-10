@@ -18,7 +18,8 @@ namespace Voicebot.RestApi.Agents
             var result = new PageResult<EntityEntry>() { };
             var query = dc.Table<EntityEntry>()
                 .Include(x => x.Synonyms)
-                .Where(x => x.EntityId == entityId);
+                .Where(x => x.EntityId == entityId)
+                .OrderByDescending(x => x.UpdatedTime);
 
             var items = result.LoadRecords<EntityEntry>(query);
 
