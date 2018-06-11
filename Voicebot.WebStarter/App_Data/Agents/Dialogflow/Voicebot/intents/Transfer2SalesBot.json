@@ -44,7 +44,7 @@
               "value": "Where are you going?"
             }
           ],
-          "defaultValue": "Apple Store",
+          "defaultValue": "",
           "isList": false
         }
       ],
@@ -112,7 +112,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1528349034,
+  "lastUpdate": 1528690786,
   "fallbackIntent": false,
   "events": []
 }

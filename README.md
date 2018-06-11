@@ -11,4 +11,3 @@ nohup dotnet bin/Debug/netcoreapp2.1/Voicebot.WebStarter.dll </dev/null> voicebo
 nohup python -m rasa_nlu.server --path projects &
 
 ```
-800 555 1212

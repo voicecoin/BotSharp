@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using Voicebot.Core.Chatbots.Tuling;
 using Voicebot.Core.Utility;
+using Voicebot.Core.Voicechain;
 
 namespace Voicebot.RestApi.Agents
 {
@@ -21,12 +22,12 @@ namespace Voicebot.RestApi.Agents
     public class ConversationController : CoreController
     {
         /// <summary>
-        /// Start a new conversation, reset contexts.
+        /// Start a new conversation, keep contexts.
         /// </summary>
         /// <param name="agentId"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpGet("{agentId}")]
+        [HttpGet("{agentId}/Start")]
         public string Start([FromRoute] string agentId)
         {
             var conversation = dc.Table<Conversation>().FirstOrDefault(x => x.UserId == CurrentUserId && x.AgentId == agentId);
@@ -102,7 +103,18 @@ namespace Voicebot.RestApi.Agents
 
             return new VmTestPayload
             {
-                FulfillmentText = fulfillmentText
+                FulfillmentText = fulfillmentText,
+                Payload = aIResponse,
+                VoicechainResponse = new VoicechainResponse<ANameModel>
+                {
+                    Message = "success",
+                    Data = new ANameModel
+                    {
+                        Address = "poTysk5FoMeV2UhpnjVsukMdPFCYdqekPo",
+                        Txid = "89cd1abacd9af531293134255cf1139acc8f5bb1c11d4217fd8652f656f04e1a",
+                        Value = "149.28.132.134"
+                    }
+                }
             };
         }
 
@@ -175,7 +187,7 @@ namespace Voicebot.RestApi.Agents
         /// </summary>
         /// <param name="conversationId"></param>
         [HttpGet("{conversationId}/reset")]
-        public void Reset([FromRoute] string conversationId)
+        public string Reset([FromRoute] string conversationId)
         {
             dc.DbTran(() => {
 
@@ -184,10 +196,11 @@ namespace Voicebot.RestApi.Agents
                             .Where(x => x.ConversationId == conversationId)
                             .ToList());
 
-                dc.Table<Conversation>()
-                    .Remove(dc.Table<Conversation>().Find(conversationId));
-
+                var con = dc.Table<Conversation>().Find(conversationId);
+                con.UpdatedTime = DateTime.UtcNow;
             });
+
+            return conversationId;
         }
     }
 }

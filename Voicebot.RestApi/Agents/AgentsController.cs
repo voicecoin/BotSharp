@@ -84,6 +84,15 @@ namespace Voicebot.RestApi.Agents
         }
 
         [AllowAnonymous]
+        [HttpGet("{agentId}/restore")]
+        public string Restore([FromRoute] string agentId)
+        {
+            var rasa = new RasaAi(dc);
+            rasa.agent = rasa.LoadAgentById(dc, agentId);
+            return rasa.Train(dc);
+        }
+
+        [AllowAnonymous]
         [HttpGet("{agentId}/train")]
         public string Train([FromRoute] string agentId)
         {
