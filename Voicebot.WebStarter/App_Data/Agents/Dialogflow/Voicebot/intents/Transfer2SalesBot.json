@@ -16,7 +16,7 @@
       "parameters": [
         {
           "id": "402bd1c2-5ea0-4100-afda-db364a80839f",
-          "required": true,
+          "required": false,
           "dataType": "@ProductName",
           "name": "ProductName",
           "value": "$ProductName",
@@ -68,9 +68,9 @@
           "type": 4,
           "lang": "en",
           "payload": {
-            "task": "delay",
+            "task": "transfer",
             "parameters": [
-              3000
+              "http://gameblockchaincom.club/openapi/queryaname"
             ]
           }
         },
@@ -112,7 +112,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1528690786,
+  "lastUpdate": 1529061155,
   "fallbackIntent": false,
   "events": []
 }

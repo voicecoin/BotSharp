@@ -1,0 +1,8 @@
+﻿{
+  "Voicechain": {
+    /*"Host": "http://gameblockchaincom.club",*/
+    "Hots": "http://45.32.255.195",
+    "Resource": "openapi/queryaname",
+    "ApiKey": "ce36fa6d0ec047248da3354519658734"
+  }
+}

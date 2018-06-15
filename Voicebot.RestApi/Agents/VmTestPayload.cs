@@ -10,6 +10,6 @@ namespace Voicebot.RestApi.Agents
     {
         public string FulfillmentText { get; set; }
         public Object Payload { get; set; }
-        public VoicechainResponse<ANameModel> VoicechainResponse { get; set; }
+        public VoicechainResponse<ANameModel> Voicechain { get; set; }
     }
 }

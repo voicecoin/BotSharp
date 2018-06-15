@@ -26,7 +26,7 @@ namespace Voicebot.RestApi
 
         public override void OnException(ExceptionContext context)
         {
-            context.Exception.Message.Log();
+            context.Exception.ToString().Log();
 
             ApiError apiError = null;
             if (context.Exception is ApiException)

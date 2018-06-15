@@ -89,7 +89,7 @@ namespace Voicebot.RestApi.Agents
         {
             var rasa = new RasaAi(dc);
             rasa.agent = rasa.LoadAgentById(dc, agentId);
-            return rasa.Train(dc);
+            return rasa.Train();
         }
 
         [AllowAnonymous]
@@ -98,7 +98,7 @@ namespace Voicebot.RestApi.Agents
         {
             var rasa = new RasaAi(dc);
             rasa.agent = rasa.LoadAgentById(dc, agentId);
-            return rasa.Train(dc);
+            return rasa.Train();
         }
     }
 }

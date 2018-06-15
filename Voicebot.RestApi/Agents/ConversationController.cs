@@ -5,6 +5,7 @@ using BotSharp.Core.Models;
 using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,6 @@ namespace Voicebot.RestApi.Agents
         /// </summary>
         /// <param name="agentId"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpGet("{agentId}/Start")]
         public string Start([FromRoute] string agentId)
         {
@@ -71,6 +71,7 @@ namespace Voicebot.RestApi.Agents
             var aIResponse = rasa.TextRequest(new AIRequest { Query = new String[] { text } });
 
             var speeches = new List<String>();
+            VoicechainResponse<ANameModel> aName = null;
 
             for (int messageIndex = 0; messageIndex < aIResponse.Result.Fulfillment.Messages.Count; messageIndex++)
             {
@@ -87,15 +88,21 @@ namespace Voicebot.RestApi.Agents
                 }
                 else if (type == "4")
                 {
-                    /*var payload = JsonConvert.DeserializeObject<CustomPayload>(message["payload"].ToString());
+                    var payload = message["Payload"].ToObject<AIResponseCustomPayload>();
                     if (payload.Task == "delay")
                     {
-                        await Task.Delay(int.Parse(payload.Parameters.First().ToString()));
+                        //await Task.Delay(int.Parse(payload.Parameters.First().ToString()));
                     }
                     else if (payload.Task == "voice")
                     {
-                        voiceId = VoiceId.FindValue(payload.Parameters.First().ToString());
-                    }*/
+                        //voiceId = VoiceId.FindValue(payload.Parameters.First().ToString());
+                    }
+                    else if (payload.Task == "transfer")
+                    {
+                        // get VNS, query blockchain
+                        var vcDriver = new VoicechainDriver(dc);
+                        aName = vcDriver.GetAName(aIResponse.Result.Parameters["VNS"]);
+                    }
                 }
             }
 
@@ -105,16 +112,7 @@ namespace Voicebot.RestApi.Agents
             {
                 FulfillmentText = fulfillmentText,
                 Payload = aIResponse,
-                VoicechainResponse = new VoicechainResponse<ANameModel>
-                {
-                    Message = "success",
-                    Data = new ANameModel
-                    {
-                        Address = "poTysk5FoMeV2UhpnjVsukMdPFCYdqekPo",
-                        Txid = "89cd1abacd9af531293134255cf1139acc8f5bb1c11d4217fd8652f656f04e1a",
-                        Value = "149.28.132.134"
-                    }
-                }
+                Voicechain = aName
             };
         }
 
