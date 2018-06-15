@@ -2,19 +2,14 @@
   {
     "value": "Apple Store",
     "synonyms": [
-      "Apple Store"
+      "Apple Store",
+      "Apple online store"
     ]
   },
   {
     "value": "Spotify",
     "synonyms": [
       "Spotify"
-    ]
-  },
-  {
-    "value": "apple online store",
-    "synonyms": [
-      "apple online store"
     ]
   }
 ]

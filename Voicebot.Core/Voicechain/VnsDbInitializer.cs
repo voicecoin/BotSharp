@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using EntityFrameworkCore.BootKit;
+using Newtonsoft.Json;
 using Voicebot.Core.Interfaces;
 
 namespace Voicebot.Core.Voicechain
@@ -12,11 +15,24 @@ namespace Voicebot.Core.Voicechain
 
         public void Load(Database dc)
         {
-            dc.Table<VnsTable>().Add(new VnsTable
+            string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Voiceweb{Path.DirectorySeparatorChar}Vns.json";
+            string json = File.ReadAllText(dataDir);
+            var vns = JsonConvert.DeserializeObject<List<Data>>(json);
+
+            if (!dc.Table<VnsTable>().Any())
             {
-                Name = "apple store",
-                Domain = "music.bot"
-            });
+                dc.Table<VnsTable>().AddRange(vns.Select(x => new VnsTable
+                {
+                    Name = x.Name,
+                    Domain = x.Value
+                }));
+            }
+        }
+
+        public class Data
+        {
+            public String Name { get; set; }
+            public String Value { get; set; }
         }
     }
 }

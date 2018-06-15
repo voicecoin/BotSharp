@@ -27,7 +27,7 @@ namespace Voicebot.Core.Chatbots
                 dc.SaveChanges();
             }
 
-            if (!dc.Table<Agent>().Any(x => x.Id == "f4811cf8-0eb8-4eb3-8271-fe2bc6da27f3"))
+            if (!dc.Table<Agent>().Any(x => x.Id == "fd9f1b29-fed8-4c68-8fda-69ab463da126"))
             {
                 ImportVoicebot(dc);
                 dc.SaveChanges();
@@ -47,7 +47,7 @@ namespace Voicebot.Core.Chatbots
 
             string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents";
             var agent = rasa.RestoreAgent(importer, "Voicebot", dataDir);
-            agent.Id = "f4811cf8-0eb8-4eb3-8271-fe2bc6da27f3";
+            agent.Id = "fd9f1b29-fed8-4c68-8fda-69ab463da126";
             agent.UserId = "8da9e1e0-42dc-420a-8016-79b04c1297d0";
             agent.ClientAccessToken = "d018bf12a8a8419797fe3965637389b0";
             agent.DeveloperAccessToken = "8553e861eecd4cd7a1c6aff6bdd1cd2f";

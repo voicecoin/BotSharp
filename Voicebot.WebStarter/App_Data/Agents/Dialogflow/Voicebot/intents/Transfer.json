@@ -1,6 +1,6 @@
 {
   "id": "b8eb0664-900d-4844-b2a4-ed8a5da09889",
-  "name": "Transfer2SalesBot",
+  "name": "Transfer",
   "auto": true,
   "contexts": [],
   "responses": [
@@ -70,7 +70,7 @@
           "payload": {
             "task": "transfer",
             "parameters": [
-              "http://gameblockchaincom.club/openapi/queryaname"
+              "http://45.32.255.195"
             ]
           }
         },
@@ -102,7 +102,7 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new iPhone 10, correct?"
+          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new iPhone, correct?"
         }
       ],
       "defaultResponsePlatforms": {},
@@ -112,7 +112,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529061155,
+  "lastUpdate": 1529097394,
   "fallbackIntent": false,
   "events": []
 }
