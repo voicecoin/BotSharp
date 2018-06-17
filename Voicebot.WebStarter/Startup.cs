@@ -55,6 +55,8 @@ namespace Voicebot.WebStarter
                 var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Voicebot.RestApi.xml");
                 c.IncludeXmlComments(filePath);
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +81,11 @@ namespace Voicebot.WebStarter
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
 
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chathub");
+            });
 
             app.UseMvc();
 

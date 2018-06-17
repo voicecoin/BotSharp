@@ -24,5 +24,7 @@ namespace Voicebot.Core.Voicechain
         public int DaysAdded { get; set; }
 
         public string Value { get; set; }
+
+        public string Domain { get; set; }
     }
 }

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "99593d17-836a-4a67-bba2-4f1cda4147f9",
+    "data": [
+      {
+        "text": "I want to buy an ",
+        "userDefined": false
+      },
+      {
+        "text": "iPhone",
+        "meta": "@sys.ignore",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529196736
+  },
+  {
+    "id": "b6c3c8e9-bd04-4ea5-9dd3-f6f95d681b35",
+    "data": [
+      {
+        "text": "I want to buy a mobile ",
+        "userDefined": false
+      },
+      {
+        "text": "phone",
+        "meta": "@sys.ignore",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529196736
+  }
+]

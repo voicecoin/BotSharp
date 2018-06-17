@@ -6,6 +6,7 @@ using System.Text;
 using BotSharp.Core.Agents;
 using BotSharp.Core.Engines;
 using EntityFrameworkCore.BootKit;
+using Newtonsoft.Json;
 using Voicebot.Core.Interfaces;
 
 namespace Voicebot.Core.Chatbots
@@ -16,57 +17,44 @@ namespace Voicebot.Core.Chatbots
 
         public void Load(Database dc)
         {
+            string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents{Path.DirectorySeparatorChar}agents.json";
+            var agents = JsonConvert.DeserializeObject<List<Agent>>(File.ReadAllText(dataDir));
+
+            agents.ForEach(meta =>
+            {
+
+                if (!dc.Table<Agent>().Any(x => x.Id == meta.Id))
+                {
+                    ImportChatbot(dc, meta);
+                    dc.SaveChanges();
+                }
+
+            });
+
             if (!dc.Table<Agent>().Any(x => x.Id == AiBot.BUILTIN_ZH_BOT_ID))
             {
                 dc.Table<Agent>().Add(new Agent {
                     Id = AiBot.BUILTIN_ZH_BOT_ID,
-                    Name = "内建机器人",
+                    Name = "中文机器人",
+                    Description = "系统内置中文辅助机器人",
                     UserId = AiBot.BUILTIN_USER_ID,
                     Language = "zh"
                 });
                 dc.SaveChanges();
             }
-
-            if (!dc.Table<Agent>().Any(x => x.Id == "fd9f1b29-fed8-4c68-8fda-69ab463da126"))
-            {
-                ImportVoicebot(dc);
-                dc.SaveChanges();
-            }
-
-            if (!dc.Table<Agent>().Any(x => x.Id == "b2ca5be5-72f0-4a91-83b6-3bab99dc0810"))
-            {
-                ImportYayabot(dc);
-                dc.SaveChanges();
-            }
         }
 
-        private void ImportVoicebot(Database dc)
+        private void ImportChatbot(Database dc, Agent meta)
         {
             var rasa = new RasaAi(dc);
             var importer = new AgentImporterInDialogflow();
 
             string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents";
-            var agent = rasa.RestoreAgent(importer, "Voicebot", dataDir);
-            agent.Id = "fd9f1b29-fed8-4c68-8fda-69ab463da126";
-            agent.UserId = "8da9e1e0-42dc-420a-8016-79b04c1297d0";
-            agent.ClientAccessToken = "d018bf12a8a8419797fe3965637389b0";
-            agent.DeveloperAccessToken = "8553e861eecd4cd7a1c6aff6bdd1cd2f";
-            rasa.agent = agent;
-
-            rasa.agent.SaveAgent(dc);
-        }
-
-        private void ImportYayabot(Database dc)
-        {
-            var rasa = new RasaAi(dc);
-            var importer = new AgentImporterInDialogflow();
-
-            string dataDir = $"{Database.ContentRootPath}{Path.DirectorySeparatorChar}App_Data{Path.DirectorySeparatorChar}Agents";
-            var agent = rasa.RestoreAgent(importer, "Yayabot", dataDir);
-            agent.Id = "b2ca5be5-72f0-4a91-83b6-3bab99dc0810";
-            agent.UserId = "8da9e1e0-42dc-420a-8016-79b04c1297d0";
-            agent.ClientAccessToken = "50dbb57981654aa1a6bbf24f612f207f";
-            agent.DeveloperAccessToken = "da38d1468cde461b8643f899c680a26b";
+            var agent = rasa.RestoreAgent(importer, meta.Name, dataDir);
+            agent.Id = meta.Id;
+            agent.UserId = meta.UserId ?? AiBot.BUILTIN_USER_ID;
+            agent.ClientAccessToken = meta.ClientAccessToken;
+            agent.DeveloperAccessToken = meta.DeveloperAccessToken;
             rasa.agent = agent;
 
             rasa.agent.SaveAgent(dc);

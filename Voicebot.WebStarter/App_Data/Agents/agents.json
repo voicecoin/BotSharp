@@ -1,0 +1,25 @@
+﻿[
+  {
+    "Id": "fd9f1b29-fed8-4c68-8fda-69ab463da126",
+    "Name": "Voicebot",
+    "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
+    "ClientAccessToken": "d018bf12a8a8419797fe3965637389b0",
+    "DeveloperAccessToken": "8553e861eecd4cd7a1c6aff6bdd1cd2f"
+  },
+
+  {
+    "Id": "a9fff0df-3136-4114-a152-8e9654f0794a",
+    "Name": "AppleStore",
+    "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
+    "ClientAccessToken": "76bff41aa5374605b0a3e8a1dab2e284",
+    "DeveloperAccessToken": "4002d9d2d2c845fb87950796b8a5757d"
+  },
+
+  {
+    "Id": "b2ca5be5-72f0-4a91-83b6-3bab99dc0810",
+    "Name": "Yayabot",
+    "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
+    "ClientAccessToken": "50dbb57981654aa1a6bbf24f612f207f",
+    "DeveloperAccessToken": "da38d1468cde461b8643f899c680a26b"
+  }
+]

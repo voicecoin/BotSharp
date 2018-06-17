@@ -31,6 +31,8 @@ namespace Voicebot.Core.Voicechain
 
             var aName = JsonConvert.DeserializeObject<VoicechainResponse<ANameModel>>(result.Content);
 
+            aName.Data.Domain = domain;
+
             return aName;
         }
     }

@@ -92,7 +92,6 @@ namespace Voicebot.RestApi.Agents
             return rasa.Train();
         }
 
-        [AllowAnonymous]
         [HttpGet("{agentId}/train")]
         public string Train([FromRoute] string agentId)
         {

@@ -62,7 +62,7 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "OK, It\u0027s connecting to Apple\u0027s chatbot. Please wait for a second."
+          "speech": "OK, It\u0027s connecting to $VNS chatbot. Please wait for a second."
         },
         {
           "type": 4,
@@ -75,11 +75,6 @@
           }
         },
         {
-          "type": 0,
-          "lang": "en",
-          "speech": "Great, It\u0027s connected for you."
-        },
-        {
           "type": 4,
           "lang": "en",
           "payload": {
@@ -90,19 +85,9 @@
           }
         },
         {
-          "type": 4,
-          "lang": "en",
-          "payload": {
-            "task": "voice",
-            "parameters": [
-              "Matthew"
-            ]
-          }
-        },
-        {
           "type": 0,
           "lang": "en",
-          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new iPhone, correct?"
+          "speech": "Great, It\u0027s connected for you."
         }
       ],
       "defaultResponsePlatforms": {},
@@ -112,7 +97,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529097394,
+  "lastUpdate": 1529201799,
   "fallbackIntent": false,
   "events": []
 }

@@ -1,0 +1,44 @@
+{
+  "id": "b8eb0664-900d-4844-b2a4-ed8a5da09889",
+  "name": "Buy iPhone",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [
+        {
+          "name": "Transfer2SalesBot-followup",
+          "parameters": {},
+          "lifespan": 2
+        }
+      ],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "voice",
+            "parameters": [
+              "Matthew"
+            ]
+          }
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new iPhone, correct?"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1529196855,
+  "fallbackIntent": false,
+  "events": []
+}
