@@ -1,11 +1,13 @@
 ﻿[
   {
     "Name": "apple store",
-    "Value": "applestore.bot"
+    "Value": "applestore.bot",
+    "AgentId": "a9fff0df-3136-4114-a152-8e9654f0794a"
   },
   {
     "Name": "spotify",
-    "Value": "music.bot"
+    "Value": "music.bot",
+    "AgentId": "6a9fd374-c43d-447a-97f2-f37540d0c725"
   }
 ]
 

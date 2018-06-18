@@ -8,8 +8,9 @@ namespace Voicebot.RestApi.Agents
 {
     public class VmTestPayload
     {
+        public string ConversationId { get; set; }
         public string FulfillmentText { get; set; }
+        public string Sender { get; set;}
         public Object Payload { get; set; }
-        public VoicechainResponse<ANameModel> Voicechain { get; set; }
     }
 }

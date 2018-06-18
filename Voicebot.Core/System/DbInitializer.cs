@@ -24,7 +24,11 @@ namespace Voicebot.Core
 
             // initial app db order by priority
             instances.OrderBy(x => x.Priority).ToList()
-                .ForEach(instance => dc.Transaction<IDbRecord>(() => instance.Load(dc)));
+                .ForEach(instance =>
+                {
+                    Console.WriteLine($"DbInitializer: {instance.ToString()}");
+                    dc.Transaction<IDbRecord>(() => instance.Load(dc));
+                });
         }
     }
 }

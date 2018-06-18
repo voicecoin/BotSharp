@@ -24,7 +24,8 @@ namespace Voicebot.Core.Voicechain
                 dc.Table<VnsTable>().AddRange(vns.Select(x => new VnsTable
                 {
                     Name = x.Name,
-                    Domain = x.Value
+                    Domain = x.Value,
+                    AgentId = x.AgentId
                 }));
             }
         }
@@ -33,6 +34,7 @@ namespace Voicebot.Core.Voicechain
         {
             public String Name { get; set; }
             public String Value { get; set; }
+            public String AgentId { get; set; }
         }
     }
 }

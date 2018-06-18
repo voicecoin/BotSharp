@@ -71,7 +71,6 @@ namespace Voicebot.RestApi.Agents
             var aIResponse = rasa.TextRequest(new AIRequest { Query = new String[] { text } });
 
             var speeches = new List<String>();
-            VoicechainResponse<ANameModel> aName = null;
 
             for (int messageIndex = 0; messageIndex < aIResponse.Result.Fulfillment.Messages.Count; messageIndex++)
             {
@@ -101,7 +100,7 @@ namespace Voicebot.RestApi.Agents
                     {
                         // get VNS, query blockchain
                         var vcDriver = new VoicechainDriver(dc);
-                        aName = vcDriver.GetAName(aIResponse.Result.Parameters["VNS"]);
+                        var aName = vcDriver.GetAName(aIResponse.Result.Parameters["VNS"]);
                     }
                 }
             }
@@ -111,8 +110,7 @@ namespace Voicebot.RestApi.Agents
             return new VmTestPayload
             {
                 FulfillmentText = fulfillmentText,
-                Payload = aIResponse,
-                Voicechain = aName
+                Payload = aIResponse
             };
         }
 

@@ -69,25 +69,8 @@
           "lang": "en",
           "payload": {
             "task": "transfer",
-            "parameters": [
-              "http://45.32.255.195"
-            ]
+            "parameters": []
           }
-        },
-        {
-          "type": 4,
-          "lang": "en",
-          "payload": {
-            "task": "delay",
-            "parameters": [
-              1000
-            ]
-          }
-        },
-        {
-          "type": 0,
-          "lang": "en",
-          "speech": "Great, It\u0027s connected for you."
         }
       ],
       "defaultResponsePlatforms": {},
@@ -97,7 +80,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529201799,
+  "lastUpdate": 1529273347,
   "fallbackIntent": false,
   "events": []
 }

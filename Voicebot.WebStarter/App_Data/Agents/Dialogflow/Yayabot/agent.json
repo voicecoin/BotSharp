@@ -1,5 +1,5 @@
 ﻿{
-  "description": "一个简单的 Hello World 聊天机器人",
+  "description": "中文闲聊陪伴机器人",
   "language": "zh-cn",
   "disableInteractionLogs": false,
   "disableStackdriverLogs": true,

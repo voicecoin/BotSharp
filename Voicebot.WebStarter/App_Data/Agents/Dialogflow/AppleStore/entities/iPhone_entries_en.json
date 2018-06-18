@@ -1,0 +1,27 @@
+[
+  {
+    "value": "iPhone",
+    "synonyms": [
+      "iPhone"
+    ]
+  },
+  {
+    "value": "iPhone 6",
+    "synonyms": [
+      "iPhone 6"
+    ]
+  },
+  {
+    "value": "iPhone 6S",
+    "synonyms": [
+      "iPhone 6S",
+      "6S"
+    ]
+  },
+  {
+    "value": "iPhone 10",
+    "synonyms": [
+      "iPhone 10"
+    ]
+  }
+]

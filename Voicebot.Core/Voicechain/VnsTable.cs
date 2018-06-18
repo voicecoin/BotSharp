@@ -1,4 +1,5 @@
-﻿using EntityFrameworkCore.BootKit;
+﻿using BotSharp.Core.Agents;
+using EntityFrameworkCore.BootKit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,5 +19,10 @@ namespace Voicebot.Core.Voicechain
         /// Voicechain domain name
         /// </summary>
         public string Domain { get; set; }
+
+        public String AgentId { get; set; }
+
+        [ForeignKey("AgentId")]
+        public Agent Agent { get; set; }
     }
 }

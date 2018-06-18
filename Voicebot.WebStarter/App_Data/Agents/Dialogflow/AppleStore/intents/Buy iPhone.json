@@ -13,7 +13,15 @@
           "lifespan": 2
         }
       ],
-      "parameters": [],
+      "parameters": [
+        {
+          "id": "7c12a419-48ce-4a99-96ac-9b4d97645b32",
+          "dataType": "@iPhone",
+          "name": "iPhone",
+          "value": "$iPhone",
+          "isList": false
+        }
+      ],
       "messages": [
         {
           "type": 4,
@@ -28,7 +36,7 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new iPhone, correct?"
+          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new $iPhone, correct?"
         }
       ],
       "defaultResponsePlatforms": {},
@@ -38,7 +46,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529196855,
+  "lastUpdate": 1529278723,
   "fallbackIntent": false,
   "events": []
 }

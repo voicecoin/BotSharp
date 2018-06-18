@@ -19,7 +19,7 @@ namespace Voicebot.Core.Voicechain
 
         public VoicechainResponse<ANameModel> GetAName(String name)
         {
-            string domain = dc.Table<VnsTable>().FirstOrDefault(x => x.Name.ToLower() == name)?.Domain;
+            string domain = dc.Table<VnsTable>().FirstOrDefault(x => x.Name.ToLower() == name.ToLower())?.Domain;
 
             var client = new RestClient($"{Database.Configuration.GetSection("Voicechain:Host").Value}");
 

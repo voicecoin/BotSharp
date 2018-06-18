@@ -1,36 +1,56 @@
 [
   {
-    "id": "99593d17-836a-4a67-bba2-4f1cda4147f9",
+    "id": "72b13b83-a8dc-4f6e-b8ea-69d8f00cedf5",
+    "data": [
+      {
+        "text": "buy ",
+        "userDefined": false
+      },
+      {
+        "text": "iPhone 10",
+        "alias": "iPhone",
+        "meta": "@iPhone",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529278723
+  },
+  {
+    "id": "cb59f153-c82e-4b48-af2d-4ab7a065a61d",
+    "data": [
+      {
+        "text": "I\u0027m going to buy an ",
+        "userDefined": false
+      },
+      {
+        "text": "iPhone 10",
+        "alias": "iPhone",
+        "meta": "@iPhone",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529278723
+  },
+  {
+    "id": "75c932fc-6135-4ea6-a4b2-2d1466b36132",
     "data": [
       {
         "text": "I want to buy an ",
         "userDefined": false
       },
       {
-        "text": "iPhone",
-        "meta": "@sys.ignore",
+        "text": "iPhone 10",
+        "alias": "iPhone",
+        "meta": "@iPhone",
         "userDefined": true
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529196736
-  },
-  {
-    "id": "b6c3c8e9-bd04-4ea5-9dd3-f6f95d681b35",
-    "data": [
-      {
-        "text": "I want to buy a mobile ",
-        "userDefined": false
-      },
-      {
-        "text": "phone",
-        "meta": "@sys.ignore",
-        "userDefined": true
-      }
-    ],
-    "isTemplate": false,
-    "count": 0,
-    "updated": 1529196736
+    "updated": 1529278723
   }
 ]

@@ -1,0 +1,41 @@
+{
+  "id": "dcd00a1d-5a8c-4ef4-b9e0-4c76a92b0f15",
+  "name": "Default Fallback Intent",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": [
+            "I missed that.",
+            "I didn\u0027t get that.",
+            "Say that again?",
+            "What was that?",
+            "One more time?",
+            "Sorry, what was that?",
+            "Sorry, I didn\u0027t get that.",
+            "Can you say that again?",
+            "Sorry, can you say that again?",
+            "Sorry, could you say that again?",
+            "I missed what you said. Say it again?",
+            "I didn\u0027t get that. Can you say it again?"
+          ]
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1529296002,
+  "fallbackIntent": true,
+  "events": []
+}
