@@ -6,5 +6,11 @@
       "iPhone 6",
       "iPhone"
     ]
+  },
+  {
+    "value": "phone",
+    "synonyms": [
+      "phone"
+    ]
   }
 ]

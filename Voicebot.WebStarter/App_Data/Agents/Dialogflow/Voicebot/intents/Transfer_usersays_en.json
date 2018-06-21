@@ -1,6 +1,114 @@
 [
   {
-    "id": "220cf9f5-9d22-4337-880f-0aff8c714fb1",
+    "id": "68694c1f-97d2-45cd-a30a-ae117cb5db6c",
+    "data": [
+      {
+        "text": "I want to talk with ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529581231
+  },
+  {
+    "id": "204e242c-304e-47bb-8785-c5cb7dfd82f8",
+    "data": [
+      {
+        "text": "Can I talk to ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529581231
+  },
+  {
+    "id": "cfeef637-7111-45fc-885e-9bd0bd1b3dcc",
+    "data": [
+      {
+        "text": "May I speak to ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529581231
+  },
+  {
+    "id": "1a84bf51-b316-4455-8cf0-f77073439295",
+    "data": [
+      {
+        "text": "wakeup ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529581231
+  },
+  {
+    "id": "01a13e6c-5e57-4b59-90d0-3ad6fda36d4c",
+    "data": [
+      {
+        "text": "call ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529581231
+  },
+  {
+    "id": "c71c89fe-fe8a-47f8-bd1d-2506290c069f",
+    "data": [
+      {
+        "text": "connect to ",
+        "userDefined": false
+      },
+      {
+        "text": "Apple Store",
+        "alias": "VNS",
+        "meta": "@VNS",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529581231
+  },
+  {
+    "id": "ceef00b9-bae8-411f-ab20-a704de76e118",
     "data": [
       {
         "text": "I want to buy an ",
@@ -8,8 +116,7 @@
       },
       {
         "text": "iPhone",
-        "alias": "ProductName",
-        "meta": "@ProductName",
+        "meta": "@sys.ignore",
         "userDefined": true
       },
       {
@@ -29,10 +136,10 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529273347
+    "updated": 1529581231
   },
   {
-    "id": "36bf3420-dc9d-4d80-a509-a8a1f251508f",
+    "id": "dc5720e8-fdba-4dc4-8a2f-7b9bd79da2a0",
     "data": [
       {
         "text": "I want to buy a mobile ",
@@ -40,8 +147,7 @@
       },
       {
         "text": "phone",
-        "alias": "ProductName",
-        "meta": "@ProductName",
+        "meta": "@sys.ignore",
         "userDefined": true
       },
       {
@@ -61,10 +167,10 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529273347
+    "updated": 1529581231
   },
   {
-    "id": "f007ae95-8bea-4d64-802a-d46dc2571595",
+    "id": "44b5187d-2583-477a-b276-80465bb9bb82",
     "data": [
       {
         "text": "I\u0027m going to ",
@@ -82,8 +188,7 @@
       },
       {
         "text": "iPhone 10",
-        "alias": "ProductName",
-        "meta": "@ProductName",
+        "meta": "@sys.ignore",
         "userDefined": true
       },
       {
@@ -93,6 +198,6 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529273347
+    "updated": 1529581231
   }
 ]

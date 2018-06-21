@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Voicebot.Core.Voicechain;
 
 namespace Voicebot.RestApi.Agents
 {
@@ -38,6 +39,6 @@ namespace Voicebot.RestApi.Agents
         /// <summary>
         /// Ingore if creating
         /// </summary>
-        public String UserId { get; set; }
+        public VnsTable VNS { get; set; }
     }
 }

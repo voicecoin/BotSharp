@@ -6,32 +6,8 @@
   "responses": [
     {
       "resetContexts": false,
-      "affectedContexts": [
-        {
-          "name": "Transfer2SalesBot-followup",
-          "parameters": {},
-          "lifespan": 2
-        }
-      ],
+      "affectedContexts": [],
       "parameters": [
-        {
-          "id": "402bd1c2-5ea0-4100-afda-db364a80839f",
-          "required": false,
-          "dataType": "@ProductName",
-          "name": "ProductName",
-          "value": "$ProductName",
-          "prompts": [
-            {
-              "lang": "en",
-              "value": "What is the product name?"
-            },
-            {
-              "lang": "en",
-              "value": "What do you want to buy?"
-            }
-          ],
-          "isList": false
-        },
         {
           "id": "97415c8c-da46-4f2f-8b91-ca48106efc86",
           "required": true,
@@ -41,7 +17,15 @@
           "prompts": [
             {
               "lang": "en",
-              "value": "Where are you going?"
+              "value": "What chatbot would you like to talk with?"
+            },
+            {
+              "lang": "en",
+              "value": "What chatbot do you want to connect to?"
+            },
+            {
+              "lang": "en",
+              "value": "What is the name of the chatbot?"
             }
           ],
           "defaultValue": "",
@@ -80,7 +64,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529273347,
+  "lastUpdate": 1529581420,
   "fallbackIntent": false,
   "events": []
 }

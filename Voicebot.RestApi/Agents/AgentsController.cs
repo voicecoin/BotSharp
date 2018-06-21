@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Voicebot.Core.Chatbots;
+using Voicebot.Core.Voicechain;
 
 namespace Voicebot.RestApi.Agents
 {
@@ -22,18 +23,19 @@ namespace Voicebot.RestApi.Agents
         /// <summary>
         /// Create agent with basic information
         /// </summary>
-        /// <param name="agent"></param>
+        /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost]
-        public string Create([FromBody] VmAgent agent)
+        public string Create([FromBody] VmAgent vm)
         {
             var bot = new AiBot();
             string agentId = String.Empty;
-            agent.UserId = CurrentUserId;
 
             dc.DbTran(() =>
             {
-                agentId = bot.CreateAgent(dc, agent.ToObject<Agent>());
+                var agent = vm.ToObject<Agent>();
+                agent.UserId = CurrentUserId;
+                agentId = bot.CreateAgent(dc, agent);
             });
 
             return agentId;
@@ -60,11 +62,14 @@ namespace Voicebot.RestApi.Agents
         }
 
         [HttpGet("{agentId}")]
-        public Object GetAgentDetail([FromRoute] string agentId)
+        public VmAgent GetAgentDetail([FromRoute] string agentId)
         {
             var agent = dc.Table<Agent>().Find(agentId);
 
-            return agent;
+            var result = agent.ToObject<VmAgent>();
+            result.VNS = dc.Table<VnsTable>().FirstOrDefault(x => x.AgentId == agentId);
+
+            return result;
         }
 
         [HttpGet("MyAgents")]
@@ -97,7 +102,9 @@ namespace Voicebot.RestApi.Agents
         {
             var rasa = new RasaAi(dc);
             rasa.agent = rasa.LoadAgentById(dc, agentId);
-            return rasa.Train();
+            rasa.TrainWithContexts();
+
+            return "Training Completed";
         }
     }
 }

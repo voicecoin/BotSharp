@@ -102,7 +102,13 @@ namespace Voicebot.RestApi
                             Payload = aName
                         });
 
-                        await SendMessage(conversationId, text);
+                        await Clients.Caller.SendAsync("Transfer", new VmTestPayload
+                        {
+                            ConversationId = conversationId,
+                            Sender = newAgent.Name,
+                            FulfillmentText = text,
+                            Payload = aName
+                        });
                     }
                 }
 

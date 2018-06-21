@@ -20,7 +20,7 @@ namespace Voicebot.UnitTest
 
         public TestEssential()
         {
-            contentRoot = $"{Directory.GetCurrentDirectory()}\\..\\..\\..\\";
+            contentRoot = $"{Directory.GetCurrentDirectory()}\\..\\..\\..\\..\\Voicebot.WebStarter\\";
 
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             var settings = Directory.GetFiles(contentRoot + "/Settings/", "*.json");
