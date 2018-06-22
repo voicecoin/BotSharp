@@ -35,10 +35,5 @@ namespace Voicebot.RestApi.Agents
         /// Image base64 logo
         /// </summary>
         public String Avatar { get; set; }
-
-        /// <summary>
-        /// Ingore if creating
-        /// </summary>
-        public VnsTable VNS { get; set; }
     }
 }

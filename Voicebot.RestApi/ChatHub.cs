@@ -86,7 +86,15 @@ namespace Voicebot.RestApi
                         });
 
                         // switch to another agent
-                        var newAgent = dc.Table<VnsTable>().Select(x => new { Id = x.Agent.Id, Name = x.Agent.Name, Domain = x.Domain }).FirstOrDefault(x => x.Domain == aName.Data.Domain);
+                        var newAgent = (from vns in dc.Table<VnsTable>()
+                                        join agent in dc.Table<Agent>() on vns.AgentId equals agent.Id
+                                        select new
+                                        {
+                                            agent.Id,
+                                            agent.Name,
+                                            vns.Domain
+                                        })
+                                       .FirstOrDefault(x => x.Domain == aName.Data.Domain);
                         
                         // update conversation agent id to new agent
                         dc.DbTran(() => {

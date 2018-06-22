@@ -62,12 +62,13 @@ namespace Voicebot.RestApi.Agents
         }
 
         [HttpGet("{agentId}")]
-        public VmAgent GetAgentDetail([FromRoute] string agentId)
+        public VmAgentDetail GetAgentDetail([FromRoute] string agentId)
         {
             var agent = dc.Table<Agent>().Find(agentId);
 
-            var result = agent.ToObject<VmAgent>();
-            result.VNS = dc.Table<VnsTable>().FirstOrDefault(x => x.AgentId == agentId);
+            var result = agent.ToObject<VmAgentDetail>();
+            var vcDriver = new VoicechainDriver(dc);
+            result.VNS = vcDriver.GetAName(agent.Name).Data;
 
             return result;
         }

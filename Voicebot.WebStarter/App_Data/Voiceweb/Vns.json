@@ -1,5 +1,10 @@
 ﻿[
   {
+    "Name": "voiceweb",
+    "Value": "voiceweb.bot",
+    "AgentId": "fd9f1b29-fed8-4c68-8fda-69ab463da126"
+  },
+  {
     "Name": "apple store",
     "Value": "applestore.bot",
     "AgentId": "a9fff0df-3136-4114-a152-8e9654f0794a"

@@ -21,8 +21,5 @@ namespace Voicebot.Core.Voicechain
         public string Domain { get; set; }
 
         public String AgentId { get; set; }
-
-        [ForeignKey("AgentId")]
-        public Agent Agent { get; set; }
     }
 }
