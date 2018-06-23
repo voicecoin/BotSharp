@@ -32,5 +32,27 @@ namespace Voicebot.UnitTest
             Assert.AreEqual(response.Result.Metadata.IntentName, "Transfer");
             Assert.AreEqual(response.Result.Parameters.First(x => x.Key == "VNS").Value, "Apple Store");
         }
+
+        [TestMethod]
+        public void AppleStoreTest()
+        {
+            var config = new AIConfiguration(BOT_CLIENT_TOKEN, SupportedLanguage.English);
+            config.SessionId = Guid.NewGuid().ToString();
+
+            var rasa = new RasaAi(dc, config);
+
+            // Round 1
+            var response = rasa.TextRequest(new AIRequest { Query = new String[] { "Hi" } });
+            Assert.AreEqual(response.Result.Metadata.IntentName, "Wakeup");
+
+            // Round 2
+            response = rasa.TextRequest(new AIRequest { Query = new String[] { "Voiceweb" } });
+            Assert.AreEqual(response.Result.Metadata.IntentName, "Wakeup");
+
+            // Round 3
+            response = rasa.TextRequest(new AIRequest { Query = new String[] { "I'm going to apple store to buy an iPhone." } });
+            Assert.AreEqual(response.Result.Metadata.IntentName, "Transfer");
+            Assert.AreEqual(response.Result.Parameters.First(x => x.Key == "VNS").Value, "Apple Store");
+        }
     }
 }

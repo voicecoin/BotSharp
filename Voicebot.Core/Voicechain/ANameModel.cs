@@ -9,7 +9,7 @@ namespace Voicebot.Core.Voicechain
     {
         public string Txid { get; set; }
 
-        public int Time { get; set; }
+        public long Time { get; set; }
 
         public int Height { get; set; }
 

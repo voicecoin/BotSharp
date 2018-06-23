@@ -1,0 +1,52 @@
+[
+  {
+    "id": "43bd8238-fd2f-4e30-8223-5e2c8efa8534",
+    "data": [
+      {
+        "text": "Please ship to ",
+        "userDefined": false
+      },
+      {
+        "text": "3112 Big Tree Ln, Wilmette, IL 60091",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529726953
+  },
+  {
+    "id": "d0c1884f-63b9-43f0-8625-4bb8d2d756bc",
+    "data": [
+      {
+        "text": "My address is ",
+        "userDefined": false
+      },
+      {
+        "text": "3112 Big Tree Ln, Wilmette, IL 60091",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529726953
+  },
+  {
+    "id": "cd5e65a7-5d32-4467-bcd0-084d2ac9d5e4",
+    "data": [
+      {
+        "text": "3112 Big Tree Ln, Wilmette, IL 60091",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529726953
+  }
+]

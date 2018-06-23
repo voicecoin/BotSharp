@@ -8,17 +8,28 @@
       "resetContexts": false,
       "affectedContexts": [
         {
-          "name": "Transfer2SalesBot-followup",
+          "name": "AskShippingAddress",
           "parameters": {},
-          "lifespan": 2
+          "lifespan": 5
         }
       ],
       "parameters": [
         {
           "id": "7c12a419-48ce-4a99-96ac-9b4d97645b32",
+          "required": true,
           "dataType": "@iPhone",
           "name": "iPhone",
           "value": "$iPhone",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What product do you want to buy?"
+            },
+            {
+              "lang": "en",
+              "value": "What product do you want to purchase?"
+            }
+          ],
           "isList": false
         }
       ],
@@ -36,7 +47,12 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Hello, I am Apple\u0027s sales Chatbot, you want to purchase a new $iPhone, correct?"
+          "speech": "Hello, I am Apple\u0027s sales Chatbot."
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "In order to purchase the $iPhone. I need some more information, what\u0027s the shipping address?"
         }
       ],
       "defaultResponsePlatforms": {},
@@ -46,7 +62,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529278723,
+  "lastUpdate": 1529726617,
   "fallbackIntent": false,
   "events": []
 }

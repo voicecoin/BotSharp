@@ -2,8 +2,8 @@
   "Database": {
     "Default": "SqlServer",
     "ConnectionStrings": {
-      "Sqlite": "Data Source=|DataDirectory|Voicebot.db;",
-      "SqlServer": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Voicebot;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+      "Sqlite": "Data Source=|DataDirectory|Voiceweb.db;",
+      "SqlServer": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Voiceweb;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
     }
   }
 }

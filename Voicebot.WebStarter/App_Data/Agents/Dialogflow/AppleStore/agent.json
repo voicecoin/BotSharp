@@ -1,5 +1,5 @@
 {
-  "description": "Apple Store sales chatbot",
+  "description": "Apple Store\u0027s sales chatbot, you can purchase Apple\u0027s products through talking with this chatbot including iPhone, iPad and Mac.",
   "language": "en",
   "disableInteractionLogs": false,
   "disableStackdriverLogs": true,

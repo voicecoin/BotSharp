@@ -1,27 +1,41 @@
 {
-  "id": "f65a1d78-c530-4a60-9be0-e30f5555ba00",
-  "name": "Buy iPhone - payment",
+  "id": "3bb89985-fdbc-4613-98eb-be8a3b759891",
+  "name": "Telling Shipping Address",
   "auto": true,
   "contexts": [
-    "ConfirmedAddress"
+    "AskShippingAddress"
   ],
   "responses": [
     {
       "resetContexts": false,
-      "action": "",
       "affectedContexts": [
         {
-          "name": "Transfer2SalesBot-payment-followup",
-          "parameters": {},
-          "lifespan": 1
-        },
-        {
-          "name": "ConfirmedAddress",
+          "name": "AskShippingAddress",
           "parameters": {},
           "lifespan": 0
+        },
+        {
+          "name": "AskPaymentMethod",
+          "parameters": {},
+          "lifespan": 5
         }
       ],
-      "parameters": [],
+      "parameters": [
+        {
+          "id": "981e897e-8df8-4bf9-9890-acda6fe4804e",
+          "required": true,
+          "dataType": "@sys.address",
+          "name": "address",
+          "value": "$address",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What\u0027s the shipping address?"
+            }
+          ],
+          "isList": false
+        }
+      ],
       "messages": [
         {
           "type": 4,
@@ -49,7 +63,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529196771,
+  "lastUpdate": 1529726953,
   "fallbackIntent": false,
   "events": []
 }

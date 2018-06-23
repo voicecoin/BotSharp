@@ -1,11 +1,5 @@
 [
   {
-    "value": "iPhone",
-    "synonyms": [
-      "iPhone"
-    ]
-  },
-  {
     "value": "iPhone 6",
     "synonyms": [
       "iPhone 6"
@@ -21,7 +15,55 @@
   {
     "value": "iPhone 10",
     "synonyms": [
-      "iPhone 10"
+      "iPhone 10",
+      "iPhone Ten",
+      "iPhone X"
+    ]
+  },
+  {
+    "value": "iPhone 5",
+    "synonyms": [
+      "iPhone 5"
+    ]
+  },
+  {
+    "value": "iPhone 5S",
+    "synonyms": [
+      "iPhone 5S",
+      "5S"
+    ]
+  },
+  {
+    "value": "iPhone 8",
+    "synonyms": [
+      "iPhone 8"
+    ]
+  },
+  {
+    "value": "iPhone 8S",
+    "synonyms": [
+      "iPhone 8S",
+      "8S"
+    ]
+  },
+  {
+    "value": "iPhone 6S Plus",
+    "synonyms": [
+      "iPhone 6S Plus",
+      "6S Plus"
+    ]
+  },
+  {
+    "value": "iPhone 7",
+    "synonyms": [
+      "iPhone 7"
+    ]
+  },
+  {
+    "value": "iPhone 7S",
+    "synonyms": [
+      "iPhone 7S",
+      "7S"
     ]
   }
 ]

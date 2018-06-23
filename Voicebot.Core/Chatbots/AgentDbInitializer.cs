@@ -22,7 +22,7 @@ namespace Voicebot.Core.Chatbots
 
             agents.ForEach(meta =>
             {
-
+                Console.WriteLine($"Initializing {meta.Name}");
                 if (!dc.Table<Agent>().Any(x => x.Id == meta.Id))
                 {
                     ImportChatbot(dc, meta);

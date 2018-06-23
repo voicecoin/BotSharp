@@ -1,4 +1,5 @@
-﻿using EntityFrameworkCore.BootKit;
+﻿using DotNetToolkit;
+using EntityFrameworkCore.BootKit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -19,6 +20,16 @@ namespace Voicebot.Core.Voicechain
 
         public VoicechainResponse<ANameModel> GetAName(String name)
         {
+            var aName = new VoicechainResponse<ANameModel>
+            {
+                Data = new ANameModel
+                {
+                    Address = "0.0.0.0",
+                    Domain = name,
+                    Time = DateTime.UtcNow.ToUnixTime()
+                }
+            };
+
             string domain = dc.Table<VnsTable>().FirstOrDefault(x => x.Name.ToLower() == name.ToLower())?.Domain;
 
             var client = new RestClient($"{Database.Configuration.GetSection("Voicechain:Host").Value}");
@@ -29,9 +40,17 @@ namespace Voicebot.Core.Voicechain
 
             var result = client.Execute(rest);
 
-            var aName = JsonConvert.DeserializeObject<VoicechainResponse<ANameModel>>(result.Content);
-
-            aName.Data.Domain = domain;
+            try
+            {
+                aName = JsonConvert.DeserializeObject<VoicechainResponse<ANameModel>>(result.Content);
+                aName.Data.Domain = domain;
+            }
+            catch (Exception ex)
+            {
+                aName.Code = -1;
+                aName.Message = result.Content;
+                ex.Message.Log(LogLevel.ERROR);
+            }
 
             return aName;
         }
