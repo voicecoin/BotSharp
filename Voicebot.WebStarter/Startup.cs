@@ -67,6 +67,7 @@ namespace Voicebot.WebStarter
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseSwagger();
@@ -91,7 +92,7 @@ namespace Voicebot.WebStarter
 
             Database.Configuration = Configuration;
             Database.ContentRootPath = env.ContentRootPath;
-            Database.Assemblies = new String[] { "Voicebot.Core", "BotSharp.Core" };
+            Database.Assemblies = new String[] { "Voiceweb.Auth.Core", "Voicebot.Core", "BotSharp.Core" };
 
             InitializationLoader loader = new InitializationLoader();
             loader.Env = env;

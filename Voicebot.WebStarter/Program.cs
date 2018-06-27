@@ -27,6 +27,7 @@ namespace Voicebot.WebStarter
                         config.AddJsonFile(setting, optional: false, reloadOnChange: true);
                     });
                 })
+                .UseIISIntegration()
                 .UseUrls("http://0.0.0.0:128")
                 .UseStartup<Startup>()
                 .Build();

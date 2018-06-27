@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\voiceweb-auth\Voiceweb.Auth.RestApi\Voiceweb.Auth.RestApi.csproj" />
     <ProjectReference Include="..\Voicebot.RestApi\Voicebot.RestApi.csproj" />
   </ItemGroup>
 

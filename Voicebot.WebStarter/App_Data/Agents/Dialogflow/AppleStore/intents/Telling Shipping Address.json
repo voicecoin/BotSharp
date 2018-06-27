@@ -23,7 +23,7 @@
       "parameters": [
         {
           "id": "981e897e-8df8-4bf9-9890-acda6fe4804e",
-          "required": true,
+          "required": false,
           "dataType": "@sys.address",
           "name": "address",
           "value": "$address",
@@ -63,7 +63,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529726953,
+  "lastUpdate": 1529847568,
   "fallbackIntent": false,
   "events": []
 }

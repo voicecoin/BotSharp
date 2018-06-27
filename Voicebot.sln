@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voicebot.UnitTest", "Voiceb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotSharp.Core", "..\..\BotSharp\BotSharp.Core\BotSharp.Core.csproj", "{EEB6E4FF-059E-4DD6-9439-6424B55D7307}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voiceweb.Auth.Core", "..\voiceweb-auth\Voiceweb.Auth.Core\Voiceweb.Auth.Core.csproj", "{55420848-3119-4370-9204-726425F7E3EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voiceweb.Auth.RestApi", "..\voiceweb-auth\Voiceweb.Auth.RestApi\Voiceweb.Auth.RestApi.csproj", "{320F0DC7-3285-4984-B990-BC3EAE453789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{EEB6E4FF-059E-4DD6-9439-6424B55D7307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEB6E4FF-059E-4DD6-9439-6424B55D7307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEB6E4FF-059E-4DD6-9439-6424B55D7307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55420848-3119-4370-9204-726425F7E3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55420848-3119-4370-9204-726425F7E3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55420848-3119-4370-9204-726425F7E3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55420848-3119-4370-9204-726425F7E3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{320F0DC7-3285-4984-B990-BC3EAE453789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320F0DC7-3285-4984-B990-BC3EAE453789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320F0DC7-3285-4984-B990-BC3EAE453789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320F0DC7-3285-4984-B990-BC3EAE453789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

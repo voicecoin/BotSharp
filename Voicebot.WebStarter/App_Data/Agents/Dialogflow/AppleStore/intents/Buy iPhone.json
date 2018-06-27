@@ -47,12 +47,12 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Hello, I am Apple\u0027s sales Chatbot."
+          "speech": "In order to purchase the $iPhone. I need some more information."
         },
         {
           "type": 0,
           "lang": "en",
-          "speech": "In order to purchase the $iPhone. I need some more information, what\u0027s the shipping address?"
+          "speech": "What\u0027s your shipping address?"
         }
       ],
       "defaultResponsePlatforms": {},
@@ -62,7 +62,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529726617,
+  "lastUpdate": 1529847153,
   "fallbackIntent": false,
   "events": []
 }

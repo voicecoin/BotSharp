@@ -1,0 +1,74 @@
+[
+  {
+    "id": "c6e4be62-9450-41d5-b4c1-90c94104bab5",
+    "data": [
+      {
+        "text": "Hi",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529843379
+  },
+  {
+    "id": "0665cffe-c385-4fca-af9a-b22d0e087846",
+    "data": [
+      {
+        "text": "Get Started",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529843379
+  },
+  {
+    "id": "535d8e33-39fb-4417-8dcc-a6adadfbc506",
+    "data": [
+      {
+        "text": "Hello",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529843379
+  },
+  {
+    "id": "d2f69afb-59df-48d7-9c8d-302f9237f33f",
+    "data": [
+      {
+        "text": "Hey",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529843379
+  },
+  {
+    "id": "42f2db2b-42d3-4b27-bc3b-b690ea36ceba",
+    "data": [
+      {
+        "text": "What\u0027s up",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529843379
+  },
+  {
+    "id": "22f4fd42-022d-4418-8d87-a5ec175dae14",
+    "data": [
+      {
+        "text": "How are you",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1529843379
+  }
+]

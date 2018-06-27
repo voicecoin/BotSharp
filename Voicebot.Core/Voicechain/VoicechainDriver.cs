@@ -42,8 +42,12 @@ namespace Voicebot.Core.Voicechain
 
             try
             {
-                aName = JsonConvert.DeserializeObject<VoicechainResponse<ANameModel>>(result.Content);
-                aName.Data.Domain = domain;
+                var json = JsonConvert.DeserializeObject<VoicechainResponse<ANameModel>>(result.Content);
+                if(json != null)
+                {
+                    aName = json;
+                    aName.Data.Domain = domain;
+                }
             }
             catch (Exception ex)
             {
