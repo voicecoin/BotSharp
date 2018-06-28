@@ -23,7 +23,7 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Hello, I am Apple\u0027s sales Chatbot."
+          "speech": "I am Apple\u0027s sales Chatbot."
         },
         {
           "type": 0,
@@ -41,7 +41,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529844481,
+  "lastUpdate": 1529847830,
   "fallbackIntent": false,
   "events": [
     {

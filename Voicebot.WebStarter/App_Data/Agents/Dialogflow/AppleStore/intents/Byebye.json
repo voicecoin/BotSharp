@@ -1,0 +1,30 @@
+{
+  "id": "a1b7f893-a3c2-4f75-b3fd-3f20e57386e7",
+  "name": "Byebye",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "terminate"
+          }
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1530212562,
+  "fallbackIntent": false,
+  "events": []
+}

@@ -10,6 +10,7 @@ namespace Voicebot.RestApi.Agents
     {
         public string ConversationId { get; set; }
         public string FulfillmentText { get; set; }
+        public string AudioPath { get; set; }
         public string Sender { get; set;}
         public Object Payload { get; set; }
     }

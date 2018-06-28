@@ -1,4 +1,5 @@
-﻿using BotSharp.Core.Agents;
+﻿using Amazon.Polly;
+using BotSharp.Core.Agents;
 using BotSharp.Core.Conversations;
 using BotSharp.Core.Engines;
 using BotSharp.Core.Models;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Voicebot.Core.TextToSpeech;
 using Voicebot.Core.Voicechain;
 using Voicebot.RestApi.Agents;
 
@@ -35,6 +37,11 @@ namespace Voicebot.RestApi
             var aIResponse = rasa.TextRequest(new AIRequest { Query = new String[] { text } });
 
             VoicechainResponse<ANameModel> aName = null;
+            VoiceId voiceId = VoiceId.Joanna;
+
+            string awsAccessKey = Database.Configuration.GetSection("Aws:AWSAccessKey").Value;
+            string awsSecretKey = Database.Configuration.GetSection("Aws:AWSSecretKey").Value;
+            var polly = new PollyUtter(awsAccessKey, awsSecretKey);
 
             await Clients.Caller.SendAsync("HideLoading");
 
@@ -49,7 +56,7 @@ namespace Voicebot.RestApi
                 if (type == "0")
                 {
                     string speech = message["Speech"].ToString();
-                    //string filePath = await polly.Utter(speech, env.WebRootPath, voiceId);
+                    string filePath = await polly.Utter(speech, Database.ContentRootPath, voiceId);
                     //polly.Play(filePath);
 
                     await Clients.Caller.SendAsync("ReceiveMessage", new VmTestPayload
@@ -57,7 +64,8 @@ namespace Voicebot.RestApi
                         ConversationId = conversationId,
                         Sender = rasa.agent.Name,
                         FulfillmentText = speech,
-                        Payload = aIResponse
+                        Payload = aIResponse,
+                        AudioPath = filePath
                     });
                 }
                 else if (type == "4")
@@ -69,7 +77,7 @@ namespace Voicebot.RestApi
                     }
                     else if (payload.Task == "voice")
                     {
-                        //voiceId = VoiceId.FindValue(payload.Parameters.First().ToString());
+                        voiceId = VoiceId.FindValue(payload.Parameters.First().ToString());
                     }
                     else if (payload.Task == "transfer")
                     {
@@ -81,7 +89,7 @@ namespace Voicebot.RestApi
                         {
                             ConversationId = conversationId,
                             Sender = rasa.agent.Name,
-                            FulfillmentText = $"Querying VNS {aName.Data.Domain} on Blockchain: IP - {aName.Data.Value}, Address - {aName.Data.Address}",
+                            FulfillmentText = $"Querying VNS {aName.Data.Domain} on Blockchain: IP - {aName.Data.Value}. <br/><hr/><a href='http://www.voicecoin.net/tx/{aName.Data.Txid}' target='_blank'>View Transaction</a>",
                             Payload = aName
                         });
 

@@ -47,6 +47,11 @@
         {
           "type": 0,
           "lang": "en",
+          "speech": "Hi, I\u0027m Apple Store\u0027s sales chatbot."
+        },
+        {
+          "type": 0,
+          "lang": "en",
           "speech": "In order to purchase the $iPhone. I need some more information."
         },
         {
@@ -62,7 +67,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529847153,
+  "lastUpdate": 1530212127,
   "fallbackIntent": false,
   "events": []
 }

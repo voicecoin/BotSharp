@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /Voicebot.WebStarter/wwwroot
 /Voicebot.WebStarter/Settings/email.json
+/Voicebot.WebStarter/Settings/aws.json

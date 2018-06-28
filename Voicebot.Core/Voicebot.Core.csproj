@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Polly" Version="3.3.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
     <PackageReference Include="Quartz" Version="3.0.5" />
   </ItemGroup>
@@ -22,6 +23,10 @@
     <Reference Include="EntityFrameworkCore.BootKit">
       <HintPath>..\..\..\..\..\.nuget\packages\entityframeworkcore.bootkit\1.5.1\lib\netcoreapp2.0\EntityFrameworkCore.BootKit.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TextToSpeech\" />
   </ItemGroup>
 
 </Project>
