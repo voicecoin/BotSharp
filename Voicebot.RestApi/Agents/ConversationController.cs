@@ -27,6 +27,7 @@ namespace Voicebot.RestApi.Agents
         /// </summary>
         /// <param name="agentId"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("{agentId}/Start")]
         public string Start([FromRoute] string agentId)
         {
@@ -38,7 +39,7 @@ namespace Voicebot.RestApi.Agents
                     conversation = new Conversation
                     {
                         AgentId = agentId,
-                        UserId = CurrentUserId,
+                        UserId = CurrentUserId ?? Guid.NewGuid().ToString(),
                         StartTime = DateTime.UtcNow
                     };
 
