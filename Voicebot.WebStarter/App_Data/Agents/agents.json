@@ -12,7 +12,8 @@
     "Name": "AppleStore",
     "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
     "ClientAccessToken": "76bff41aa5374605b0a3e8a1dab2e284",
-    "DeveloperAccessToken": "4002d9d2d2c845fb87950796b8a5757d"
+    "DeveloperAccessToken": "4002d9d2d2c845fb87950796b8a5757d",
+    "VoiceId": "Matthew"
   },
 
   {
@@ -20,7 +21,8 @@
     "Name": "Spotify",
     "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
     "ClientAccessToken": "43a0f48e3f1e41da822092e7e699426b",
-    "DeveloperAccessToken": "cd1e4685c6a04d7db1f59e6853fd597b"
+    "DeveloperAccessToken": "cd1e4685c6a04d7db1f59e6853fd597b",
+    "VoiceId": "Matthew"
   },
 
   {
@@ -29,5 +31,14 @@
     "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
     "ClientAccessToken": "50dbb57981654aa1a6bbf24f612f207f",
     "DeveloperAccessToken": "da38d1468cde461b8643f899c680a26b"
+  },
+
+  {
+    "Id": "bfc01c5d-768b-4594-8300-fc5f0e67ba1a",
+    "Name": "Greeting",
+    "UserId": "8da9e1e0-42dc-420a-8016-79b04c1297d0",
+    "ClientAccessToken": "229f11bea843437f9d02b5bf68819670",
+    "DeveloperAccessToken": "a5986d4c2fc846438c54ec6f17febb01",
+    "IsSkillSet": 1
   }
 ]

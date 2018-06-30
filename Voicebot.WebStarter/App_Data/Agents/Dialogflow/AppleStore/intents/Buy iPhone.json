@@ -38,6 +38,16 @@
           "type": 4,
           "lang": "en",
           "payload": {
+            "task": "delay",
+            "parameters": [
+              "3000"
+            ]
+          }
+        },
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
             "task": "voice",
             "parameters": [
               "Matthew"
@@ -67,7 +77,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1530212127,
+  "lastUpdate": 1530242385,
   "fallbackIntent": false,
   "events": []
 }

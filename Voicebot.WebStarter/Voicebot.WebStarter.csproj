@@ -6,18 +6,55 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App_Data\Agents\BotSharp\Alexa Skill A01\**" />
+    <Compile Remove="App_Data\Agents\BotSharp\人物通\**" />
+    <Compile Remove="App_Data\Agents\BotSharp\天气查询\**" />
+    <Compile Remove="App_Data\Agents\BotSharp\小丫\**" />
+    <Compile Remove="App_Data\Agents\BotSharp\日常交流\**" />
+    <Compile Remove="App_Data\Agents\BotSharp\花灵溪\**" />
+    <Compile Remove="App_Data\Agents\BotSharp\闲聊机器人\**" />
     <Compile Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <Compile Remove="App_Data\Logs\**" />
+    <Compile Remove="PublishOutput\**" />
+    <Compile Remove="wwwroot\voice\**" />
+    <Content Remove="App_Data\Agents\BotSharp\Alexa Skill A01\**" />
+    <Content Remove="App_Data\Agents\BotSharp\人物通\**" />
+    <Content Remove="App_Data\Agents\BotSharp\天气查询\**" />
+    <Content Remove="App_Data\Agents\BotSharp\小丫\**" />
+    <Content Remove="App_Data\Agents\BotSharp\日常交流\**" />
+    <Content Remove="App_Data\Agents\BotSharp\花灵溪\**" />
+    <Content Remove="App_Data\Agents\BotSharp\闲聊机器人\**" />
     <Content Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <Content Remove="App_Data\Logs\**" />
+    <Content Remove="PublishOutput\**" />
+    <Content Remove="wwwroot\voice\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\Alexa Skill A01\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\人物通\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\天气查询\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\小丫\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\日常交流\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\花灵溪\**" />
+    <EmbeddedResource Remove="App_Data\Agents\BotSharp\闲聊机器人\**" />
     <EmbeddedResource Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <EmbeddedResource Remove="App_Data\Logs\**" />
+    <EmbeddedResource Remove="PublishOutput\**" />
+    <EmbeddedResource Remove="wwwroot\voice\**" />
+    <None Remove="App_Data\Agents\BotSharp\Alexa Skill A01\**" />
+    <None Remove="App_Data\Agents\BotSharp\人物通\**" />
+    <None Remove="App_Data\Agents\BotSharp\天气查询\**" />
+    <None Remove="App_Data\Agents\BotSharp\小丫\**" />
+    <None Remove="App_Data\Agents\BotSharp\日常交流\**" />
+    <None Remove="App_Data\Agents\BotSharp\花灵溪\**" />
+    <None Remove="App_Data\Agents\BotSharp\闲聊机器人\**" />
     <None Remove="App_Data\Agents\Dialogflow\HelloWorld\**" />
     <None Remove="App_Data\Logs\**" />
+    <None Remove="PublishOutput\**" />
+    <None Remove="wwwroot\voice\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\voice\" />
+    <Folder Include="App_Data\Agents\BotSharp\" />
+    <Folder Include="App_Data\Agents\Dialogflow\Greeting\" />
   </ItemGroup>
 
   <ItemGroup>

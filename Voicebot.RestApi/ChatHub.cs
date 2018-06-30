@@ -37,7 +37,7 @@ namespace Voicebot.RestApi
             var aIResponse = rasa.TextRequest(new AIRequest { Query = new String[] { text } });
 
             VoicechainResponse<ANameModel> aName = null;
-            VoiceId voiceId = VoiceId.Joanna;
+            VoiceId voiceId = dc.Table<AgentVoice>().FirstOrDefault(x => x.AgentId == agentId)?.VoiceId;
 
             string awsAccessKey = Database.Configuration.GetSection("Aws:AWSAccessKey").Value;
             string awsSecretKey = Database.Configuration.GetSection("Aws:AWSSecretKey").Value;
@@ -48,7 +48,7 @@ namespace Voicebot.RestApi
             for (int messageIndex = 0; messageIndex < aIResponse.Result.Fulfillment.Messages.Count; messageIndex++)
             {
                 await Clients.Caller.SendAsync("ShowLoading");
-                await Task.Delay(1000);
+                await Task.Delay(500);
 
                 var message = JObject.FromObject(aIResponse.Result.Fulfillment.Messages[messageIndex]);
                 string type = message["Type"].ToString();
@@ -77,7 +77,23 @@ namespace Voicebot.RestApi
                     }
                     else if (payload.Task == "voice")
                     {
-                        voiceId = VoiceId.FindValue(payload.Parameters.First().ToString());
+                        //voiceId = VoiceId.FindValue(payload.Parameters.First().ToString());
+                    }
+                    else if (payload.Task == "terminate")
+                    {
+                        // update conversation agent id to new agent
+                        dc.DbTran(() => {
+                            var conversation = dc.Table<Conversation>().Find(conversationId);
+                            conversation.AgentId = "fd9f1b29-fed8-4c68-8fda-69ab463da126";
+                        });
+
+                        await Clients.Caller.SendAsync("Transfer", new VmTestPayload
+                        {
+                            ConversationId = conversationId,
+                            Sender = "Voiceweb",
+                            FulfillmentText = "Hi",
+                            Payload = aIResponse
+                        });
                     }
                     else if (payload.Task == "transfer")
                     {
