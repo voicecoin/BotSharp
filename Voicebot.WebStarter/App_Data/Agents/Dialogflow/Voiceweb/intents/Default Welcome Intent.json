@@ -19,6 +19,14 @@
             "Good day!",
             "Greetings!"
           ]
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": [
+            "How can I help you?",
+            "What can I do for you?"
+          ]
         }
       ],
       "defaultResponsePlatforms": {},
@@ -28,7 +36,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529843379,
+  "lastUpdate": 1530367356,
   "fallbackIntent": false,
   "events": [
     {

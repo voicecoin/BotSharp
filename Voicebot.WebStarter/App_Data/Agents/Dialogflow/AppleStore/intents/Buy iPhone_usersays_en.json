@@ -1,6 +1,20 @@
 [
   {
-    "id": "035d8004-17b4-40fe-abab-de22885a1050",
+    "id": "20a202bf-e06e-45e0-a807-2d375cf288c4",
+    "data": [
+      {
+        "text": "iPhone 10",
+        "alias": "iPhone",
+        "meta": "@iPhone",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1530366637
+  },
+  {
+    "id": "143996a9-739b-4cac-b104-6d5a1f26b15e",
     "data": [
       {
         "text": "buy ",
@@ -18,7 +32,7 @@
     "updated": 1530242385
   },
   {
-    "id": "42b89788-758d-4a44-9df4-c42a9d45d6c5",
+    "id": "9930b7ff-0a8d-4eae-b0df-bf24f37a80ad",
     "data": [
       {
         "text": "I\u0027m going to buy an ",
@@ -36,7 +50,7 @@
     "updated": 1530242385
   },
   {
-    "id": "7a5cd8f3-ef2e-4e29-a5f9-38862dffd061",
+    "id": "2b33378a-415a-45e1-b99b-8de33344783d",
     "data": [
       {
         "text": "I want to buy an ",

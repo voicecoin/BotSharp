@@ -73,6 +73,17 @@ namespace Voicebot.RestApi.Agents
             return result;
         }
 
+        [AllowAnonymous]
+        [HttpGet("{agentId}/public")]
+        public VmAgent GetAgentPublicDetail([FromRoute] string agentId)
+        {
+            var agent = dc.Table<Agent>().Find(agentId);
+
+            var result = agent.ToObject<VmAgent>();
+
+            return result;
+        }
+
         [HttpGet("MyAgents")]
         public PageResult<VmAgent> MyAgents()
         {

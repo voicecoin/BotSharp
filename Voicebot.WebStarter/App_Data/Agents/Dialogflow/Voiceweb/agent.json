@@ -1,6 +1,10 @@
 {
   "description": "Voiceweb\u0027s chatbot is the bridge that connects all the bots hosted in voice enable internet",
   "language": "en",
+  "activeAssistantAgents": [
+    "smalltalk-domain-on",
+    "smalltalk-fulfillment-on"
+  ],
   "disableInteractionLogs": false,
   "disableStackdriverLogs": true,
   "googleAssistant": {

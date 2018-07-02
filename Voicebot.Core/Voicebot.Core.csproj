@@ -19,10 +19,4 @@
     <ProjectReference Include="..\..\..\BotSharp\BotSharp.Core\BotSharp.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="EntityFrameworkCore.BootKit">
-      <HintPath>..\..\..\..\..\.nuget\packages\entityframeworkcore.bootkit\1.5.1\lib\netcoreapp2.0\EntityFrameworkCore.BootKit.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

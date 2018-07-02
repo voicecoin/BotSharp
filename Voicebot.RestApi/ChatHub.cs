@@ -48,7 +48,7 @@ namespace Voicebot.RestApi
             for (int messageIndex = 0; messageIndex < aIResponse.Result.Fulfillment.Messages.Count; messageIndex++)
             {
                 await Clients.Caller.SendAsync("ShowLoading");
-                await Task.Delay(500);
+                await Task.Delay(1000);
 
                 var message = JObject.FromObject(aIResponse.Result.Fulfillment.Messages[messageIndex]);
                 string type = message["Type"].ToString();
@@ -125,20 +125,24 @@ namespace Voicebot.RestApi
                             var conversation = dc.Table<Conversation>().Find(conversationId);
                             conversation.AgentId = newAgent.Id;
                         });
-                        
+
+                        await Task.Delay(5000);
+                        string speech = $"Great, You are connected to {newAgent.Name}'s chatbot.";
+                        string filePath = await polly.Utter(speech, Database.ContentRootPath, voiceId);
                         await Clients.Caller.SendAsync("ReceiveMessage", new VmTestPayload
                         {
                             ConversationId = conversationId,
                             Sender = rasa.agent.Name,
-                            FulfillmentText = $"Connected to {newAgent.Name}",
-                            Payload = aName
+                            FulfillmentText = speech,
+                            Payload = aName,
+                            AudioPath = filePath
                         });
 
                         await Clients.Caller.SendAsync("Transfer", new VmTestPayload
                         {
                             ConversationId = conversationId,
                             Sender = newAgent.Name,
-                            FulfillmentText = text,
+                            FulfillmentText = "Hi",
                             Payload = aName
                         });
                     }
