@@ -22,7 +22,7 @@ namespace Voicebot.WebStarter
                 .ConfigureAppConfiguration((hostingContext, config) => {
                     
                     var env = hostingContext.HostingEnvironment;
-                    var settings = Directory.GetFiles("Settings", "*.json");
+                    var settings = Directory.GetFiles($"{env.ContentRootPath}{Path.DirectorySeparatorChar}Settings", "*.json");
                     settings.ToList().ForEach(setting => {
                         config.AddJsonFile(setting, optional: false, reloadOnChange: true);
                     });
