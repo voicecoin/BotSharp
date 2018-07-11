@@ -22,11 +22,6 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Hi! Welcome to use voice enabled, world wide web."
-        },
-        {
-          "type": 0,
-          "lang": "en",
           "speech": "How can I help you?"
         }
       ],
@@ -37,7 +32,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1525024572,
+  "lastUpdate": 1531306849,
   "fallbackIntent": false,
   "events": []
 }

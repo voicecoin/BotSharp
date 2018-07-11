@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Voicebot.Core.TextToSpeech
 {
-    [Table("Voiceweb_AgentVoice")]
+    [Table("Voicebot_AgentVoice")]
     public class AgentVoice : DbRecord, IDbRecord
     {
         [Required]

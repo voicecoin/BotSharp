@@ -12,13 +12,17 @@
       "messages": [
         {
           "type": 0,
+          "platform": "telegram",
           "lang": "en",
           "speech": [
             "Hi!",
-            "Hello!",
-            "Good day!",
-            "Greetings!"
+            "Hello!"
           ]
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Hi! Welcome to use voice enabled, world wide web."
         },
         {
           "type": 0,
@@ -29,14 +33,16 @@
           ]
         }
       ],
-      "defaultResponsePlatforms": {},
+      "defaultResponsePlatforms": {
+        "telegram": true
+      },
       "speech": []
     }
   ],
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1530367356,
+  "lastUpdate": 1531306873,
   "fallbackIntent": false,
   "events": [
     {

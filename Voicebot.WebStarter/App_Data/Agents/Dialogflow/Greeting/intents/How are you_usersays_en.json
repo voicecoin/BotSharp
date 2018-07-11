@@ -1,0 +1,84 @@
+[
+  {
+    "id": "52dd1597-f851-4c6d-bf50-ff9dc6a1ce0c",
+    "data": [
+      {
+        "text": "How have you been doing?",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531270485
+  },
+  {
+    "id": "59999063-52ab-4437-a857-5c157058e163",
+    "data": [
+      {
+        "text": "Are you doing well?",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531270485
+  },
+  {
+    "id": "5021750e-877b-452f-a3dc-786ec6f052a5",
+    "data": [
+      {
+        "text": "How are you doing ",
+        "userDefined": false
+      },
+      {
+        "text": "today",
+        "alias": "date",
+        "meta": "@sys.date",
+        "userDefined": false
+      },
+      {
+        "text": "?",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531270485
+  },
+  {
+    "id": "9dfb490b-f71a-4769-81fe-153c2608c73f",
+    "data": [
+      {
+        "text": "What\u0027s up?",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531270485
+  },
+  {
+    "id": "f760c5b5-9abe-425a-97fe-fc9d97975bff",
+    "data": [
+      {
+        "text": "How are you doing",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531270485
+  },
+  {
+    "id": "e96dfad8-1560-41d7-b4db-8ead18f59f00",
+    "data": [
+      {
+        "text": "How are you",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531270485
+  }
+]

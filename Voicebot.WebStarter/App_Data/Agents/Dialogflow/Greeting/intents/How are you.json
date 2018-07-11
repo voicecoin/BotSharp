@@ -1,0 +1,44 @@
+{
+  "id": "75c215e0-847d-44a3-8940-c8bb9675da58",
+  "name": "How are you",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "d4675b50-0054-40ac-b688-adbf712dca71",
+          "dataType": "@sys.date",
+          "name": "date",
+          "value": "$date",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": [
+            "I’m well, thank you. And you?",
+            "Fine, thank you.",
+            "I\u0027m great, thank you. How are you?",
+            "Good, how are you?",
+            "I’m good, thanks! You?",
+            "Not much. How are you doing?",
+            "I’m doing good."
+          ]
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1531270485,
+  "fallbackIntent": false,
+  "events": []
+}

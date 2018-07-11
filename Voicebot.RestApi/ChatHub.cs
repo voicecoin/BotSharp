@@ -2,7 +2,9 @@
 using BotSharp.Core.Agents;
 using BotSharp.Core.Conversations;
 using BotSharp.Core.Engines;
+using BotSharp.Core.Engines.Dialogflow;
 using BotSharp.Core.Models;
+using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -36,6 +38,14 @@ namespace Voicebot.RestApi
 
             var aIResponse = rasa.TextRequest(new AIRequest { Query = new String[] { text } });
 
+            // redirect to third-part api when get fallback intent
+            if (aIResponse.Result.Metadata.IntentName == "Default Fallback Intent")
+            {
+                var apiAi = new ApiAiSDK.ApiAi(new ApiAiSDK.AIConfiguration(clientAccessToken, ApiAiSDK.SupportedLanguage.English));
+                var apiAiResponse = apiAi.TextRequest(text);
+                aIResponse = apiAiResponse.ToObject<AIResponse>();
+            }
+
             VoicechainResponse<ANameModel> aName = null;
             VoiceId voiceId = dc.Table<AgentVoice>().FirstOrDefault(x => x.AgentId == agentId)?.VoiceId;
 
@@ -51,11 +61,11 @@ namespace Voicebot.RestApi
                 await Task.Delay(1000);
 
                 var message = JObject.FromObject(aIResponse.Result.Fulfillment.Messages[messageIndex]);
-                string type = message["Type"].ToString();
+                string type = (message["Type"]??message["type"]).ToString();
 
                 if (type == "0")
                 {
-                    string speech = message["Speech"].ToString();
+                    string speech = (message["Speech"]?? message["speech"]).ToString();
                     string filePath = await polly.Utter(speech, Database.ContentRootPath, voiceId);
                     //polly.Play(filePath);
 
@@ -101,11 +111,11 @@ namespace Voicebot.RestApi
                         var vcDriver = new VoicechainDriver(dc);
                         aName = vcDriver.GetAName(aIResponse.Result.Parameters["VNS"]);
 
-                        await Clients.Caller.SendAsync("ReceiveMessage", new VmTestPayload
+                        await Clients.Caller.SendAsync("SystemNotification", new VmTestPayload
                         {
                             ConversationId = conversationId,
                             Sender = rasa.agent.Name,
-                            FulfillmentText = $"Querying VNS {aName.Data.Domain} on Blockchain: IP - {aName.Data.Value}. <br/><hr/><a href='http://www.voicecoin.net/tx/{aName.Data.Txid}' target='_blank'>View Transaction</a>",
+                            FulfillmentText = $"Querying VNS {aName.Data.Domain} on Blockchain: IP - {aName.Data.Value}. <a href='http://www.voicecoin.net/tx/{aName.Data.Txid}' target='_blank' style='color:white;'>View Transaction</a>",
                             Payload = aName
                         });
 

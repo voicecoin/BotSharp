@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Voicebot.Core.Voicechain
 {
-    [Table("Voiceweb_VnsTable")]
+    [Table("Voicebot_VnsTable")]
     public class VnsTable : DbRecord, IDbRecord
     {
         /// <summary>

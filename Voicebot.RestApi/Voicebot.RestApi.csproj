@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ApiAiSDK" Version="1.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Voicebot.Core\Voicebot.Core.csproj" />
   </ItemGroup>
 

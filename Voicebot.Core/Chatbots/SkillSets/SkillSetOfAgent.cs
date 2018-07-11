@@ -7,9 +7,12 @@ using System.Text;
 
 namespace Voicebot.Core.Chatbots.SkillSets
 {
-    [Table("Voiceweb_SkillSetOfAgent")]
+    [Table("Voicebot_SkillSetOfAgent")]
     public class SkillSetOfAgent : DbRecord, IDbRecord
     {
+        /// <summary>
+        /// Agent Id with IsSkillSet=True
+        /// </summary>
         [Required]
         [StringLength(36)]
         public string SkillSetId { get; set; }
