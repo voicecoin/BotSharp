@@ -30,7 +30,7 @@
   },
   "isPrivate": true,
   "customClassifierMode": "use.after",
-  "mlMinConfidence": 0.8,
+  "mlMinConfidence": 0.65,
   "supportedLanguages": [],
   "onePlatformApiVersion": "v1legacy"
 }

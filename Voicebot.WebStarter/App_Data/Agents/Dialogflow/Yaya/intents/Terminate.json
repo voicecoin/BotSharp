@@ -1,0 +1,39 @@
+{
+  "id": "b86909bb-fea2-472d-8111-7c08e6deb4da",
+  "name": "Terminate",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": [
+            "Byebye, have a good one.",
+            "Byebye"
+          ]
+        },
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "terminate",
+            "parameters": []
+          }
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1531397223,
+  "fallbackIntent": false,
+  "events": []
+}

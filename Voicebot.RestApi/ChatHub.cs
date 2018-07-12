@@ -3,6 +3,7 @@ using BotSharp.Core.Agents;
 using BotSharp.Core.Conversations;
 using BotSharp.Core.Engines;
 using BotSharp.Core.Engines.Dialogflow;
+using BotSharp.Core.Intents;
 using BotSharp.Core.Models;
 using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
@@ -91,6 +92,8 @@ namespace Voicebot.RestApi
                     }
                     else if (payload.Task == "terminate")
                     {
+                        if (rasa.agent.Id == "fd9f1b29-fed8-4c68-8fda-69ab463da126") continue;
+
                         // update conversation agent id back to Voiceweb
                         dc.DbTran(() => {
                             var conversation = dc.Table<Conversation>().Find(conversationId);

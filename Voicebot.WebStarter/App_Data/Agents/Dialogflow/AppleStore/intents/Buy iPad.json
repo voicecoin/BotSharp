@@ -1,6 +1,6 @@
 {
-  "id": "b8eb0664-900d-4844-b2a4-ed8a5da09889",
-  "name": "Buy iPhone",
+  "id": "650ff1a0-73f0-4b76-b2d8-3989baa5fb9e",
+  "name": "Buy iPad",
   "auto": true,
   "contexts": [],
   "responses": [
@@ -15,23 +15,19 @@
       ],
       "parameters": [
         {
-          "id": "7c12a419-48ce-4a99-96ac-9b4d97645b32",
+          "id": "5efae546-2f6e-497c-8357-0cc66530a0c1",
           "required": true,
-          "dataType": "@iPhone",
-          "name": "iPhone",
-          "value": "$iPhone",
+          "dataType": "@iPad",
+          "name": "iPad",
+          "value": "$iPad",
           "prompts": [
             {
               "lang": "en",
-              "value": "What the model do you want ?"
+              "value": "What model are you asking for?"
             },
             {
               "lang": "en",
-              "value": "What model do you want to purchase?"
-            },
-            {
-              "lang": "en",
-              "value": "What model would you like?"
+              "value": "What the iPad model do you like?"
             }
           ],
           "isList": false
@@ -76,7 +72,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1531395338,
+  "lastUpdate": 1531395362,
   "fallbackIntent": false,
   "events": []
 }

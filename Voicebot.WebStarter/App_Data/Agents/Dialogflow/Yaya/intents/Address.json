@@ -1,0 +1,87 @@
+{
+  "id": "fe0d2062-b7cc-46e0-8298-932d6f2c64a3",
+  "name": "Address",
+  "auto": true,
+  "contexts": [
+    "address"
+  ],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [
+        {
+          "name": "address",
+          "parameters": {},
+          "lifespan": 5
+        }
+      ],
+      "parameters": [
+        {
+          "id": "22af2b8e-5ddb-4cb5-ae18-3ac65e4d58a0",
+          "required": true,
+          "dataType": "@sys.address",
+          "name": "address",
+          "value": "$address",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "Where are you?"
+            }
+          ],
+          "isList": true
+        },
+        {
+          "id": "7bf74a0b-a256-4245-b035-f8855e393439",
+          "required": true,
+          "dataType": "@sys.geo-city",
+          "name": "geo-city",
+          "value": "$geo-city",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What\u0027s the city?"
+            }
+          ],
+          "isList": false
+        },
+        {
+          "id": "a5003d25-393f-4bf6-b046-a25032bc35c4",
+          "required": true,
+          "dataType": "@sys.zip-code",
+          "name": "zip-code",
+          "value": "$zip-code",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What\u0027s the zipcode?"
+            }
+          ],
+          "isList": false
+        },
+        {
+          "id": "5914c11d-654d-46a9-9551-64df057de1fe",
+          "required": false,
+          "dataType": "@sys.geo-state-us",
+          "name": "geo-state-us",
+          "value": "$geo-state-us",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1531392712,
+  "fallbackIntent": false,
+  "events": []
+}

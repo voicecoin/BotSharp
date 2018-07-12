@@ -1,0 +1,22 @@
+[
+  {
+    "value": "iPad",
+    "synonyms": [
+      "iPad",
+      "iPad New"
+    ]
+  },
+  {
+    "value": "iPad Mini",
+    "synonyms": [
+      "iPad Mini",
+      "iPad Mini 4"
+    ]
+  },
+  {
+    "value": "iPad Pro",
+    "synonyms": [
+      "iPad Pro"
+    ]
+  }
+]

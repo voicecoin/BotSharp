@@ -1,6 +1,7 @@
 ﻿using BotSharp.Core.Agents;
 using BotSharp.Core.Conversations;
 using BotSharp.Core.Engines;
+using BotSharp.Core.Intents;
 using BotSharp.Core.Models;
 using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
@@ -30,12 +31,15 @@ namespace Voicebot.RestApi.Agents
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("{agentId}/Start")]
-        public string Start([FromRoute] string agentId)
+        public VmTestPayload Start([FromRoute] string agentId)
         {
+            var result = new VmTestPayload();
+
             var conversation = dc.Table<Conversation>().FirstOrDefault(x => x.UserId == CurrentUserId && x.AgentId == agentId);
             if (conversation == null)
             {
-                dc.DbTran(() => {
+                dc.DbTran(() =>
+                {
 
                     conversation = new Conversation
                     {
@@ -46,10 +50,23 @@ namespace Voicebot.RestApi.Agents
 
                     dc.Table<Conversation>().Add(conversation);
 
+                    result.ConversationId = conversation.Id;
                 });
+
+                // check WELCOME event
+                /*var intentId = from intent in dc.Table<Intent>()
+                            join ie in dc.Table<IntentEvent>() on intent.Id equals ie.IntentId
+                            where ie.Name == "WELCOME"
+                            select intent.Id;*/
+
+
+            }
+            else
+            {
+                result.ConversationId = conversation.Id;
             }
 
-            return conversation.Id;
+            return result;
         }
 
         /// <summary>

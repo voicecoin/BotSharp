@@ -1,6 +1,6 @@
 {
   "id": "f9cb6112-f549-49c4-b773-087baa45c621",
-  "name": "Buy iPhone - place work order",
+  "name": "Place work order",
   "auto": true,
   "contexts": [
     "AskPaymentMethod"
@@ -9,7 +9,13 @@
     {
       "resetContexts": false,
       "action": "",
-      "affectedContexts": [],
+      "affectedContexts": [
+        {
+          "name": "AskPaymentMethod",
+          "parameters": {},
+          "lifespan": 0
+        }
+      ],
       "parameters": [],
       "messages": [
         {
@@ -35,7 +41,7 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "Your new iPhone 10 will arrive within 3 days."
+          "speech": "Your new product will arrive within 3 days."
         }
       ],
       "defaultResponsePlatforms": {},
@@ -45,7 +51,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529727003,
+  "lastUpdate": 1531409138,
   "fallbackIntent": false,
   "events": []
 }

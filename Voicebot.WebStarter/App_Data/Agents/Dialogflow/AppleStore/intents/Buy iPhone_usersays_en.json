@@ -1,6 +1,42 @@
 [
   {
-    "id": "20a202bf-e06e-45e0-a807-2d375cf288c4",
+    "id": "a01a045c-ed11-46f4-aaac-72e17b446ffe",
+    "data": [
+      {
+        "text": "I like ",
+        "userDefined": false
+      },
+      {
+        "text": "iPhone 6S",
+        "alias": "iPhone",
+        "meta": "@iPhone",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531395338
+  },
+  {
+    "id": "6237e898-53b4-4779-9e03-287d8b1c402f",
+    "data": [
+      {
+        "text": "I\u0027d like to buy a new ",
+        "userDefined": false
+      },
+      {
+        "text": "iPhone 6",
+        "alias": "iPhone",
+        "meta": "@iPhone",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531395338
+  },
+  {
+    "id": "0aa227de-d248-441c-9ed4-26f242547a46",
     "data": [
       {
         "text": "iPhone 10",
@@ -11,10 +47,10 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1530366637
+    "updated": 1531395338
   },
   {
-    "id": "143996a9-739b-4cac-b104-6d5a1f26b15e",
+    "id": "28b68ea7-e7c2-47eb-aab0-87005545f63a",
     "data": [
       {
         "text": "buy ",
@@ -29,10 +65,10 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1530242385
+    "updated": 1531395338
   },
   {
-    "id": "9930b7ff-0a8d-4eae-b0df-bf24f37a80ad",
+    "id": "3ab5a90b-f4e6-483a-85b7-e7aef64a80f7",
     "data": [
       {
         "text": "I\u0027m going to buy an ",
@@ -47,10 +83,10 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1530242385
+    "updated": 1531395338
   },
   {
-    "id": "2b33378a-415a-45e1-b99b-8de33344783d",
+    "id": "0a8fb74c-c2db-4af2-b6d0-86dc106d42dd",
     "data": [
       {
         "text": "I want to buy an ",
@@ -65,6 +101,6 @@
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1530242385
+    "updated": 1531395338
   }
 ]

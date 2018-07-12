@@ -68,7 +68,7 @@ namespace Voicebot.RestApi.Agents
 
             var result = agent.ToObject<VmAgentDetail>();
             var vcDriver = new VoicechainDriver(dc);
-            result.VNS = vcDriver.GetAName(agent.Name).Data;
+            result.VNS = vcDriver.GetAName(agent.Id).Data;
 
             return result;
         }

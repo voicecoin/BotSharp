@@ -30,7 +30,7 @@ namespace Voicebot.Core.Voicechain
                 }
             };
 
-            string domain = dc.Table<VnsTable>().FirstOrDefault(x => x.Name.ToLower() == name.ToLower())?.Domain;
+            string domain = dc.Table<VnsTable>().FirstOrDefault(x => x.AgentId == name || x.Name.ToLower() == name.ToLower())?.Domain;
 
             var client = new RestClient($"{Database.Configuration.GetSection("Voicechain:Host").Value}");
 

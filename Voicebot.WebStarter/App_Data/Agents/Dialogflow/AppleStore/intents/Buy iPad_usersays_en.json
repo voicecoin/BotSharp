@@ -1,0 +1,52 @@
+[
+  {
+    "id": "fc3c2e2c-a429-4847-85c6-73394f6ed451",
+    "data": [
+      {
+        "text": "iPad",
+        "alias": "iPad",
+        "meta": "@iPad",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531395231
+  },
+  {
+    "id": "f840d4fb-2920-4c69-92fc-9e20b6d3b7d2",
+    "data": [
+      {
+        "text": "buy ",
+        "userDefined": false
+      },
+      {
+        "text": "iPad Mini",
+        "alias": "iPad",
+        "meta": "@iPad",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531393640
+  },
+  {
+    "id": "96207538-1e26-4211-82c5-43109f0ef1a4",
+    "data": [
+      {
+        "text": "I want to buy a ",
+        "userDefined": false
+      },
+      {
+        "text": "iPad",
+        "alias": "iPad",
+        "meta": "@iPad",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531393640
+  }
+]

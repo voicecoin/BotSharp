@@ -34,6 +34,27 @@
             }
           ],
           "isList": false
+        },
+        {
+          "id": "b224b439-7cd8-4f2f-b03d-922f2b98495e",
+          "dataType": "@sys.zip-code",
+          "name": "zip-code",
+          "value": "$zip-code",
+          "isList": false
+        },
+        {
+          "id": "dc032693-235c-4eca-b108-e23c74d0cf75",
+          "dataType": "@sys.geo-city-us",
+          "name": "geo-city-us",
+          "value": "$geo-city-us",
+          "isList": false
+        },
+        {
+          "id": "92d3e8dc-ba8a-495d-9230-e995d30273a8",
+          "dataType": "@sys.geo-state-us",
+          "name": "geo-state-us",
+          "value": "$geo-state-us",
+          "isList": false
         }
       ],
       "messages": [
@@ -63,7 +84,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1529847568,
+  "lastUpdate": 1531399495,
   "fallbackIntent": false,
   "events": []
 }

@@ -1,52 +1,136 @@
 [
   {
-    "id": "52b05ad0-cf07-479b-bd64-f68317eb3502",
+    "id": "e222d654-62f0-4a3b-8f44-81d9ca7c19eb",
+    "data": [
+      {
+        "text": "1241 W Fletcher St",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531399495
+  },
+  {
+    "id": "cc63826a-da76-44f8-8b04-2a595067a906",
     "data": [
       {
         "text": "Please ship to ",
         "userDefined": false
       },
       {
-        "text": "3112 Big Tree Ln, Wilmette, IL 60091",
+        "text": "3112 Big Tree Ln",
         "alias": "address",
         "meta": "@sys.address",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "Wilmette",
+        "alias": "geo-city-us",
+        "meta": "@sys.geo-city-us",
+        "userDefined": true
+      },
+      {
+        "text": ", IL ",
+        "userDefined": false
+      },
+      {
+        "text": "60091",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
         "userDefined": true
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529726953
+    "updated": 1531399495
   },
   {
-    "id": "e40978d0-9424-4019-af37-6796ed205e14",
+    "id": "6e1eb38a-cb5c-4e97-b669-afdd7ce77542",
     "data": [
       {
         "text": "My address is ",
         "userDefined": false
       },
       {
-        "text": "3112 Big Tree Ln, Wilmette, IL 60091",
+        "text": "3112 Big Tree Ln",
         "alias": "address",
         "meta": "@sys.address",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "Wilmette",
+        "alias": "geo-city-us",
+        "meta": "@sys.geo-city-us",
+        "userDefined": true
+      },
+      {
+        "text": ", IL ",
+        "userDefined": false
+      },
+      {
+        "text": "60091",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
         "userDefined": true
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529726953
+    "updated": 1531399495
   },
   {
-    "id": "c515cb33-13be-4ca3-96fd-cfdd91bfe9d8",
+    "id": "aaf80265-9ea2-443e-807d-b71fff926522",
     "data": [
       {
-        "text": "3112 Big Tree Ln, Wilmette, IL 60091",
+        "text": "3112 Big Tree Ln",
         "alias": "address",
         "meta": "@sys.address",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "Wilmette",
+        "alias": "geo-city-us",
+        "meta": "@sys.geo-city-us",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "IL",
+        "alias": "geo-state-us",
+        "meta": "@sys.geo-state-us",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "60091",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
         "userDefined": true
       }
     ],
     "isTemplate": false,
     "count": 0,
-    "updated": 1529726953
+    "updated": 1531399495
   }
 ]

@@ -1,0 +1,198 @@
+[
+  {
+    "id": "216661bc-ed2c-4c02-9971-ccc29f776f1a",
+    "data": [
+      {
+        "text": "600 N McClurg Ct",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "9d761f4f-1e05-470b-a800-a8e3275dffeb",
+    "data": [
+      {
+        "text": "Illinos",
+        "alias": "geo-state-us",
+        "meta": "@sys.geo-state-us",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "60091",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "05c9d349-466b-4656-9aba-4ba6c6263e41",
+    "data": [
+      {
+        "text": "IL",
+        "alias": "geo-state-us",
+        "meta": "@sys.geo-state-us",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "aa3f8c96-ed4a-4eb9-82af-11a8c2eb6c7d",
+    "data": [
+      {
+        "text": "60091",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "d3ee6c55-3ab6-40ac-80cb-9db25455d64f",
+    "data": [
+      {
+        "text": "Chicago",
+        "alias": "geo-city",
+        "meta": "@sys.geo-city",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "89eff0e7-9a61-4d65-b0db-dfa82937e5a2",
+    "data": [
+      {
+        "text": "1601 McCarthy Blvd",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "94d4189a-937d-4ce6-be80-b40727c7a8f1",
+    "data": [
+      {
+        "text": "1601 McCarthy Blvd",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": false
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "Milpitas",
+        "alias": "geo-city",
+        "meta": "@sys.geo-city",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "CA",
+        "alias": "geo-state-us",
+        "meta": "@sys.geo-state-us",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "95035",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "2e2d005f-79a9-4431-bdaa-e93d362d3c61",
+    "data": [
+      {
+        "text": "1241 W Fletcher st",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  },
+  {
+    "id": "bf10c907-4f3d-43c2-8e4d-42979f53b3fb",
+    "data": [
+      {
+        "text": "3112 Big Tree Ln",
+        "alias": "address",
+        "meta": "@sys.address",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "Wilmette",
+        "alias": "geo-city",
+        "meta": "@sys.geo-city",
+        "userDefined": true
+      },
+      {
+        "text": ", ",
+        "userDefined": false
+      },
+      {
+        "text": "IL",
+        "alias": "geo-state-us",
+        "meta": "@sys.geo-state-us",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "60091",
+        "alias": "zip-code",
+        "meta": "@sys.zip-code",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1531392712
+  }
+]
