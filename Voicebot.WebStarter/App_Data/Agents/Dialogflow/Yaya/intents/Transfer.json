@@ -46,7 +46,7 @@
         {
           "type": 0,
           "lang": "en",
-          "speech": "OK, It\u0027s connecting to $VNS chatbot. Please wait for a second."
+          "speech": "OK, It\u0027s connecting to $VNS. Please wait for a second."
         },
         {
           "type": 4,
@@ -55,6 +55,24 @@
             "task": "transfer",
             "parameters": []
           }
+        },
+        {
+          "type": 4,
+          "lang": "en",
+          "payload": {
+            "task": "delay",
+            "parameters": [
+              3000
+            ]
+          }
+        },
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": [
+            "Great, You are connected to $VNS .",
+            "Great, It\u0027s connected for you."
+          ]
         }
       ],
       "defaultResponsePlatforms": {},
@@ -64,7 +82,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1530244412,
+  "lastUpdate": 1531364519,
   "fallbackIntent": false,
   "events": []
 }

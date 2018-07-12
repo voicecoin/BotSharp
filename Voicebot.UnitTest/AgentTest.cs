@@ -18,7 +18,7 @@ namespace Voicebot.UnitTest
 
             var rasa = new RasaAi(dc, config);
 
-            rasa.TrainWithContexts();
+            rasa.Train();
         }
     }
 }

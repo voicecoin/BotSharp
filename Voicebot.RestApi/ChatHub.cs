@@ -41,7 +41,7 @@ namespace Voicebot.RestApi
             // redirect to third-part api when get fallback intent
             if (aIResponse.Result.Metadata.IntentName == "Default Fallback Intent")
             {
-                var apiAi = new ApiAiSDK.ApiAi(new ApiAiSDK.AIConfiguration(clientAccessToken, ApiAiSDK.SupportedLanguage.English));
+                var apiAi = new ApiAiSDK.ApiAi(new ApiAiSDK.AIConfiguration("d018bf12a8a8419797fe3965637389b0", ApiAiSDK.SupportedLanguage.English));
                 var apiAiResponse = apiAi.TextRequest(text);
                 aIResponse = apiAiResponse.ToObject<AIResponse>();
             }
@@ -80,7 +80,7 @@ namespace Voicebot.RestApi
                 }
                 else if (type == "4")
                 {
-                    var payload = message["Payload"].ToObject<AIResponseCustomPayload>();
+                    var payload = (message["Payload"]?? message["payload"]).ToObject<AIResponseCustomPayload>();
                     if (payload.Task == "delay")
                     {
                         await Task.Delay(int.Parse(payload.Parameters.First().ToString()));
@@ -91,7 +91,7 @@ namespace Voicebot.RestApi
                     }
                     else if (payload.Task == "terminate")
                     {
-                        // update conversation agent id to new agent
+                        // update conversation agent id back to Voiceweb
                         dc.DbTran(() => {
                             var conversation = dc.Table<Conversation>().Find(conversationId);
                             conversation.AgentId = "fd9f1b29-fed8-4c68-8fda-69ab463da126";
@@ -111,6 +111,7 @@ namespace Voicebot.RestApi
                         var vcDriver = new VoicechainDriver(dc);
                         aName = vcDriver.GetAName(aIResponse.Result.Parameters["VNS"]);
 
+                        // sending feedback when do querying blockchain
                         await Clients.Caller.SendAsync("SystemNotification", new VmTestPayload
                         {
                             ConversationId = conversationId,
@@ -134,18 +135,6 @@ namespace Voicebot.RestApi
                         dc.DbTran(() => {
                             var conversation = dc.Table<Conversation>().Find(conversationId);
                             conversation.AgentId = newAgent.Id;
-                        });
-
-                        await Task.Delay(5000);
-                        string speech = $"Great, You are connected to {newAgent.Name}'s chatbot.";
-                        string filePath = await polly.Utter(speech, Database.ContentRootPath, voiceId);
-                        await Clients.Caller.SendAsync("ReceiveMessage", new VmTestPayload
-                        {
-                            ConversationId = conversationId,
-                            Sender = rasa.agent.Name,
-                            FulfillmentText = speech,
-                            Payload = aName,
-                            AudioPath = filePath
                         });
 
                         await Clients.Caller.SendAsync("Transfer", new VmTestPayload

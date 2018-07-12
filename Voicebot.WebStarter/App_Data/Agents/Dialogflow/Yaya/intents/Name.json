@@ -1,6 +1,6 @@
 {
-  "id": "a1b7f893-a3c2-4f75-b3fd-3f20e57386e7",
-  "name": "Byebye",
+  "id": "51abf6db-590e-4876-a0e4-16d333e46804",
+  "name": "Name",
   "auto": true,
   "contexts": [],
   "responses": [
@@ -10,11 +10,9 @@
       "parameters": [],
       "messages": [
         {
-          "type": 4,
+          "type": 0,
           "lang": "en",
-          "payload": {
-            "task": "terminate"
-          }
+          "speech": "I\u0027m Yaya."
         }
       ],
       "defaultResponsePlatforms": {},
@@ -24,7 +22,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1530366908,
+  "lastUpdate": 1531367783,
   "fallbackIntent": false,
   "events": []
 }

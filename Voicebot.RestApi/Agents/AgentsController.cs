@@ -106,7 +106,7 @@ namespace Voicebot.RestApi.Agents
         {
             var rasa = new RasaAi(dc);
             rasa.agent = rasa.LoadAgentById(dc, agentId);
-            return rasa.Train();
+            return rasa.TrainWithoutContext();
         }
 
         [HttpGet("{agentId}/train")]
@@ -114,7 +114,7 @@ namespace Voicebot.RestApi.Agents
         {
             var rasa = new RasaAi(dc);
             rasa.agent = rasa.LoadAgentById(dc, agentId);
-            rasa.TrainWithContexts();
+            rasa.Train();
 
             return "Training Completed";
         }

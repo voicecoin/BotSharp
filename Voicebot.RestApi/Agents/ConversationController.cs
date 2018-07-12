@@ -2,6 +2,7 @@
 using BotSharp.Core.Conversations;
 using BotSharp.Core.Engines;
 using BotSharp.Core.Models;
+using DotNetToolkit;
 using EntityFrameworkCore.BootKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,16 +72,24 @@ namespace Voicebot.RestApi.Agents
 
             var aIResponse = rasa.TextRequest(new AIRequest { Query = new String[] { text } });
 
+            // redirect to third-part api when get fallback intent
+            if (aIResponse.Result.Metadata.IntentName == "Default Fallback Intent")
+            {
+                var apiAi = new ApiAiSDK.ApiAi(new ApiAiSDK.AIConfiguration("d018bf12a8a8419797fe3965637389b0", ApiAiSDK.SupportedLanguage.English));
+                var apiAiResponse = apiAi.TextRequest(text);
+                aIResponse = apiAiResponse.ToObject<AIResponse>();
+            }
+
             var speeches = new List<String>();
 
             for (int messageIndex = 0; messageIndex < aIResponse.Result.Fulfillment.Messages.Count; messageIndex++)
             {
                 var message = JObject.FromObject(aIResponse.Result.Fulfillment.Messages[messageIndex]);
-                string type = message["Type"].ToString();
+                string type = (message["Type"] ?? message["type"]).ToString();
 
                 if (type == "0")
                 {
-                    string speech = message["Speech"].ToString();
+                    string speech = (message["Speech"] ?? message["speech"]).ToString();
                     //string filePath = await polly.Utter(speech, env.WebRootPath, voiceId);
                     //polly.Play(filePath);
 
@@ -88,7 +97,7 @@ namespace Voicebot.RestApi.Agents
                 }
                 else if (type == "4")
                 {
-                    var payload = message["Payload"].ToObject<AIResponseCustomPayload>();
+                    var payload = (message["Payload"] ?? message["payload"]).ToObject<AIResponseCustomPayload>();
                     if (payload.Task == "delay")
                     {
                         //await Task.Delay(int.Parse(payload.Parameters.First().ToString()));
